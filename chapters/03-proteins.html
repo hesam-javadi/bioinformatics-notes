@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>پروتئین‌ها · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="پروتئین‌ها کارگران سلول‌اند: آمینواسیدها، پیوند پپتیدی، چهار سطح ساختار، پیوندهای غیرکووالانسی، اتصال و فایل PDB.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch03">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۱ (advance_bio_part1)، اسلایدهای ۴۶ تا ۷۱" data-motif="AUGGCUAAAGGUCUGGAACUUUAA">
+  <h1>پروتئین‌ها</h1>
+  <p class="lead">خون ما اکسیژن را از ریه به همهٔ بدن می‌برد و ماهی‌های قطبی در آب یخ‌زده یخ نمی‌زنند. پشت هر دو، یک نوع مولکول هست. این مولکول از یک «رشتهٔ حروف» ساخته شده و شکلش سه‌بعدی است. در این فصل می‌بینی چطور یک رشته به کارگر تبدیل می‌شود و چرا برای یک برنامه‌نویس، فایل ساختارش فقط یک فایل متنی از مختصات است.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>اجزای یک آمینواسید را <b>نام ببری</b> و بگویی کدام بخش در همهٔ آن‌ها مشترک است.</li>
+    <li>تشکیل پیوند پپتیدی را <b>توضیح بدهی</b>.</li>
+    <li>۲۰ آمینواسید را بر اساس بار و قطبیت <b>طبقه‌بندی کنی</b> و تأثیر یک جهش را <b>ارزیابی کنی</b>.</li>
+    <li>چهار سطح ساختار پروتئین و پیوندهای پایدارکننده‌شان را <b>شرح بدهی</b>.</li>
+    <li>یک خط ATOM فایل PDB را <b>بخوانی</b> و مختصات x،y،z را با کد <b>استخراج کنی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch03:pre1">
+  <p class="q">پروتئین‌ها از چند نوع واحد سازنده (آمینواسید) ساخته می‌شوند؟</p>
+  <ol class="opts">
+    <li>۴ نوع</li>
+    <li>۶۴ نوع</li>
+    <li data-correct>۲۰ نوع</li>
+    <li>هزاران نوع</li>
+  </ol>
+  <div class="explain">پروتئین رشته‌ای است روی الفبای ۲۰ حرفی. ۴ حرف مربوط به DNA است و ۶۴ تعداد کدون‌هاست (فصل‌های بعد). حدس غلط هم به یادگیری کمک می‌کند.</div>
+</div>
+
+<h2 id="work">پروتئین‌ها کارگران سلول‌اند</h2>
+
+<p>اسلاید ۴۶ می‌پرسد: «بدن ما چطور کارهای شگفت‌انگیز می‌کند؟» پاسخ: با مولکول‌هایی که اسمشان <span class="term" data-en="Protein">پروتئین</span> است. مثال اول <b>هموگلوبین</b> است، پروتئین گلبول‌های قرمز که اکسیژن (O₂) را حمل می‌کند. اگر DNA مثل سورس‌کد باشد، پروتئین‌ها برنامه‌های در حال اجرا هستند که کار واقعی را می‌کنند.</p>
+
+<p>اسلاید ۴۸ چند نمونه از کارهای پروتئین‌ها را می‌آورد:</p>
+<ul>
+  <li><b>ضدیخ:</b> موجوداتی که نزدیک قطب زندگی می‌کنند (اسلاید صدف‌خوراکی «oyster» را نام برده؛ در کتاب‌ها مثال آشناتر ماهی‌های قطبی است) پروتئین‌هایی با خاصیت <b>ضدیخ</b> دارند که از یخ زدن مایعات بدنشان جلوگیری می‌کند.</li>
+  <li><b>تنظیم‌کننده:</b> پروتئین‌هایی به قند خون پاسخ می‌دهند. وقتی قند بالا می‌رود، یک فرایند متابولیک بالا می‌رود و بعد پایین می‌آید. مثال: <b>انسولین</b>.</li>
+  <li>هموگلوبین: حمل اکسیژن.</li>
+</ul>
+
+<h3>شکل و اندازهٔ پروتئین‌ها (اسلاید ۴۹)</h3>
+<p>پروتئین‌ها شکل‌های بسیار متفاوتی دارند: رشته‌ای، گلوله‌ای، حلقه‌ای، لوله‌ای. نمونهٔ اسلاید «کپسید HIV» است، یعنی پوستهٔ پروتئینی ویروس ایدز که از تکرار بسیاری پروتئین ساخته شده و شکل مخروطی دارد.</p>
+
+<h3>پروتئین چیست؟ (اسلاید ۵۰)</h3>
+<p>برای یک برنامه‌نویس: <b>پروتئین یک رشتهٔ متنی (string) روی الفبای ۲۰ حرفی است</b>. ولی این رشته در سلول خودش را در فضا تاه می‌کند و به شکل سه‌بعدی مشخصی درمی‌آید. نکته‌ها:</p>
+<ul>
+  <li><b>دمای بالا:</b> گرما ساختار را باز می‌کند؛ به این <span class="term" data-en="Denaturation">واسرشت‌شدن</span> می‌گویند و پروتئین کارش را از دست می‌دهد. مثل سفت شدن سفیدهٔ تخم‌مرغ هنگام پختن.</li>
+  <li>بخش‌هایی از رشته <b>مارپیچ</b> (Helix) و بخش‌هایی <b>صفحه</b> (Sheet) می‌سازند.</li>
+  <li>هر اتم در فضا مختصات <b>x, y, z</b> دارد؛ پس یک ساختار پروتئین یعنی فهرست بزرگی از اعداد.</li>
+</ul>
+
+<div class="worked" data-title="مثال اسلاید ۵۰: مارپیچ و صفحه در پروتئین ۲۰۰ تایی">
+  <p class="problem">پروتئینی ۲۰۰ آمینواسید دارد. باقی‌مانده‌های ۲۰ تا ۴۵ مارپیچ و ۵۵ تا ۱۲۳ صفحه است. چند باقی‌مانده در هر بخش است و چند تا در ساختار منظم نیستند؟</p>
+  <ol class="steps">
+    <li>مارپیچ: از ۲۰ تا ۴۵ یعنی ۴۵ − ۲۰ + ۱ = ۲۶ باقی‌مانده (+۱ چون هر دو سر شمرده می‌شوند).</li>
+    <li>صفحه: ۱۲۳ − ۵۵ + ۱ = ۶۹ باقی‌مانده.</li>
+    <li>جمع ساختارهای منظم: ۲۶ + ۶۹ = ۹۵.</li>
+    <li>بقیه: ۲۰۰ − ۹۵ = ۱۰۵ باقی‌مانده در حلقه‌ها و پیچ‌ها (۱ تا ۱۹، ۴۶ تا ۵۴ و ۱۲۴ تا ۲۰۰).</li>
+    <li>چون مارپیچ ≈ ۳٫۶ باقی‌مانده در هر دور دارد، ۲۶ باقی‌مانده حدود ۷ دور است.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> ۲۶ مارپیچ، ۶۹ صفحه، ۱۰۵ بدون ساختار منظم.</p>
+</div>
+
+<h3>این پروتئین‌ها چه می‌کنند و چقدر بزرگ‌اند؟ (اسلاید ۵۲)</h3>
+<p>اسلاید ۵۲ سؤال‌هایی دارد که جواب آن‌ها این است:</p>
+<ul>
+  <li><b>متحرک (Movable):</b> پروتئین‌های موتوری مثل میوزین در ماهیچه، که حرکت می‌سازند.</li>
+  <li><b>حامل (Portable):</b> پروتئین‌هایی که مواد را جابه‌جا می‌کنند، مثل هموگلوبین.</li>
+  <li><b>تنظیم‌کننده (Regulator):</b> پروتئین‌هایی که فعالیت را بالا و پایین می‌برند، مثل انسولین.</li>
+</ul>
+<p>اندازه: اگر سلول‌ها در حد میکرومتر (µm) باشند، پروتئین‌ها در حد <b>نانومتر</b> (nm) هستند، یعنی هزار برابر کوچک‌تر. اگر سلول را به اندازهٔ همین اتاق کلاس (حدود ۵ متر) بگیری، یک پروتئین حدود اندازهٔ یک دانهٔ شن می‌شود.</p>
+
+<details class="think">
+  <summary>آیا پروتئین‌ها فقط درون موجودات زنده‌اند؟ (اسلاید ۵۲)</summary>
+  <div><p>پروتئین‌ها را سلول‌های زنده می‌سازند، ولی <b>فقط درون موجود زنده کار نمی‌کنند</b>. می‌شود آن‌ها را خالص کرد و در لوله‌آزمایش نگه داشت یا بلور ساخت (مثل ساختارهای PDB). ویروس‌ها هم که زنده نیستند، پوستهٔ پروتئینی دارند. پروتئین را می‌شود در آزمایشگاه هم ساخت. پس حیات برای ساخته شدن پروتئین لازم است، نه برای وجودش.</p></div>
+</details>
+
+<h2 id="amino">آمینواسید: واحد ساختمانی پروتئین</h2>
+
+<p>پروتئین زنجیره‌ای از <span class="term" data-en="Amino acid">آمینواسید</span>‌هاست. همهٔ آمینواسیدها یک «اسکلت» مشترک دارند (اسلاید ۵۳). یک کربن مرکزی به نام <span class="term" data-en="Alpha carbon">کربن آلفا</span> به چهار چیز وصل است:</p>
+<ol>
+  <li><b>گروه آمین</b> (<code>NH₂</code>)، بخش بازی.</li>
+  <li><b>گروه کربوکسیل یا گروه اسیدی</b> (<code>COOH</code>).</li>
+  <li>یک <b>اتم هیدروژن</b> (H).</li>
+  <li>یک <b>زنجیرهٔ جانبی</b> (R، side chain) که در هر آمینواسید فرق می‌کند.</li>
+</ol>
+
+<figure class="fig compact">
+<svg viewBox="0 0 520 260" width="520" role="img" aria-labelledby="aa-t">
+  <title id="aa-t">آناتومی آمینواسید: کربن آلفا با گروه آمین، گروه اسیدی کربوکسیل، هیدروژن و زنجیرهٔ جانبی R</title>
+  <line x1="260" y1="130" x2="130" y2="130" class="s-ink-2" stroke-width="3"/>
+  <line x1="260" y1="130" x2="390" y2="130" class="s-ink-2" stroke-width="3"/>
+  <line x1="260" y1="130" x2="260" y2="50" class="s-ink-2" stroke-width="3"/>
+  <line x1="260" y1="130" x2="260" y2="210" class="s-ink-2" stroke-width="3"/>
+  <circle cx="260" cy="130" r="26" class="f-ink-2"/>
+  <text x="260" y="136" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">Cα</text>
+  <rect x="62" y="108" width="82" height="44" rx="10" class="f-info"/>
+  <text x="103" y="136" font-size="16" font-weight="800" text-anchor="middle" class="t-white mono">NH₂</text>
+  <text x="103" y="176" font-size="12.5" text-anchor="middle">گروه آمین</text>
+  <rect x="380" y="108" width="100" height="44" rx="10" class="f-bad"/>
+  <text x="430" y="136" font-size="16" font-weight="800" text-anchor="middle" class="t-white mono">COOH</text>
+  <text x="430" y="176" font-size="12.5" text-anchor="middle">گروه اسیدی</text>
+  <circle cx="260" cy="34" r="20" class="f-surface-2 s-line" stroke-width="2"/>
+  <text x="260" y="40" font-size="15" font-weight="800" text-anchor="middle" class="mono">H</text>
+  <rect x="224" y="206" width="72" height="40" rx="10" class="f-warn"/>
+  <text x="260" y="233" font-size="16" font-weight="800" text-anchor="middle" class="mono t-white">R</text>
+  <text x="330" y="232" font-size="12.5">زنجیرهٔ جانبی (متفاوت)</text>
+  <text x="300" y="30" font-size="12.5" class="t-muted">هیدروژن</text>
+</svg>
+<figcaption><b>شکل ۳.۱</b> — آناتومی آمینواسید. گروه آمین، گروه اسیدی و H در همهٔ ۲۰ آمینواسید یکسان‌اند. فقط R فرق می‌کند.</figcaption>
+</figure>
+
+<aside class="callout exam">
+  <p><b>سؤال میان‌ترم ۳:</b> «آمینواسیدهای مختلف چه چیزی مشترک دارند؟ الف) الکترونگاتیوی ب) گروه اسیدی ج) آب‌دوستی/آب‌گریزی د) هیچ‌کدام.» پاسخ: <b>ب</b>. همهٔ آن‌ها گروه آمین و گروه اسیدی دارند. فرقشان فقط در R است و آب‌دوستی یا آب‌گریزی از R می‌آید، پس مشترک نیست.</p>
+</aside>
+
+<aside class="callout analogy">
+  <p>آمینواسید مثل یک حلقه در زنجیر است که دو سر اتصال یکسان دارد (آمین و اسیدی) ولی هر حلقه «برچسب» متفاوتی دارد (R). چون سرها یکسان‌اند، هر آمینواسید می‌تواند به هر دیگری وصل شود.</p>
+</aside>
+
+<h3>پیوند پپتیدی (اسلاید ۵۴)</h3>
+<p>دو آمینواسید وقتی به هم وصل می‌شوند که گروه اسیدی (COOH) یکی با گروه آمین (NH₂) دیگری واکنش بدهد. در این واکنش یک مولکول <b>آب (H₂O)</b> آزاد می‌شود. پیوند حاصل <span class="term" data-en="Peptide bond">پیوند پپتیدی</span> (از نوع کووالانسی) است. زنجیره‌ای که از چند آمینواسید ساخته شود «پلی‌پپتید» نام دارد.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 220" width="720" role="img" aria-labelledby="pb-t">
+  <title id="pb-t">تشکیل پیوند پپتیدی: COOH آمینواسید اول با NH₂ آمینواسید دوم واکنش می‌دهد و آب آزاد می‌شود</title>
+  <defs><marker id="pb-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <rect x="10" y="70" width="80" height="44" rx="10" class="f-info"/><text x="50" y="98" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">H₂N</text>
+  <rect x="100" y="76" width="50" height="32" rx="16" class="f-ink-2"/><text x="125" y="98" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">Cα</text>
+  <rect x="160" y="70" width="80" height="44" rx="10" class="f-bad"/><text x="200" y="98" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">COOH</text>
+  <text x="125" y="140" font-size="12" text-anchor="middle">آمینواسید ۱ (R۱)</text>
+  <rect x="260" y="70" width="80" height="44" rx="10" class="f-info"/><text x="300" y="98" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">H₂N</text>
+  <rect x="350" y="76" width="50" height="32" rx="16" class="f-ink-2"/><text x="375" y="98" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">Cα</text>
+  <rect x="410" y="70" width="80" height="44" rx="10" class="f-bad"/><text x="450" y="98" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">COOH</text>
+  <text x="375" y="140" font-size="12" text-anchor="middle">آمینواسید ۲ (R۲)</text>
+  <line x1="505" y1="92" x2="545" y2="92" class="s-ink-2" stroke-width="2.5" marker-end="url(#pb-ah)"/>
+  <rect x="555" y="70" width="150" height="44" rx="10" class="f-hl-soft s-hl" stroke-width="2.5"/>
+  <text x="630" y="98" font-size="13" font-weight="800" text-anchor="middle" class="mono">-CO-NH- + H₂O</text>
+  <text x="630" y="140" font-size="12" text-anchor="middle" class="t-hl">پیوند پپتیدی + آب</text>
+  <path d="M200 160 q40 36 100 0" class="f-none s-hl anim-pulse" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <text x="250" y="196" font-size="12" text-anchor="middle" class="t-hl">COOH با NH₂ واکنش می‌دهد</text>
+</svg>
+<figcaption><b>شکل ۳.۲</b> — OH از گروه اسیدی و H از گروه آمین به شکل آب جدا می‌شوند؛ کربن و نیتروژن با پیوند پپتیدی به هم می‌چسبند.</figcaption>
+</figure>
+
+<aside class="callout pitfall">
+  <p>در پیوند پپتیدی یک مولکول آب <b>آزاد می‌شود</b> (نه مصرف). به این نوع واکنش «تراکمی» می‌گویند. شکستن پیوند پپتیدی برعکس، آب مصرف می‌کند (آبکافت).</p>
+</aside>
+
+<h2 id="classes">طبقه‌بندی ۲۰ آمینواسید</h2>
+
+<p>اسلاید ۵۵ می‌گوید آمینواسیدها بر اساس <b>بار، قطبیت و آب‌گریزی</b> دسته‌بندی می‌شوند. همهٔ این‌ها از زنجیرهٔ جانبی R می‌آید. «قطبی» یعنی R با آب پیوند می‌دهد (آب‌دوست)؛ «غیرقطبی» یعنی R از آب فراری است (<span class="term" data-en="Hydrophobic">آب‌گریز</span>).</p>
+
+<table>
+  <thead><tr><th>دسته</th><th>آمینواسیدها (فارسی، English، سه‌حرفی، یک‌حرفی)</th></tr></thead>
+  <tbody>
+    <tr><td><b>غیرقطبی، آب‌گریز</b></td><td>گلیسین Glycine Gly G؛ آلانین Alanine Ala A؛ والین Valine Val V؛ لوسین Leucine Leu L؛ ایزولوسین Isoleucine Ile I؛ پرولین Proline Pro P؛ متیونین Methionine Met M؛ فنیل‌آلانین Phenylalanine Phe F؛ تریپتوفان Tryptophan Trp W</td></tr>
+    <tr><td><b>قطبی بدون بار</b></td><td>سرین Serine Ser S؛ ترئونین Threonine Thr T؛ سیستئین Cysteine Cys C؛ آسپاراژین Asparagine Asn N؛ گلوتامین Glutamine Gln Q؛ تیروزین Tyrosine Tyr Y</td></tr>
+    <tr><td><b>اسیدی (بار منفی −)</b></td><td>آسپارتیک‌اسید Aspartic acid Asp D؛ گلوتامیک‌اسید Glutamic acid Glu E</td></tr>
+    <tr><td><b>بازی (بار مثبت +)</b></td><td>لیزین Lysine Lys K؛ آرژینین Arginine Arg R؛ هیستیدین Histidine His H</td></tr>
+  </tbody>
+</table>
+<p>۹ + ۶ + ۲ + ۳ = ۲۰ آمینواسید. (در بعضی کتاب‌ها سیستئین یا تیروزین در دسته‌ای کمی متفاوت می‌آیند؛ همین جدول مرجع استاندارد است. اسلاید ۵۵ فقط تصویر ساختارهاست.)</p>
+
+<aside class="callout simple">
+  <p>خاطره‌سازی: اسیدی‌ها (Asp, Glu) منفی‌اند؛ بازی‌ها (Lys, Arg, His) مثبت. بقیه بدون بارند و بین آب‌دوست و آب‌گریز تقسیم می‌شوند. این بارها دلیل جذب DNA (منفی) به هیستون‌ها (غنی از Lys و Arg، مثبت) در فصل ۴ است.</p>
+</aside>
+
+<div class="quiz" data-id="ch03:s3">
+  <p class="q">کدام آمینواسید بار مثبت دارد؟</p>
+  <ol class="opts"><li>آسپارتیک‌اسید (Asp)</li><li>گلوتامیک‌اسید (Glu)</li><li data-correct>لیزین (Lys)</li><li>والین (Val)</li></ol>
+  <div class="explain">لیزین بازی و مثبت است. Asp و Glu اسیدی و منفی‌اند و Val غیرقطبی و بدون بار.</div>
+</div>
+
+<h3>این طبقه‌بندی به چه کار می‌آید؟ جهش‌ها (اسلاید ۵۶)</h3>
+
+<p>اسلاید ۵۶ می‌پرسد: «اگر باید به پزشکی کمک کنی جهش‌های عامل یک بیماری ژنتیکی را در یک کودک پیدا کنی، چه می‌کنی؟» دو رویکرد:</p>
+<ol class="steps">
+  <li><b>مهندس:</b> ژنوم کودک را با ژنوم والدین مقایسه می‌کند. حدود <b>۱۰٬۰۰۰</b> تفاوت پیدا می‌شود. بررسی دستی همهٔ آن‌ها ممکن نیست.</li>
+  <li><b>بیوانفورماتیسین:</b> فقط جهش‌هایی را نگه می‌دارد که یک آمینواسید را به آمینواسیدی از <b>دستهٔ دیگر</b> تبدیل می‌کنند. تعداد به حدود <b>۱۰۰</b> می‌رسد.</li>
+  <li>با فیلترهای بعدی (مثلاً نادر بودن جهش در جمعیت، قرار داشتن در ژن مرتبط با بیماری) به حدود <b>۱۰</b> جهش کاندیدا می‌رسد.</li>
+</ol>
+
+<p>منطق: بیشتر تفاوت‌ها در ژنوم بی‌اثرند (مثلاً در نواحی غیرژنی یا تغییرهایی که آمینواسید را عوض نمی‌کنند). جهش‌هایی که آمینواسید را با یک آمینواسید <b>مشابه</b> (هم‌دسته) عوض کنند معمولاً شکل و کار پروتئین را کم تغییر می‌دهند. اما تبدیل یک آمینواسید آب‌گریز به باردار می‌تواند تاخوردگی را به‌هم بریزد. پس دسته‌بندی ابزاری است برای فیلتر کردن.</p>
+
+<div class="worked" data-title="ارزیابی اثر چند جهش">
+  <p class="problem">سه جهش در یک پروتئین پیدا شده: (۱) Leu ← Ile، (۲) Val ← Asp، (۳) Lys ← Arg. کدام‌ها را به‌عنوان کاندیدا نگه می‌داری؟</p>
+  <ol class="steps">
+    <li>(۱) Leu و Ile هر دو غیرقطبی و آب‌گریزند: هم‌دسته، اثر احتمالی کم.</li>
+    <li>(۲) Val غیرقطبی است و Asp اسیدی با بار منفی: <b>دستهٔ متفاوت</b>. آمینواسید آب‌گریز در هستهٔ پروتئین، ناگهان باردار می‌شود.</li>
+    <li>(۳) Lys و Arg هر دو بازی و مثبت‌اند: هم‌دسته.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> فقط جهش (۲) کاندیدا می‌ماند.</p>
+</div>
+
+<div class="fill" data-answer="Gly|G|گلیسین" data-id="ch03:f1">
+  <p class="q">ساده‌ترین آمینواسید که زنجیرهٔ جانبی‌اش فقط یک H است <input class="blank" type="text"> (سه‌حرفی یا یک‌حرفی) نام دارد.</p>
+  <div class="explain">گلیسین (Gly, G) که R آن فقط یک هیدروژن است و غیرقطبی محسوب می‌شود.</div>
+</div>
+
+<h2 id="levels">سطوح ساختار پروتئین</h2>
+
+<p>اسلاید ۵۷ چهار سطح را نشان می‌دهد. مثل لایه‌های یک برنامه از خط کد تا کل سیستم:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 240" width="740" role="img" aria-labelledby="lv-t">
+  <title id="lv-t">چهار سطح ساختار پروتئین: اولیه، ثانویه، سوم و چهارم</title>
+  <defs><marker id="lv-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g class="s-muted" stroke-width="1.8" marker-end="url(#lv-ah)"><line x1="205" y1="105" x2="165" y2="105"/><line x1="395" y1="105" x2="355" y2="105"/><line x1="585" y1="105" x2="545" y2="105"/></g>
+  <g>
+    <g class="f-accent"><circle cx="680" cy="90" r="10"/><circle cx="650" cy="110" r="10"/><circle cx="700" cy="125" r="10"/></g>
+    <text x="675" y="75" font-size="9" class="t-white" text-anchor="middle"></text>
+    <text x="675" y="170" font-size="13" font-weight="700" text-anchor="middle">۱. ساختار اولیه</text>
+    <text x="675" y="190" font-size="11.5" text-anchor="middle" class="t-muted">ترتیب آمینواسیدها</text>
+    <text x="675" y="206" font-size="11.5" text-anchor="middle" class="t-muted mono" style="direction:ltr">Ala-Glu-Val-Thr</text>
+  </g>
+  <g>
+    <path d="M470 100 q10 -30 20 0 t20 0 t20 0 t20 0" class="f-none s-info" stroke-width="5" stroke-linecap="round"/>
+    <path d="M470 125 h35 l-8 -7 m8 7 l-8 7 M510 125 h0" class="f-none s-ok" stroke-width="3"/>
+    <text x="490" y="170" font-size="13" font-weight="700" text-anchor="middle">۲. ثانویه</text>
+    <text x="490" y="190" font-size="11.5" text-anchor="middle" class="t-muted">مارپیچ α، صفحه β</text>
+    <text x="490" y="206" font-size="11.5" text-anchor="middle" class="t-muted">با پیوند هیدروژنی</text>
+  </g>
+  <g>
+    <path d="M250 125 q10 -50 30 -30 t30 30 q0 20 -20 10 t-30 -30 q-20 -10 -10 30z" class="f-ok-soft s-ok" stroke-width="3"/>
+    <text x="280" y="170" font-size="13" font-weight="700" text-anchor="middle">۳. ساختار سوم</text>
+    <text x="280" y="190" font-size="11.5" text-anchor="middle" class="t-muted">تاخوردگی سه‌بعدی یک زنجیره</text>
+    <text x="280" y="206" font-size="11.5" text-anchor="middle" class="t-muted">دامنه (Domain)</text>
+  </g>
+  <g>
+    <path d="M60 120 q10 -40 25 -20 t25 25 q0 20 -15 10 t-35 -15z" class="f-ok-soft s-ok" stroke-width="3"/>
+    <path d="M100 100 q10 -40 25 -20 t25 25 q0 20 -15 10 t-35 -15z" class="f-info-soft s-info" stroke-width="3"/>
+    <text x="100" y="170" font-size="13" font-weight="700" text-anchor="middle">۴. ساختار چهارم</text>
+    <text x="100" y="190" font-size="11.5" text-anchor="middle" class="t-muted">چند زنجیره کنار هم</text>
+    <text x="100" y="206" font-size="11.5" text-anchor="middle" class="t-muted">مثل هموگلوبین</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۳.۳</b> — از رشتهٔ ساده (راست) تا مجموعهٔ چندزنجیره‌ای (چپ).</figcaption>
+</figure>
+
+<ul>
+  <li><b>ساختار اولیه (Primary):</b> فقط ترتیب آمینواسیدها (همان رشتهٔ حروف). مثل <code>Ala-Glu-Val-Thr-Asp-Pro-Gly</code>.</li>
+  <li><b>ساختار ثانویه (Secondary):</b> الگوهای منظم و کوتاه‌برد: <b>مارپیچ α</b>، <b>صفحهٔ β</b> و <b>پیچ‌ها (turns)</b>. با پیوند هیدروژنی بین اتم‌های <b>اسکلت</b> زنجیره پایدار می‌شوند.</li>
+  <li><b>ساختار سوم (Tertiary):</b> تاخوردگی سه‌بعدی کل یک زنجیره. بخش‌های مستقل تاخورده را <span class="term" data-en="Domain">دامنه</span> می‌گویند.</li>
+  <li><b>ساختار چهارم (Quaternary):</b> کنار هم آمدن چند زنجیره. مثال: <b>هموگلوبین</b> چهار زنجیره دارد.</li>
+</ul>
+
+<h3>مارپیچ α (اسلاید ۵۹ و ۶۰)</h3>
+<p>در مارپیچ، پیوند هیدروژنی بین اکسیژن کربونیل (C=O) و نیتروژن آمید (N–H) اسکلت زنجیره برقرار می‌شود. این پیوندها <b>موازی محور مارپیچ</b> هستند و بین باقی‌مانده‌های <b>n و n+۴</b> قرار می‌گیرند. در هر دور حدود <b>۳٫۶ باقی‌مانده</b> هست و ارتفاع یک دور حدود ۰٫۵۴ نانومتر است.</p>
+
+<figure class="fig compact">
+<svg viewBox="0 0 520 250" width="520" role="img" aria-labelledby="hx-t">
+  <title id="hx-t">مارپیچ آلفا: پیوند هیدروژنی بین باقی‌مانده n و n+4 موازی محور مارپیچ</title>
+  <path d="M60 175 C90 80 130 80 160 175 C190 270 230 270 260 175 C290 80 330 80 360 175 C390 270 430 270 460 175" class="f-none s-info" stroke-width="4"/>
+  <g class="f-accent"><circle cx="60" cy="175" r="9"/><circle cx="110" cy="107" r="9"/><circle cx="160" cy="175" r="9"/><circle cx="210" cy="240" r="9"/><circle cx="260" cy="175" r="9"/></g>
+  <text x="60" y="205" font-size="12" font-weight="700" text-anchor="middle" class="mono">n</text>
+  <text x="260" y="205" font-size="12" font-weight="700" text-anchor="middle" class="mono">n+4</text>
+  <path d="M60 160 C60 40 260 40 260 160" class="f-none s-hl anim-flow" stroke-width="3" stroke-dasharray="6 4"/>
+  <text x="160" y="40" font-size="12.5" font-weight="700" text-anchor="middle" class="t-hl">پیوند هیدروژنی C=O ··· N–H</text>
+  <text x="160" y="58" font-size="11.5" text-anchor="middle" class="t-muted">بین n و n+۴؛ موازی محور مارپیچ</text>
+  <text x="400" y="235" font-size="11.5" class="t-muted" text-anchor="middle">۳٫۶ باقی‌مانده در هر دور</text>
+</svg>
+<figcaption><b>شکل ۳.۴</b> — طرح ساده. هر باقی‌مانده با باقی‌مانده‌ای که چهار تا جلوتر است پیوند هیدروژنی می‌سازد؛ این الگو مارپیچ را قفل می‌کند.</figcaption>
+</figure>
+
+<h3>صفحهٔ β (اسلاید ۶۱ و ۶۲)</h3>
+<p>رشته‌های β کنار هم (دوتایی یا چندتایی) قرار می‌گیرند و با پیوند هیدروژنی <b>عمود بر محور هر رشته</b> به هم می‌چسبند. این پیوندها بین کربونیل و آمید اسکلت‌اند. رشته‌ها می‌توانند <b>هم‌جهت (parallel)</b> یا <b>خلاف‌جهت (antiparallel)</b> باشند. صفحه مثل یک ورق چین‌دار است.</p>
+
+<div class="compare">
+  <div><h4>مارپیچ α</h4><p>یک رشته به دور خودش می‌پیچد؛ پیوند H درون همان رشته، بین n و n+۴، موازی محور.</p></div>
+  <div><h4>صفحهٔ β</h4><p>چند رشته کنار هم؛ پیوند H بین رشته‌های مجاور، عمود بر محور.</p></div>
+</div>
+
+<div class="quiz" data-id="ch03:s5">
+  <p class="q">در مارپیچ α پیوند هیدروژنی بین کدام باقی‌مانده‌ها برقرار می‌شود؟</p>
+  <ol class="opts"><li>n و n+۱</li><li>n و n+۲</li><li data-correct>n و n+۴</li><li>n و n+۱۰۰</li></ol>
+  <div class="explain">طبق اسلاید ۶۰ پیوند بین باقی‌مانده‌های n و n+۴ است؛ با ۳٫۶ باقی‌مانده در هر دور این الگو اتم‌ها را روبه‌روی هم می‌آورد.</div>
+</div>
+
+<h2 id="bonds">پیوندهای غیرکووالانسی: چسب تاخوردگی</h2>
+
+<p>پیوند پپتیدی کووالانسی و قوی است، ولی شکل سه‌بعدی را عمدتاً پیوندهای <b>غیرکووالانسی</b> (اسلاید ۵۸) نگه می‌دارند. هر کدام ضعیف است اما تعدادشان زیاد است و روی هم محکم می‌شوند:</p>
+<table>
+  <thead><tr><th>نوع</th><th>توضیح</th></tr></thead>
+  <tbody>
+    <tr><td>جاذبهٔ الکترواستاتیک (یونی)</td><td>جذب بین بار مثبت و منفی (مثلاً Lys و Asp).</td></tr>
+    <tr><td>پیوند هیدروژنی</td><td>اشتراک هیدروژن بین اتم‌های قطبی، مثل N–H و C=O.</td></tr>
+    <tr><td>نیروهای وان‌دروالس</td><td>جاذبهٔ ضعیف بین اتم‌های بسیار نزدیک.</td></tr>
+    <tr><td>اثر آب‌گریزی</td><td>زنجیره‌های آب‌گریز از آب دور می‌شوند و در داخل پروتئین جمع می‌شوند.</td></tr>
+  </tbody>
+</table>
+
+<aside class="callout analogy">
+  <p>مثل ولکرو (چسب‌های خاری): یک خار ضعیف است ولی هزاران خار یک اتصال محکم می‌سازند. اگر دما بالا برود، همین اتصالات ضعیف اول می‌شکنند و پروتئین باز می‌شود (واسرشت).</p>
+</aside>
+
+<h3>بخش کاربردی پروتئین کجاست؟ (اسلاید ۶۴)</h3>
+
+<details class="think">
+  <summary>در آنزیم‌هایی مثل پروتئاز و لیپاز، بخش عملکردی (جایگاه فعال) بیشتر در کدام ساختار است: صفحهٔ β، مارپیچ α، پیچ یا کویل؟</summary>
+  <div><p>معمولاً در <b>حلقه‌ها، پیچ‌ها و بخش‌های کویل (coil)</b>. مارپیچ‌ها و صفحه‌ها داربست پایدار و سفت پروتئین‌اند. حلقه‌ها انعطاف‌پذیرند و تاخوردگی سه‌بعدی آن‌ها را کنار هم می‌آورد تا یک «جیب» بسازند که آمینواسیدهای کلیدی در آن قرار دارند. قسمت‌های سفت برای ساخت داربست خوب‌اند، قسمت‌های متحرک برای چسبیدن به ماده و انجام واکنش. (استثناها هم هست؛ این قاعدهٔ کلی است.)</p></div>
+</details>
+
+<h2 id="function">اتصال، روشن و خاموش شدن</h2>
+
+<h3>واحدهای تکراری و دامنه‌ها (اسلاید ۶۵)</h3>
+<p>بسیاری از پروتئین‌ها از چند <b>دامنه</b> ساخته شده‌اند و بعضی دامنه‌ها در پروتئین‌های مختلف تکرار می‌شوند. مثل کتابخانه‌ای از ماژول‌های قابل‌استفادهٔ مجدد در برنامه‌نویسی.</p>
+
+<h3>اتصال پروتئین (اسلاید ۶۶)</h3>
+<p>پروتئین‌ها با <span class="term" data-en="Ligand">لیگاند</span> (مولکولی که به پروتئین می‌چسبد) در <b>جایگاه اتصال</b> برهم‌کنش می‌کنند. این اساس بسیاری از داروهاست:</p>
+<ul>
+  <li><b>متابولیسم دارو:</b> آنزیم‌ها دارو را در بدن تغییر می‌دهند.</li>
+  <li><b>ساخت کلسترول:</b> داروهای استاتین یک آنزیم این مسیر را مهار می‌کنند.</li>
+  <li><b>داروهای ضدسرطان:</b> بسیاری پروتئین‌های بیش‌فعال سلول سرطانی را هدف می‌گیرند.</li>
+</ul>
+
+<h3>پروتئین‌ها روشن و خاموش می‌شوند (اسلاید ۶۷)</h3>
+<p>پروتئین‌ها ثابت نیستند. شکلشان با اتصال یک مولکول تنظیم‌کننده عوض می‌شود. مثلاً یک آنزیم فعال است و با چسبیدن مولکول <b>CTP</b> (محصول نهایی مسیر) به آن، شکلش تغییر می‌کند و غیرفعال می‌شود. به این <span class="term" data-en="Feedback inhibition">مهار بازخوردی</span> می‌گویند: محصول وقتی زیاد شد، تولید خودش را متوقف می‌کند. راه دیگر <b>فسفوریلاسیون</b> است، یعنی اضافه شدن گروه فسفات که پروتئین را روشن یا خاموش می‌کند.</p>
+
+<aside class="callout analogy">
+  <p>مثل یک کلید در برنامه (feature flag). یک ورودی کوچک (اتصال CTP یا فسفات) رفتار یک ماژول بزرگ را عوض می‌کند. مهار بازخوردی هم مثل thermostat است: وقتی خروجی زیاد شد، تولید را کم می‌کند.</p>
+</aside>
+
+<div class="quiz" data-id="ch03:s6">
+  <p class="q">در مهار بازخوردی، چه چیزی آنزیم را غیرفعال می‌کند؟</p>
+  <ol class="opts"><li>گرما</li><li data-correct>محصول نهایی همان مسیر که به آنزیم می‌چسبد</li><li>حذف آمینواسیدها</li><li>شکستن پیوند پپتیدی</li></ol>
+  <div class="explain">محصول (مثل CTP) به جایگاه تنظیمی می‌چسبد و شکل آنزیم را عوض می‌کند؛ بدون شکستن زنجیره. گرما هم غیرفعال می‌کند ولی آن واسرشت است، نه مهار بازخوردی.</div>
+</div>
+
+<h2 id="pdb">بانک PDB و فرمت فایل آن</h2>
+
+<p>ساختار سه‌بعدی پروتئین‌ها در آزمایشگاه (مثلاً با بلورنگاری اشعهٔ X) اندازه‌گیری و در بانک <b>Protein Data Bank (PDB)</b> نگهداری می‌شود: <code>https://www.rcsb.org/</code>. هر ساختار یک فایل متنی است (اسلاید ۷۰).</p>
+
+<table>
+  <thead><tr><th>نوع رکورد</th><th>چه چیزی دارد؟</th><th>چرا مهم است؟</th></tr></thead>
+  <tbody>
+    <tr><td>HEADER</td><td>اطلاعات کلی دربارهٔ ساختار</td><td>نمای کلی از فایل</td></tr>
+    <tr><td>TITLE</td><td>توضیح متنی قابل‌خواندن</td><td>می‌فهمی ساختار مربوط به چیست</td></tr>
+    <tr><td>COMPND</td><td>مولکول‌ها و زنجیره‌ها (Chains)</td><td>چه مولکول‌ها و زنجیره‌هایی در ساختار هست</td></tr>
+    <tr><td>SOURCE</td><td>منبع زیستی مولکول</td><td>از چه موجودی یا سیستمی گرفته شده</td></tr>
+    <tr><td>EXPDTA</td><td>روش آزمایشی تعیین ساختار</td><td>ساختار سه‌بعدی چطور به‌دست آمده (کیفیت و اعتماد)</td></tr>
+    <tr><td>ATOM</td><td>اتم‌ها و مختصات سه‌بعدی</td><td>مهم‌ترین بخش برای تحلیل محاسباتی</td></tr>
+    <tr><td>CONECT</td><td>پیوند بین اتم‌ها، در صورت وجود</td><td>برای بررسی ارتباط بین اتم‌ها</td></tr>
+  </tbody>
+</table>
+
+<h3>یک خط ATOM (اسلاید ۷۱)</h3>
+
+<pre data-lang="PDB"><code>ATOM      1  N   MET D   1      12.345  25.678  18.901  1.00 20.00           N
+<span class="c">^^^^ ^^^^^ ^^^^ ^^^ ^ ^^^^    ^^^^^^^^ ^^^^^^^^ ^^^^^^^^</span>
+<span class="c">رکورد  شماره نوع  باقی  زنجیره شماره   X        Y        Z</span></code></pre>
+
+<table>
+  <thead><tr><th>فیلد</th><th>مثال</th><th>مفهوم</th></tr></thead>
+  <tbody>
+    <tr><td>شماره اتم (Atom number)</td><td>1</td><td>شناسهٔ یکتای اتم</td></tr>
+    <tr><td>نوع اتم (Atom type)</td><td>N</td><td>اینجا نیتروژن</td></tr>
+    <tr><td>باقی‌مانده (Residue)</td><td>MET</td><td>آمینواسیدی که این اتم به آن تعلق دارد: متیونین</td></tr>
+    <tr><td>زنجیره (Chain)</td><td>D</td><td>زنجیره‌ای که اتم در آن است</td></tr>
+    <tr><td>شماره باقی‌مانده</td><td>1</td><td>موقعیت آمینواسید در زنجیره</td></tr>
+    <tr><td>X</td><td>12.345</td><td>موقعیت روی محور X</td></tr>
+    <tr><td>Y</td><td>25.678</td><td>موقعیت روی محور Y</td></tr>
+    <tr><td>Z</td><td>18.901</td><td>موقعیت روی محور Z</td></tr>
+  </tbody>
+</table>
+
+<p>فرمت PDB ستونی با عرض ثابت است: X ستون‌های ۳۱ تا ۳۸، Y ستون‌های ۳۹ تا ۴۶ و Z ستون‌های ۴۷ تا ۵۴. چون ستون‌ها از ۱ شماره‌گذاری می‌شوند و پایتون از ۰، برش‌ها <code>[30:38]</code>، <code>[38:46]</code> و <code>[46:54]</code> هستند.</p>
+
+<pre data-lang="PYTHON"><code>line = <span class="s">"ATOM      1  N   MET D   1      12.345  25.678  18.901  1.00 20.00           N"</span>
+<span class="k">if</span> line.startswith(<span class="s">"ATOM"</span>):
+    x = float(line[<span class="n">30</span>:<span class="n">38</span>])   <span class="c"># columns 31-38</span>
+    y = float(line[<span class="n">38</span>:<span class="n">46</span>])   <span class="c"># columns 39-46</span>
+    z = float(line[<span class="n">46</span>:<span class="n">54</span>])   <span class="c"># columns 47-54</span>
+    print(x, y, z)           <span class="c"># 12.345 25.678 18.901</span></code></pre>
+
+<div class="quiz" data-id="ch03:s7">
+  <p class="q">برای تحلیل‌های محاسباتی (مثل محاسبهٔ فاصلهٔ اتم‌ها) مهم‌ترین رکورد فایل PDB کدام است؟</p>
+  <ol class="opts"><li>HEADER</li><li>TITLE</li><li data-correct>ATOM</li><li>SOURCE</li></ol>
+  <div class="explain">ATOM مختصات سه‌بعدی اتم‌ها را دارد. بقیه توصیفی‌اند.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>پروتئین‌ها کارگران سلول‌اند: حمل اکسیژن (هموگلوبین)، ضدیخ، تنظیم (انسولین).</li>
+    <li>پروتئین رشته‌ای روی الفبای ۲۰ حرفی است که به شکل سه‌بعدی تا می‌خورد؛ گرما آن را واسرشت می‌کند.</li>
+    <li>آمینواسید: کربن آلفا + گروه آمین + گروه اسیدی + H + R. فقط R فرق می‌کند، پس مشترک‌ها <b>آمین و اسید</b> هستند.</li>
+    <li>پیوند پپتیدی از واکنش COOH و NH₂ با آزاد شدن آب ساخته می‌شود.</li>
+    <li>آمینواسیدها بر اساس R به غیرقطبی/آب‌گریز، قطبی بدون بار، اسیدی (−) و بازی (+) دسته‌بندی می‌شوند؛ از این برای فیلتر جهش‌ها استفاده می‌شود (۱۰٬۰۰۰ ← ۱۰۰ ← ۱۰).</li>
+    <li>چهار سطح ساختار: اولیه، ثانویه (α، β، پیچ)، سوم (دامنه)، چهارم (چند زنجیره، مثل هموگلوبین).</li>
+    <li>مارپیچ α: پیوند H بین n و n+۴، ۳٫۶ باقی‌مانده در هر دور؛ صفحهٔ β: پیوند H بین رشته‌ها عمود بر محور، هم‌جهت یا خلاف‌جهت.</li>
+    <li>پیوندهای غیرکووالانسی: الکترواستاتیک، هیدروژنی، وان‌دروالس، اثر آب‌گریزی. جایگاه فعال بیشتر در حلقه‌ها و پیچ‌ها.</li>
+    <li>فایل PDB: HEADER، TITLE، COMPND، SOURCE، EXPDTA، ATOM، CONECT؛ مختصات x,y,z در ستون‌های ۳۱ تا ۵۴ هر خط ATOM.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

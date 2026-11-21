@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>خط لولهٔ RNA-seq و مینی‌پروژه · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="از نمونه تا پاسخ زیستی: درخت تصمیم تحلیل، مراحل RNA-seq، فرمت‌های SAM و BAM، مرور لینوکس و مینی‌پروژهٔ گروهی با FastQC، Trimmomatic، HISAT2، samtools و featureCounts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch18">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۲ (هم‌ترازی)، اسلایدهای ۳۹ تا ۵۱" data-motif="ACGTTAGCATCGGATTACAGCT">
+  <h1>خط لولهٔ RNA-seq و مینی‌پروژه</h1>
+  <p class="lead">یک دستگاه توالی‌یابی فایلی پر از میلیون‌ها خوانش کوتاه به تو می‌دهد. این فایل چطور به جدولی تبدیل می‌شود که می‌گوید هر ژن چقدر بیان شده؟ جواب یک زنجیره از ابزارهاست که خروجی هر کدام ورودی بعدی است. در این فصل زنجیره را می‌شناسی و در مینی‌پروژه خودت آن را اجرا و توضیح می‌دهی.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>مسیر تحلیل را از نمونه تا نتیجه (با شرط «ژنوم مرجع داریم؟») <b>رسم کنی</b>.</li>
+    <li>مراحل RNA-seq را با ابزار، ورودی و خروجی هر مرحله <b>نام ببری</b>.</li>
+    <li>فرق FASTQ، SAM، BAM و VCF را <b>توضیح بدهی</b>.</li>
+    <li>دستورهای پایهٔ لینوکس را برای کار با فایل‌ها <b>اجرا کنی</b>.</li>
+    <li>هر پرچم دستورهای FastQC، Trimmomatic، HISAT2، samtools و featureCounts را <b>تفسیر کنی</b>.</li>
+    <li>به ده پرسش گزارش مینی‌پروژه با زبان خودت <b>پاسخ بدهی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch18:pre1">
+  <p class="q">اگر ژنوم مرجع گونه‌ای در دسترس نباشد، پس از کنترل کیفیت کدام مسیر را می‌رویم؟</p>
+  <ol class="opts"><li>هم‌ترازی (alignment) با ژنوم انسان</li><li data-correct>مونتاژ (assembly) خوانش‌ها و در صورت نیاز پر کردن شکاف‌ها</li><li>مستقیماً تحلیل بیان</li><li>توالی‌یابی دوباره با Sanger</li></ol>
+  <div class="explain">بدون مرجع، خوانش‌ها را از نو به هم می‌چسبانیم (مونتاژ) و شکاف‌ها را پر می‌کنیم. با مرجع، آن‌ها را روی مرجع نگاشت می‌کنیم. حدس غلط ضرری ندارد.</div>
+</div>
+
+<h2 id="big-picture">از نمونه تا پاسخ زیستی</h2>
+
+<p>اسلاید ۳۹ کل مسیر را در یک نمودار نشان می‌دهد. نقطهٔ تصمیم اصلی این است که <b>ژنوم مرجع</b> داریم یا نه.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 380" width="740" role="img" aria-labelledby="dt-t">
+  <title id="dt-t">درخت تصمیم: آماده‌سازی نمونه، توالی‌یابی، کنترل کیفیت، آیا مرجع داریم؟ بله: هم‌ترازی و سه تحلیل؛ خیر: مونتاژ و پر کردن شکاف</title>
+  <defs><marker id="dt-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="12.5" text-anchor="middle" style="direction:rtl">
+    <rect x="290" y="10" width="160" height="30" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="370" y="30">آماده‌سازی نمونه</text>
+    <rect x="290" y="62" width="160" height="30" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="370" y="82">توالی‌یابی</text>
+    <rect x="290" y="114" width="160" height="30" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="370" y="134">کنترل کیفیت</text>
+    <rect x="270" y="170" width="200" height="40" rx="20" class="f-warn-soft s-warn" stroke-width="2"/><text x="370" y="195" font-weight="700">ژنوم مرجع موجود است؟</text>
+    <rect x="150" y="248" width="160" height="32" rx="8" class="f-ok-soft s-ok" stroke-width="2"/><text x="230" y="269" font-weight="700">هم‌ترازی (Alignment)</text>
+    <rect x="520" y="248" width="160" height="32" rx="8" class="f-info-soft s-info" stroke-width="2"/><text x="600" y="269" font-weight="700">مونتاژ (Assembly)</text>
+    <rect x="530" y="318" width="140" height="32" rx="8" class="f-surface s-line" stroke-width="1.5"/><text x="600" y="339">پر کردن شکاف</text>
+    <rect x="20" y="318" width="140" height="48" rx="8" class="f-surface s-line" stroke-width="1.5"/><text x="90" y="338">تشخیص تغییرات</text><text x="90" y="356" class="t-muted" style="direction:ltr">SNV, CNV, indel</text>
+    <rect x="180" y="318" width="100" height="48" rx="8" class="f-surface s-line" stroke-width="1.5"/><text x="230" y="338">یافتن قله</text><text x="230" y="356" class="t-muted">ChIP-seq</text>
+    <rect x="300" y="318" width="140" height="48" rx="8" class="f-surface s-line" stroke-width="1.5"/><text x="370" y="338">تحلیل بیان</text><text x="370" y="356" class="t-muted">سطح بیان، ژن‌های DE</text>
+    <text x="316" y="232" class="t-ok" font-weight="700">بله</text>
+    <text x="424" y="232" class="t-info" font-weight="700">خیر</text>
+  </g>
+  <g class="s-muted" stroke-width="1.8" marker-end="url(#dt-ah)">
+    <line x1="370" y1="40" x2="370" y2="60"/><line x1="370" y1="92" x2="370" y2="112"/><line x1="370" y1="144" x2="370" y2="168"/>
+    <line x1="300" y1="208" x2="240" y2="246"/><line x1="440" y1="208" x2="590" y2="246"/>
+    <line x1="600" y1="280" x2="600" y2="316"/>
+    <line x1="200" y1="282" x2="100" y2="316"/><line x1="230" y1="282" x2="230" y2="316"/><line x1="260" y1="282" x2="350" y2="316"/>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۸.۱</b> — مسیر تحلیل. در شاخهٔ «بله»، پس از هم‌ترازی سه نوع تحلیل پایین‌دستی داریم: تغییرات ژنتیکی، قله‌یابی و تحلیل بیان.</figcaption>
+</figure>
+
+<p>سه خانوادهٔ تحلیل پایین‌دستی (اسلاید ۳۹):</p>
+<ul>
+  <li><b>تشخیص تغییرات (Variation detection):</b> یافتن SNV (تغییر تک‌نوکلئوتیدی)، CNV (تغییر تعداد نسخه) و indel (درج و حذف).</li>
+  <li><b>یافتن قله (Peak finding):</b> در ChIP-seq جاهایی از ژنوم را پیدا می‌کنیم که خوانش‌ها در آن‌ها انباشته شده‌اند؛ محل اتصال فاکتورهای رونویسی و «کد هیستونی».</li>
+  <li><b>تحلیل بیان (Expression analysis):</b> سطح بیان هر ژن و ژن‌های با بیان متفاوت (differentially expressed، DE) بین دو شرایط.</li>
+</ul>
+
+<aside class="callout analogy">
+  <p>خط لوله مثل یک <b>pipeline CI/CD</b> است: هر مرحله ورودی را می‌گیرد، خروجی تولید می‌کند و مرحلهٔ بعد فقط به همان خروجی نیاز دارد. اگر مرحله‌ای خراب باشد (مثلاً کیفیت بد)، خطا تا آخر منتقل می‌شود.</p>
+</aside>
+
+<h2 id="rnaseq-workflow">مراحل RNA-seq</h2>
+
+<p>در RNA-seq (اسلاید ۴۰) RNA یک نمونه را توالی‌یابی می‌کنیم تا ببینیم هر ژن چقدر خوانده می‌شود. مراحل و ابزارها:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 700 500" width="700" role="img" aria-labelledby="wf-t">
+  <title id="wf-t">خط لولهٔ RNA-seq: دستگاه، FastQC، Trimmomatic، HISAT2، featureCounts، DESeq2، GO/KEGG و نوع فایل بین مراحل</title>
+  <defs><marker id="wf-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="13" text-anchor="middle" style="direction:rtl">
+    <rect x="200" y="20" width="300" height="38" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="350" y="44">توالی‌یاب Illumina</text>
+    <rect x="200" y="90" width="300" height="38" rx="8" class="f-accent-soft s-accent" stroke-width="1.5"/><text x="350" y="114">کنترل کیفیت: FastQC</text>
+    <rect x="200" y="160" width="300" height="38" rx="8" class="f-accent-soft s-accent" stroke-width="1.5"/><text x="350" y="184">تریم: Trimmomatic</text>
+    <rect x="200" y="230" width="300" height="38" rx="8" class="f-warn-soft s-warn" stroke-width="1.5"/><text x="350" y="254">نگاشت: HISAT2 یا STAR</text>
+    <rect x="200" y="300" width="300" height="38" rx="8" class="f-warn-soft s-warn" stroke-width="1.5"/><text x="350" y="324">شمارش: featureCounts</text>
+    <rect x="200" y="370" width="300" height="38" rx="8" class="f-info-soft s-info" stroke-width="1.5"/><text x="350" y="394">بیان تفاضلی: DESeq2</text>
+    <rect x="200" y="440" width="300" height="38" rx="8" class="f-ok-soft s-ok" stroke-width="1.5"/><text x="350" y="464">تحلیل عملکردی: GO / KEGG</text>
+  </g>
+  <g class="s-muted" stroke-width="1.8" marker-end="url(#wf-ah)">
+    <line x1="350" y1="58" x2="350" y2="88"/><line x1="350" y1="128" x2="350" y2="158"/><line x1="350" y1="198" x2="350" y2="228"/>
+    <line x1="350" y1="268" x2="350" y2="298"/><line x1="350" y1="338" x2="350" y2="368"/><line x1="350" y1="408" x2="350" y2="438"/>
+  </g>
+  <g font-size="12" class="mono" text-anchor="middle" style="direction:ltr">
+    <rect x="530" y="66" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="81">FASTQ</text>
+    <rect x="530" y="136" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="151">FASTQ + report</text>
+    <rect x="530" y="206" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="221">clean FASTQ</text>
+    <rect x="530" y="276" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="291">SAM / BAM</text>
+    <rect x="530" y="346" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="361">count table</text>
+    <rect x="530" y="416" width="130" height="22" rx="11" class="f-surface s-line"/><text x="595" y="431">DE gene list</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۸.۲</b> — ستون راست نوع فایلی است که از مرحله به مرحلهٔ بعد می‌رود. خروجی هر مرحله ورودی بعدی است.</figcaption>
+</figure>
+
+<table>
+  <thead><tr><th>مرحله</th><th>ابزار</th><th>ورودی</th><th>خروجی</th></tr></thead>
+  <tbody>
+    <tr><td>توالی‌یابی</td><td>Illumina</td><td>RNA آماده‌شده</td><td><code>FASTQ</code></td></tr>
+    <tr><td>کنترل کیفیت</td><td>FastQC</td><td><code>FASTQ</code></td><td>گزارش HTML</td></tr>
+    <tr><td>تریم</td><td>Trimmomatic</td><td><code>FASTQ</code></td><td>FASTQ پاک‌شده</td></tr>
+    <tr><td>نگاشت</td><td>HISAT2 / STAR</td><td>FASTQ پاک‌شده + مرجع</td><td><code>SAM</code> / <code>BAM</code></td></tr>
+    <tr><td>شمارش</td><td>featureCounts</td><td><code>BAM</code> + <code>GTF</code></td><td>جدول شمارش</td></tr>
+    <tr><td>بیان تفاضلی</td><td>DESeq2</td><td>جدول شمارش</td><td>فهرست ژن‌های DE</td></tr>
+    <tr><td>تحلیل عملکردی</td><td>GO / KEGG</td><td>فهرست ژن‌ها</td><td>مسیرها و عملکردهای غنی‌شده</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-id="ch18:q-flow">
+  <p class="q">ورودی ابزار featureCounts چیست؟</p>
+  <ol class="opts"><li>FASTQ خام</li><li>فایل FASTA ژنوم</li><li data-correct>فایل BAM هم‌ترازی‌ها و یک فایل حاشیه‌نویسی GTF</li><li>فهرست ژن‌های DE</li></ol>
+  <div class="explain">featureCounts می‌شمارد چند خوانش روی هر ژن افتاده‌اند؛ برای این کار هم موقعیت خوانش‌ها (BAM) و هم موقعیت ژن‌ها (GTF) لازم است.</div>
+</div>
+
+<h2 id="formats">زنجیرهٔ فرمت‌ها: FASTQ تا VCF</h2>
+
+<p>اسلاید ۴۱ زنجیرهٔ فایل‌ها را نشان می‌دهد (جزئیات فرمت‌ها در فصل ۱۲):</p>
+
+<p style="text-align:center"><code>sequencer → FASTQ → (BWA/HISAT2) → SAM → (samtools) → BAM → (bcftools) → VCF</code></p>
+
+<div class="compare">
+  <div><h4>SAM</h4><p>فایل <b>متنی</b>؛ هر خط یک خوانش هم‌تراز‌شده (موقعیت، CIGAR، کیفیت). برای انسان قابل خواندن ولی حجیم.</p></div>
+  <div><h4>BAM</h4><p>همان SAM به صورت <b>باینری فشرده</b>؛ معمولاً مرتب‌شده (sorted) و ایندکس‌شده (indexed) تا دسترسی سریع به یک ناحیه ممکن شود.</p></div>
+</div>
+
+<p>VCF فهرست تغییرات (واریانت‌ها) نسبت به مرجع است و با bcftools از BAM به دست می‌آید. در مینی‌پروژهٔ ما تا BAM و جدول شمارش پیش می‌رویم.</p>
+
+<h2 id="linux">لینوکس برای کسی که هرگز ترمینال ندیده</h2>
+
+<p>اسلاید ۴۲ چهار نیاز را اعلام می‌کند: شناخت پایهٔ لینوکس، نوشتن اسکریپت bash ساده، آشنایی با سیستم فایل و مجوزها، و دانلود و نصب ابزار از خط فرمان. اسلاید ۴۳ دو منبع خودآموزی می‌دهد: <span class="ltr">ubuntu.com/tutorials/command-line-for-beginners</span> و <span class="ltr">hackr.io/blog/basic-linux-commands</span>. این بخش حداقل لازم است.</p>
+
+<p>ترمینال جایی است که دستور متنی می‌نویسی و برنامه اجرا می‌شود. ساختار هر دستور: <code>برنامه [پرچم‌ها] [ورودی‌ها]</code>. پرچم‌ها با <code>-</code> شروع می‌شوند.</p>
+
+<table>
+  <thead><tr><th>دستور</th><th>کار</th><th>مثال</th></tr></thead>
+  <tbody>
+    <tr><td><code>pwd</code></td><td>نشان دادن پوشهٔ فعلی</td><td><code>pwd</code></td></tr>
+    <tr><td><code>ls</code></td><td>فهرست فایل‌ها (<code>-l</code> با جزئیات)</td><td><code>ls -l data/</code></td></tr>
+    <tr><td><code>cd</code></td><td>رفتن به پوشه (<code>..</code> یعنی یک پوشه بالاتر)</td><td><code>cd data</code></td></tr>
+    <tr><td><code>mkdir</code></td><td>ساختن پوشه (<code>-p</code> مسیر تو‌در‌تو)</td><td><code>mkdir -p data HISAT2</code></td></tr>
+    <tr><td><code>cp</code></td><td>کپی</td><td><code>cp a.txt b.txt</code></td></tr>
+    <tr><td><code>mv</code></td><td>جابه‌جایی یا تغییر نام</td><td><code>mv a.txt data/</code></td></tr>
+    <tr><td><code>rm</code></td><td>حذف (بدون سطل زباله! <code>-r</code> برای پوشه)</td><td><code>rm old.txt</code></td></tr>
+    <tr><td><code>cat</code> / <code>head</code> / <code>less</code></td><td>نمایش فایل / چند خط اول / مرور صفحه‌به‌صفحه</td><td><code>head -n 8 data/demo.fastq</code></td></tr>
+    <tr><td><code>wc -l</code></td><td>شمارش خطوط</td><td><code>wc -l data/demo.fastq</code></td></tr>
+    <tr><td><code>grep</code></td><td>جستجوی الگو در خطوط</td><td><code>grep "ACGT" file.txt</code></td></tr>
+    <tr><td><code>wget</code></td><td>دانلود از اینترنت</td><td><code>wget URL</code></td></tr>
+    <tr><td><code>tar -xzf</code></td><td>باز کردن آرشیو <code>.tar.gz</code> (x استخراج، z فشردهٔ gzip، f فایل)</td><td><code>tar -xzf a.tar.gz -C HISAT2/</code></td></tr>
+    <tr><td><code>gunzip</code></td><td>باز کردن <code>.gz</code></td><td><code>gunzip a.gtf.gz</code></td></tr>
+    <tr><td><code>chmod</code></td><td>تغییر مجوز (مثلاً <code>+x</code> اجرایی کردن)</td><td><code>chmod +x run.sh</code></td></tr>
+  </tbody>
+</table>
+
+<h3>پایپ و تغییر مسیر خروجی</h3>
+
+<ul>
+  <li><code>|</code> (پایپ) خروجی یک دستور را به ورودی دستور بعدی می‌دهد.</li>
+  <li><code>&gt;</code> خروجی را در فایل می‌نویسد (فایل را بازنویسی می‌کند) و <code>&gt;&gt;</code> به انتهای فایل اضافه می‌کند.</li>
+</ul>
+
+<pre data-lang="BASH"><code><span class="c"># تعداد خوانش‌ها = تعداد خطوط ÷ ۴</span>
+wc -l data/demo.fastq
+
+<span class="c"># ۸ خط اول فایل را ذخیره کن</span>
+head -n 8 data/demo.fastq &gt; first2.txt
+
+<span class="c"># تعداد خطوطی که ACGT دارند</span>
+grep ACGT data/demo.fastq | wc -l</code></pre>
+
+<div class="fill" data-answer="1000|۱۰۰۰" data-id="ch18:f-wc">
+  <p class="q">خروجی <code>wc -l demo.fastq</code> برابر ۴۰۰۰ است. فایل چند خوانش دارد؟ <input class="blank" type="text"></p>
+  <div class="explain">هر رکورد FASTQ چهار خط دارد: <code>4000 ÷ 4 = 1000</code>.</div>
+</div>
+
+<h3>مجوزها، اجرای برنامه و نصب</h3>
+
+<p><code>ls -l</code> برای هر فایل رشته‌ای مثل <code>-rwxr-xr--</code> نشان می‌دهد: اولین حرف نوع (<code>-</code> فایل، <code>d</code> پوشه) و بعد سه گروه سه‌تایی برای صاحب فایل، گروه و بقیه. <code>r</code> خواندن، <code>w</code> نوشتن، <code>x</code> اجرا. برای اجرای یک اسکریپت باید <code>x</code> داشته باشد: <code>chmod +x run.sh</code> و بعد <code>./run.sh</code>.</p>
+
+<p>برنامه‌های جاوا (مثل Trimmomatic) با <code>java -jar فایل.jar</code> اجرا می‌شوند و جاوا باید نصب باشد. ابزارهای دیگر معمولاً با مدیر بسته نصب می‌شوند: <code>sudo apt install fastqc</code> در اوبونتو یا <code>conda install -c bioconda hisat2 samtools subread</code> (featureCounts بخشی از بستهٔ subread است). ایدهٔ هر دو مثل <code>pip install</code> است: مدیر بسته ابزار و وابستگی‌هایش را از یک مخزن می‌آورد.</p>
+
+<aside class="callout pitfall">
+  <p><code>rm</code> فایل را برای همیشه پاک می‌کند و <code>&gt;</code> فایل موجود را بی‌خبر بازنویسی می‌کند. قبل از اجرا، مسیر را با <code>pwd</code> و <code>ls</code> چک کن. همچنین حروف بزرگ و کوچک مهم‌اند: <code>Data</code> با <code>data</code> فرق دارد.</p>
+</aside>
+
+<h2 id="project">مینی‌پروژه: هدف و داده</h2>
+
+<p>در اسلایدهای ۴۴ تا ۴۷ پروژه معرفی می‌شود. گروه‌های <b>دو نفره</b> یک خط لولهٔ ساده RNA-seq را اجرا می‌کنند. ورودی: <code>demo.fastq</code>، یک فایل کوچک RNA-seq تک‌انتها (single-end). هدف نهایی: <b>جدول تعداد خوانش‌های منتسب به ژن‌های مختلف</b>.</p>
+
+<aside class="callout exam">
+  <p>تأکید اسلاید ۴۷: هدف فقط اجرای دستورها نیست. باید بتوانی توضیح بدهی هر دستور چه می‌کند و چرا در این مرحله از خط لوله استفاده می‌شود؛ همچنین ورودی، خروجی، پارامترها و نتایج هر مرحله.</p>
+</aside>
+
+<p>یادآوری FASTQ (اسلاید ۴۵؛ جزئیات در فصل ۱۲): هر رکورد ۴ خط دارد: خط ۱ با <code>@</code> و شناسه، خط ۲ توالی، خط ۳ با <code>+</code> (و گاهی تکرار شناسه)، خط ۴ کیفیت‌ها (مقیاس Phred). کیفیت <code>Q = −10·log10(p)</code> و رمزگذاری استاندارد Phred+33 است؛ مثلاً Q = ۴۰ یعنی یک خطا در ۱۰٬۰۰۰.</p>
+
+<p>پوشه‌ها را آماده کن:</p>
+<pre data-lang="BASH"><code>mkdir -p data HISAT2
+<span class="c"># demo.fastq را در پوشهٔ data بگذار</span></code></pre>
+
+<h2 id="step-fastqc">گام ۱: کنترل کیفیت با FastQC</h2>
+
+<pre data-lang="BASH"><code>fastqc data/demo.fastq -o data/</code></pre>
+
+<table>
+  <thead><tr><th>بخش</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><code>fastqc</code></td><td>برنامهٔ کنترل کیفیت</td></tr>
+    <tr><td><code>data/demo.fastq</code></td><td>فایل ورودی</td></tr>
+    <tr><td><code>-o data/</code></td><td>پوشهٔ خروجی (باید از قبل وجود داشته باشد)؛ گزارش <code>demo_fastqc.html</code> و فایل zip ساخته می‌شود</td></tr>
+  </tbody>
+</table>
+
+<p>FastQC بررسی می‌کند: کیفیت هر موقعیت خوانش (per-base quality)، توزیع طول خوانش‌ها، محتوای GC، توالی‌های تکراری یا بیش‌ازحد فراوان (over-represented) که ممکن است آلودگی یا آداپتور باشند. این مرحله فقط <b>گزارش</b> می‌دهد و داده را تغییر نمی‌دهد.</p>
+
+<h2 id="step-trim">گام ۲: تریم با Trimmomatic</h2>
+
+<pre data-lang="BASH"><code>java -jar trimmomatic-0.39.jar SE -threads 4 -phred33 data/demo.fastq data/demo_trimmed.fastq TRAILING:10</code></pre>
+
+<table>
+  <thead><tr><th>بخش</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><code>java -jar trimmomatic-0.39.jar</code></td><td>اجرای نسخهٔ ۰٫۳۹ که یک برنامهٔ جاوا است</td></tr>
+    <tr><td><code>SE</code></td><td>حالت single-end (برای paired-end <code>PE</code> است)</td></tr>
+    <tr><td><code>-threads 4</code></td><td>استفاده از ۴ رشتهٔ پردازشی</td></tr>
+    <tr><td><code>-phred33</code></td><td>کدگذاری کیفیت‌ها Phred+33 است</td></tr>
+    <tr><td><code>data/demo.fastq</code> و <code>data/demo_trimmed.fastq</code></td><td>ورودی و خروجی</td></tr>
+    <tr><td><code>TRAILING:10</code></td><td>از انتهای ۳′ خوانش بازها را تا وقتی کیفیتشان کمتر از ۱۰ است حذف می‌کند</td></tr>
+  </tbody>
+</table>
+
+<p>کیفیت ۱۰ یعنی احتمال خطا ۱۰٪ (<code>p = 10^(−10/10) = 0.1</code>). چون کیفیت معمولاً به انتهای خوانش بدتر می‌شود، بریدن انتهای بد، خوانش‌های تمیزتری می‌دهد.</p>
+
+<div data-widget="fastq-parse"></div>
+
+<div class="quiz" data-id="ch18:q-trail">
+  <p class="q">با <code>TRAILING:10</code> روی خوانشی که کیفیت چهار بازِ آخرش ۲، ۵، ۹، ۳۰ است، چه می‌شود؟</p>
+  <ol class="opts"><li>هر چهار باز حذف می‌شوند</li><li>فقط بازهای با کیفیت ۲، ۵ و ۹ حذف می‌شوند</li><li data-correct>هیچ بازی حذف نمی‌شود</li><li>کل خوانش دور ریخته می‌شود</li></ol>
+  <div class="explain">برش از انتهای خوانش شروع می‌شود و با اولین بازِ با کیفیت ≥ ۱۰ می‌ایستد. چون بازِ آخر Q = ۳۰ است، هیچ بازی حذف نمی‌شود. اگر ترتیب برعکس بود (۳۰، ۳، ۵، ۲) سه باز آخر حذف می‌شد.</div>
+</div>
+
+<h2 id="step-hisat">گام ۳: نگاشت با HISAT2</h2>
+
+<p>اول ایندکس ژنوم انسان (GRCh38) را دانلود و باز کنیم. این ایندکس همان ساختار FM-index فصل ۱۷ است که از قبل ساخته شده.</p>
+
+<pre data-lang="BASH"><code>wget https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz
+tar -xzf grch38_genome.tar.gz -C HISAT2/</code></pre>
+
+<pre data-lang="BASH"><code>hisat2 -q --rna-strandness R -x HISAT2/grch38/genome -U data/demo_trimmed.fastq -S data/demo.sam</code></pre>
+
+<table>
+  <thead><tr><th>پرچم</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><code>-q</code></td><td>ورودی فایل FASTQ است</td></tr>
+    <tr><td><code>--rna-strandness R</code></td><td>کتابخانه strand-specific و از نوع reverse است؛ جهت خوانش نسبت به رشتهٔ RNA معکوس است</td></tr>
+    <tr><td><code>-x HISAT2/grch38/genome</code></td><td>پیشوند فایل‌های ایندکس (<code>genome.1.ht2</code> و …)، نه یک فایل خاص</td></tr>
+    <tr><td><code>-U data/demo_trimmed.fastq</code></td><td>خوانش‌های unpaired (تک‌انتها)؛ برای paired از <code>-1</code> و <code>-2</code></td></tr>
+    <tr><td><code>-S data/demo.sam</code></td><td>فایل خروجی SAM</td></tr>
+  </tbody>
+</table>
+
+<p>HISAT2 «spliced aligner» است؛ می‌تواند خوانشی را که از دو اگزون عبور می‌کند (فصل ۶) و در DNA مرجع یک اینترون در وسطش است، به‌درستی نگاشت کند. در پایان، روی صفحه خلاصهٔ نگاشت (مثل <i>overall alignment rate</i>) چاپ می‌شود.</p>
+
+<h2 id="step-samtools">گام ۴: مرتب‌سازی و ایندکس با samtools</h2>
+
+<pre data-lang="BASH"><code>samtools sort -o data/demo.sorted.bam data/demo.sam
+samtools index data/demo.sorted.bam</code></pre>
+
+<table>
+  <thead><tr><th>دستور</th><th>کار</th></tr></thead>
+  <tbody>
+    <tr><td><code>samtools sort -o خروجی ورودی</code></td><td>خوانش‌ها را بر اساس موقعیت در ژنوم مرتب می‌کند و خروجی را BAM (فشردهٔ باینری) می‌نویسد</td></tr>
+    <tr><td><code>samtools index</code></td><td>فایل ایندکس <code>demo.sorted.bam.bai</code> می‌سازد تا بدون خواندن کل فایل به یک ناحیه برسیم</td></tr>
+  </tbody>
+</table>
+
+<h2 id="step-counts">گام ۵: شمارش با featureCounts</h2>
+
+<pre data-lang="BASH"><code>wget http://ftp.ensembl.org/pub/release-106/gtf/homo_sapiens/Homo_sapiens.GRCh38.106.gtf.gz
+gunzip Homo_sapiens.GRCh38.106.gtf.gz
+featureCounts -s 2 -a Homo_sapiens.GRCh38.106.gtf -o data/demo_counts.txt data/demo.sorted.bam</code></pre>
+
+<table>
+  <thead><tr><th>پرچم</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><code>-s 2</code></td><td>جهت‌دار معکوس (reversely stranded)؛ با <code>R</code> در HISAT2 سازگار است. (۰ بدون جهت، ۱ جهت‌دار)</td></tr>
+    <tr><td><code>-a ...gtf</code></td><td>فایل حاشیه‌نویسی: موقعیت ژن‌ها و اگزون‌ها</td></tr>
+    <tr><td><code>-o data/demo_counts.txt</code></td><td>جدول شمارش خروجی</td></tr>
+    <tr><td><code>data/demo.sorted.bam</code></td><td>BAM ورودی</td></tr>
+  </tbody>
+</table>
+
+<p>خروجی دو فایل است: جدول شمارش <code>demo_counts.txt</code> (ستون‌های Geneid، Chr، Start، End، Strand، Length و یک ستون شمارش برای هر BAM) و فایل <code>demo_counts.txt.summary</code> که می‌گوید چند خوانش شمرده شد (Assigned) و چند خوانش به چه دلیل شمرده نشد (مثلاً بدون ویژگی، ناحیهٔ مبهم، نگاشت‌نشده).</p>
+
+<p>فرمت GTF مثل GFF نُه ستون دارد و ستون آخرش صفت‌هایی مثل <code>gene_id</code> است؛ featureCounts به‌طور پیش‌فرض اگزون‌ها را می‌شمارد و نتایج را بر حسب <code>gene_id</code> جمع می‌کند.</p>
+
+<div class="fill" data-answer="reverse|reversely stranded|معکوس" data-id="ch18:f-s2">
+  <p class="q">در featureCounts گزینهٔ <code>-s 2</code> با <code>--rna-strandness R</code> در HISAT2 سازگار است چون هر دو جهت‌دار ____ هستند. <input class="blank" type="text"></p>
+  <div class="explain">R یعنی reverse و <code>-s 2</code> یعنی reversely stranded؛ باید با هم یکی باشند وگرنه شمارش به ژن رشتهٔ مقابل می‌رود.</div>
+</div>
+
+<h2 id="report">ده پرسش گزارش</h2>
+
+<p>اسلاید ۵۱ ده سؤال تحلیلی دارد. جواب نهایی را خودت با زبان خودت بنویس؛ اینجا مفهوم هر سؤال و نکاتی که جواب خوب باید پوشش بدهد آمده.</p>
+
+<details class="think"><summary>۱. فایل FASTQ چه اطلاعاتی ذخیره می‌کند؟</summary><div><p>برای هر خوانش چهار خط: شناسه (<code>@</code>)، توالی بازها، جداکنندهٔ <code>+</code>، و رشتهٔ کیفیت. برخلاف FASTA، کیفیت هر باز هم ذخیره می‌شود. جواب خوب مثالی از یک رکورد می‌آورد.</p></div></details>
+
+<details class="think"><summary>۲. تفاوت توالی و امتیاز کیفیت چیست؟</summary><div><p>توالی می‌گوید دستگاه چه بازی خوانده؛ کیفیت می‌گوید چقدر به آن باز اطمینان دارد. هر باز یک کاراکتر کیفیت دارد، پس طول دو خط برابر است. <code>Q = −10·log10(p)</code>؛ Q = ۲۰ یعنی خطای ۱٪ و Q = ۳۰ یعنی ۰٫۱٪. کدگذاری Phred+33: ASCII منهای ۳۳.</p></div></details>
+
+<details class="think"><summary>۳. FastQC چه مشکلاتی را بررسی می‌کند؟</summary><div><p>افت کیفیت در انتهای خوانش‌ها، توزیع نامعمول طول، محتوای GC نامتعارف (نشانهٔ آلودگی)، تکرار زیاد توالی‌ها، توالی‌های over-represented و آداپتور. جواب خوب بگوید هر مورد چه چیزی را درباره نمونه یا آزمایش نشان می‌دهد.</p></div></details>
+
+<details class="think"><summary>۴. حداقل دو نمودار یا شاخص گزارش را تفسیر کنید.</summary><div><p>مثلاً «کیفیت هر موقعیت»: جعبه‌ها در ناحیهٔ سبز (Q بالا) یعنی خوب و افتادن به ناحیهٔ قرمز در انتها یعنی نیاز به تریم. «محتوای GC»: اگر منحنی با توزیع نظری فاصله دارد، احتمال آلودگی. نمودار را ببین، عدد بخوان و نتیجه‌گیری عملی (تریم کنم یا نه) بنویس.</p></div></details>
+
+<details class="think"><summary>۵. دستور TRAILING:10 دقیقاً چه تغییری در خوانش‌ها ایجاد می‌کند؟</summary><div><p>از انتهای ۳′ هر خوانش، بازهای با کیفیت کمتر از ۱۰ را یکی‌یکی برش می‌دهد تا به بازی با Q ≥ ۱۰ برسد و بعد می‌ایستد. بازهای درونی با کیفیت پایین حذف نمی‌شوند. خوانش‌ها کوتاه‌تر می‌شوند و ممکن است طول صفر پیدا کنند. شاخص را با FastQC قبل و بعد مقایسه کن.</p></div></details>
+
+<details class="think"><summary>۶. چرا باید خوانش‌ها را روی ژنوم مرجع نگاشت کنیم؟</summary><div><p>خوانش‌ها کوتاه‌اند و خودشان نمی‌گویند از کدام ژن یا کدام مکان آمده‌اند. با نگاشت، موقعیت هر خوانش مشخص می‌شود و می‌توانیم تعداد خوانش‌های هر ژن را بشماریم. (فصل ۱۵ مسئلهٔ نگاشت را توضیح داد.) به نقش ایندکس FM برای سرعت هم اشاره کن.</p></div></details>
+
+<details class="think"><summary>۷. HISAT2 چه چیزی تولید می‌کند؟</summary><div><p>فایل SAM (و خلاصهٔ نگاشت روی صفحه). SAM برای هر خوانش نام، FLAG، کروموزوم، موقعیت، MAPQ، CIGAR و غیره دارد. جواب خوب بگوید چرا بعد از آن به BAM مرتب‌شده تبدیل می‌کنیم.</p></div></details>
+
+<details class="think"><summary>۸. GTF چه اطلاعاتی دارد و چرا برای featureCounts ضروری است؟</summary><div><p>GTF موقعیت و جهت ویژگی‌ها (ژن، رونوشت، اگزون) را فهرست می‌کند. featureCounts با مقایسهٔ موقعیت خوانش (BAM) با موقعیت ژن‌ها (GTF) می‌فهمد هر خوانش مال کدام ژن است. نکته: نام کروموزوم‌ها در BAM و GTF باید یکسان باشد (مثلاً <code>1</code> یا <code>chr1</code>).</p></div></details>
+
+<details class="think"><summary>۹. تفاوت «تعداد خوانش‌های نگاشت‌شده» با «تعداد خوانش‌های شمارش‌شده برای ژن‌ها» چیست؟</summary><div><p>نگاشت‌شده: خوانش‌هایی که HISAT2 برایشان جایی در ژنوم پیدا کرد (حتی اینترون یا بین‌ژنی). شمارش‌شده: فقط آن‌هایی که featureCounts به یک ژن نسبت داد. خوانش‌های چندنگاشتی، مبهم (روی چند ژن) و بدون ویژگی شمرده نمی‌شوند؛ پس معمولاً عدد دوم کوچک‌تر است. جواب خوب اعداد را از فایل summary مثال بزند.</p></div></details>
+
+<details class="think"><summary>۱۰. اگر فایل ورودی بزرگ‌تر شود، کدام مراحل ممکن است زمان یا حافظهٔ بیشتری بخواهند؟</summary><div><p>زمان تقریباً با تعداد خوانش‌ها بالا می‌رود: نگاشت HISAT2 گران‌ترین است؛ مرتب‌سازی BAM به حافظه و دیسک نیاز دارد؛ FastQC و Trimmomatic و featureCounts هم بیشتر طول می‌کشند. حافظهٔ HISAT2 عمدتاً به اندازهٔ ایندکس بستگی دارد (فصل ۱۷). دانلود و فضای دیسک را هم فراموش نکن.</p></div></details>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>مسیر کلی: آماده‌سازی نمونه ← توالی‌یابی ← کنترل کیفیت ← (مرجع دارد؟) بله: هم‌ترازی؛ خیر: مونتاژ و پر کردن شکاف.</li>
+    <li>تحلیل‌های پایین‌دستی: تغییرات (SNV, CNV, indel)، قله‌یابی (ChIP-seq)، تحلیل بیان (DE).</li>
+    <li>RNA-seq: FastQC ← Trimmomatic ← HISAT2/STAR ← featureCounts ← DESeq2 ← GO/KEGG.</li>
+    <li>فایل‌ها: FASTQ ← clean FASTQ ← SAM/BAM ← جدول شمارش ← فهرست ژن‌های DE.</li>
+    <li>SAM متنی است و BAM باینری فشرده، مرتب و ایندکس‌شده؛ VCF فهرست واریانت‌هاست.</li>
+    <li>لینوکس: <code>pwd, ls, cd, mkdir, cp, mv, rm, head, wc -l, grep, |, &gt;, wget, tar -xzf, gunzip, chmod</code>.</li>
+    <li>Trimmomatic: <code>SE -threads 4 -phred33 ... TRAILING:10</code> بازهای انتهایی با Q &lt; ۱۰ را حذف می‌کند.</li>
+    <li>HISAT2: <code>-q --rna-strandness R -x پیشوند -U ورودی -S خروجی</code> و featureCounts با <code>-s 2</code> سازگار است.</li>
+    <li>هدف پروژه: جدول شمارش ژن‌ها و توضیح منطق، ورودی/خروجی و پارامتر هر مرحله.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>سؤال‌ها شامل خواندن دستور و مرتب کردن مراحل است. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>پایتون، Biopython و دادهٔ GEO · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="خواندن و نوشتن FASTA و FASTQ با Biopython و SeqIO، فیلتر کیفیت، k-mer، و دریافت دادهٔ بیان ژن از NCBI GEO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch13">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۳ (اسلایدهای ۷۹ تا ۸۵ و ۹۹ تا ۱۰۴)" data-motif="ATGGCCATTGTAATGGGCCGCTGAA">
+  <h1>پایتون، Biopython و دادهٔ GEO</h1>
+  <p class="lead">فایل FASTQ یک میلیون خوانش دارد و تو فقط خوانش‌هایی با میانگین کیفیت حداقل ۳۰ را می‌خواهی. این کار با چند خط پایتون ممکن است، به شرطی که فرمت‌ها را خودت از صفر تجزیه نکنی. بعد هم یاد می‌گیری دادهٔ واقعی بیان ژن را از کجا بگیری.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>با <code>SeqIO.parse</code> فایل FASTA و FASTQ را <b>بخوانی</b> و به <code>id</code>، <code>seq</code> و کیفیت‌ها <b>دسترسی پیدا کنی</b>.</li>
+    <li>میانگین کیفیت هر خوانش را <b>حساب کنی</b> و خوانش‌های کم‌کیفیت را <b>فیلتر</b> و با <code>SeqIO.write</code> ذخیره کنی.</li>
+    <li>تابع <code>process_fasta</code> را خط‌به‌خط <b>توضیح بدهی</b> و درصد GC و تعداد N را برای هر رکورد به‌دست آوری.</li>
+    <li>متدهای <code>Seq</code> را به‌کار ببری و k-merها را <b>فهرست کنی</b>.</li>
+    <li>خروجی قطعه‌کدهای کوتاه پایتون را <b>پیش‌بینی کنی</b>.</li>
+    <li>پنج گام دریافت دادهٔ RNA-seq از NCBI GEO را <b>نام ببری</b> و GSE، GSM، GPL و GDS را از هم <b>تشخیص بدهی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch13:pre1">
+  <p class="q">اگر <code>record.letter_annotations["phred_quality"]</code> برابر <code>[40, 40, 20]</code> باشد، این اعداد چه هستند؟</p>
+  <ol class="opts">
+    <li>کدهای ASCII کاراکترهای کیفیت</li>
+    <li data-correct>خود مقدارهای Q، یک عدد برای هر باز</li>
+    <li>احتمال خطای هر باز</li>
+    <li>تعداد بازهای هر خوانش</li>
+  </ol>
+  <div class="explain">Biopython خودش عدد ۳۳ را کم کرده است. پس لازم نیست <code>ord(c) - 33</code> بنویسی؛ مقدار Q برای هر باز در لیست است.</div>
+</div>
+
+<h2 id="seqio">Biopython و SeqIO</h2>
+
+<p><span class="term" data-en="Biopython">Biopython</span> یک کتابخانهٔ پایتونی برای داده‌های زیستی است. بخش <code>SeqIO</code> آن فایل‌های FASTA، FASTQ، GenBank و فرمت‌های دیگر را با <b>یک الگوی واحد</b> می‌خواند و می‌نویسد. هر رکورد یک شیء با <code>.id</code> و <code>.seq</code> است. فرمت‌ها را در <a href="12-formats.html">فصل قبل</a> دیدی.</p>
+
+<pre data-lang="TERMINAL"><code>$ pip install biopython</code></pre>
+<pre data-lang="PYTHON"><code><span class="k">from</span> Bio <span class="k">import</span> SeqIO</code></pre>
+
+<figure class="fig">
+<svg viewBox="0 0 720 230" width="720" role="img" aria-labelledby="sr-t">
+  <title id="sr-t">ساختار یک رکورد SeqRecord: id، seq، description و letter_annotations</title>
+  <rect x="20" y="20" width="680" height="190" rx="12" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="360" y="46" font-size="14" font-weight="700" text-anchor="middle" class="mono">record  (SeqRecord)</text>
+  <g>
+    <rect x="50" y="64" width="190" height="56" rx="8" class="f-accent"/>
+    <text x="145" y="88" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">record.id</text>
+    <text x="145" y="108" font-size="12" text-anchor="middle" class="t-white mono">'read_001'</text>
+    <rect x="265" y="64" width="190" height="56" rx="8" class="f-info"/>
+    <text x="360" y="88" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">record.seq</text>
+    <text x="360" y="108" font-size="12" text-anchor="middle" class="t-white mono">Seq('GATTACAGGT')</text>
+    <rect x="480" y="64" width="190" height="56" rx="8" class="f-hl"/>
+    <text x="575" y="88" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">record.description</text>
+    <text x="575" y="108" font-size="12" text-anchor="middle" class="t-white mono">'read_001 lane1'</text>
+  </g>
+  <rect x="50" y="140" width="620" height="56" rx="8" class="f-warn-soft s-warn" stroke-width="1.5"/>
+  <text x="360" y="162" font-size="13" font-weight="700" text-anchor="middle" class="mono">record.letter_annotations["phred_quality"]</text>
+  <text x="360" y="184" font-size="12" text-anchor="middle" class="mono t-ink-2">[40, 40, 20, 30, 10, 2, 40, 40, 20, 30]   (فقط در FASTQ)</text>
+</svg>
+<figcaption><b>شکل ۱۳.۱</b> — هر رکورد، مستقل از فرمت فایل، همین اجزا را دارد. در FASTA فقط id، seq و description پر می‌شوند؛ در FASTQ کیفیت‌ها هم در <code>letter_annotations</code> هستند.</figcaption>
+</figure>
+
+<h2 id="fasta">خواندن FASTA</h2>
+
+<pre data-lang="PYTHON"><code><span class="k">from</span> Bio <span class="k">import</span> SeqIO
+
+<span class="k">for</span> record <span class="k">in</span> SeqIO.parse(<span class="s">"sequences.fasta"</span>, <span class="s">"fasta"</span>):
+    print(record.id)
+    print(record.seq)
+    print(len(record.seq))</code></pre>
+
+<p>خروجی برای رکورد seq1 فایل FASTA فصل قبل:</p>
+<pre data-lang="OUTPUT"><code>seq1
+ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG
+39
+chr_demo
+ACGTTAGCCATGGATCCTAGGCATTACG
+28</code></pre>
+
+<ul>
+  <li><code>SeqIO.parse</code> فایل را باز می‌کند و یک <b>iterator</b> از رکوردها برمی‌گرداند؛ یعنی رکوردها یکی‌یکی در حلقه خوانده می‌شوند و کل فایل در حافظه نمی‌ماند.</li>
+  <li><code>record.id</code>: شناسه از خط سرآیند (کلمهٔ اول بعد از <code>&gt;</code>).</li>
+  <li><code>record.seq</code>: خود توالی؛ با <code>len</code> طولش را می‌گیری.</li>
+  <li>فقط سه خط برای خواندن هزاران توالی؛ لازم نیست parser دستی بنویسی.</li>
+</ul>
+
+<aside class="callout pitfall">
+  <p>خروجی <code>parse</code> فقط <b>یک بار</b> قابل پیمایش است. اگر <code>records = SeqIO.parse(...)</code> را یک بار با <code>list(records)</code> یا حلقه مصرف کنی، بار دوم خالی است. اگر چند بار لازم داری، یک بار <code>records = list(SeqIO.parse(...))</code> بنویس.</p>
+</aside>
+
+<div class="quiz" data-id="ch13:s-fasta">
+  <p class="q">در <code>for record in SeqIO.parse("a.fasta", "fasta")</code>، متغیر <code>record.id</code> چیست؟</p>
+  <ol class="opts">
+    <li>کل خط سرآیند همراه <code>&gt;</code></li>
+    <li data-correct>شناسه از سرآیند (کلمهٔ اول بعد از <code>&gt;</code>)</li>
+    <li>طول توالی</li>
+    <li>شمارهٔ رکورد در فایل</li>
+  </ol>
+  <div class="explain">برای سرآیند <code>&gt;seq1 example gene</code> مقدار id برابر <code>seq1</code> است و description مقدار کامل <code>seq1 example gene</code> را دارد.</div>
+</div>
+
+<h2 id="fastq">خواندن FASTQ و کیفیت‌ها</h2>
+
+<pre data-lang="PYTHON"><code><span class="k">for</span> record <span class="k">in</span> SeqIO.parse(<span class="s">"reads.fastq"</span>, <span class="s">"fastq"</span>):
+    scores = record.letter_annotations[<span class="s">"phred_quality"</span>]
+    avg_quality = sum(scores) / len(scores)
+    print(record.id, avg_quality)</code></pre>
+<pre data-lang="OUTPUT"><code>read_001 29.0
+read_002 35.4</code></pre>
+
+<ul>
+  <li>فقط رشتهٔ قالب از <code>"fasta"</code> به <code>"fastq"</code> تغییر کرد.</li>
+  <li><code>letter_annotations["phred_quality"]</code> لیستی از Q‌هاست، یک عدد برای هر باز و به همان ترتیب توالی.</li>
+  <li>Biopython خودش <code>−33</code> را انجام داده و عددهای Q را می‌دهد.</li>
+  <li><code>sum(scores) / len(scores)</code> میانگین کیفیت یک خوانش است؛ پایهٔ کنترل کیفیت و trimming.</li>
+</ul>
+
+<div class="worked" data-title="میانگین کیفیت یک خوانش">
+  <p class="problem">یک رکورد FASTQ رشتهٔ کیفیت <code>5?I+</code> دارد. میانگین کیفیت چقدر است؟</p>
+  <ol class="steps">
+    <li>هر کاراکتر را تبدیل کن: <code>5</code> → 53−33 = 20؛ <code>?</code> → 30؛ <code>I</code> → 40؛ <code>+</code> → 10.</li>
+    <li>جمع: 20 + 30 + 40 + 10 = 100.</li>
+    <li>تقسیم بر تعداد بازها (۴): 100 / 4 = 25.0.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> میانگین Q برابر 25.0 است؛ پس این خوانش با آستانهٔ ۳۰ فیلتر می‌شود.</p>
+</div>
+
+<aside class="callout pitfall">
+  <p>میانگین Q یک میانگین روی مقیاس لگاریتمی است. دو باز Q40 و Q10 میانگین Q25 می‌دهند، ولی میانگین احتمال خطایشان (0.0001 و 0.1 → حدود 0.05) معادل Q13 است. برای فیلتر ساده همان میانگین Q کافی است، فقط بدان که تقریب است.</p>
+</aside>
+
+<div data-widget="fastq-parse"></div>
+
+<h2 id="write">نوشتن فایل: SeqRecord و SeqIO.write</h2>
+
+<pre data-lang="PYTHON"><code><span class="k">from</span> Bio.SeqRecord <span class="k">import</span> SeqRecord
+<span class="k">from</span> Bio.Seq <span class="k">import</span> Seq
+
+record = SeqRecord(Seq(<span class="s">"ATGGCCATT"</span>), id=<span class="s">"gene1"</span>, description=<span class="s">"example"</span>)
+SeqIO.write([record], <span class="s">"output.fasta"</span>, <span class="s">"fasta"</span>)</code></pre>
+<pre data-lang="FASTA"><code>&gt;gene1 example
+ATGGCCATT</code></pre>
+
+<ul>
+  <li><code>SeqRecord</code> = توالی + <code>id</code> + توضیح.</li>
+  <li><code>SeqIO.write(records, filename, format)</code> فهرستی (یا iterator) از رکوردها را با قالب دلخواه ذخیره می‌کند و سرآیند را <b>خودش می‌سازد</b>. مقدار برگشتی‌اش تعداد رکوردهای نوشته‌شده است.</li>
+  <li>کاربرد: فیلتر خوانش‌های کم‌کیفیت و ذخیرهٔ نتیجه برای مرحلهٔ بعد خط لوله.</li>
+</ul>
+
+<h2 id="pipeline">یک خط لولهٔ ساده: process_fasta</h2>
+
+<pre data-lang="PYTHON"><code><span class="k">def</span> process_fasta(filename):
+    results = []
+    <span class="k">for</span> record <span class="k">in</span> SeqIO.parse(filename, <span class="s">"fasta"</span>):
+        seq = str(record.seq)
+        gc = (seq.count(<span class="s">"G"</span>) + seq.count(<span class="s">"C"</span>)) / len(seq) * <span class="n">100</span>
+        n_count = seq.count(<span class="s">"N"</span>)
+        entry = {<span class="s">"id"</span>: record.id, <span class="s">"length"</span>: len(seq),
+                 <span class="s">"gc"</span>: gc, <span class="s">"n_count"</span>: n_count}
+        results.append(entry)
+    <span class="k">return</span> results</code></pre>
+
+<ol class="steps">
+  <li><code>results = []</code>: لیست خالی برای جمع‌کردن نتیجهٔ همهٔ رکوردها.</li>
+  <li><code>for record in SeqIO.parse(...)</code>: خواندن رکوردها یکی‌یکی.</li>
+  <li><code>seq = str(record.seq)</code>: تبدیل شیء <code>Seq</code> به رشتهٔ ساده.</li>
+  <li><code>gc = (...)/len(seq)*100</code>: درصد G و C.</li>
+  <li><code>n_count = seq.count("N")</code>: تعداد بازهای مبهم (N یعنی دستگاه نتوانسته باز را تشخیص بدهد).</li>
+  <li><code>entry = {...}</code>: یک دیکشنری با چهار کلید.</li>
+  <li><code>results.append(entry)</code> و <code>return results</code>: خروجی ساختاریافته، لیستی از دیکشنری‌ها.</li>
+</ol>
+
+<p>اگر فایل همان دو رکورد مثال قبل را داشته باشد:</p>
+<pre data-lang="PYTHON"><code>print(process_fasta(<span class="s">"sequences.fasta"</span>))
+<span class="c"># [{'id': 'seq1', 'length': 39, 'gc': 56.41025641025641, 'n_count': 0},</span>
+<span class="c">#  {'id': 'chr_demo', 'length': 28, 'gc': 50.0, 'n_count': 0}]</span></code></pre>
+
+<aside class="callout pitfall">
+  <p>اگر یک رکورد خالی باشد (<code>len(seq) == 0</code>) تقسیم بر صفر رخ می‌دهد. در کار واقعی قبل از تقسیم شرط <code>if len(seq) == 0: continue</code> بگذار. همچنین <code>seq.count("G")</code> حروف کوچک <code>g</code> را نمی‌شمارد؛ در صورت لزوم <code>seq.upper()</code> کن.</p>
+</aside>
+
+<figure class="fig">
+<svg viewBox="0 0 740 150" width="740" role="img" aria-labelledby="pp-t">
+  <title id="pp-t">خط لوله: خواندن FASTQ، فیلتر بر اساس میانگین کیفیت، نوشتن FASTQ جدید</title>
+  <defs><marker id="pp-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <rect x="10" y="40" width="150" height="54" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="85" y="63" class="mono">reads.fastq</text><text x="85" y="82" font-size="11.5" class="t-muted" style="direction:rtl">همهٔ خوانش‌ها</text>
+    <rect x="215" y="40" width="130" height="54" rx="8" class="f-info"/><text x="280" y="63" class="t-white mono">SeqIO.parse</text><text x="280" y="82" font-size="11.5" class="t-white" style="direction:rtl">رکورد به رکورد</text>
+    <rect x="400" y="40" width="150" height="54" rx="8" class="f-hl"/><text x="475" y="63" class="t-white mono">mean(Q) &gt;= 30 ?</text><text x="475" y="82" font-size="11.5" class="t-white" style="direction:rtl">فیلتر</text>
+    <rect x="605" y="40" width="125" height="54" rx="8" class="f-ok"/><text x="667" y="63" class="t-white mono">good.fastq</text><text x="667" y="82" font-size="11.5" class="t-white" style="direction:rtl">SeqIO.write</text>
+  </g>
+  <g class="s-muted" stroke-width="1.6" marker-end="url(#pp-ah)">
+    <line x1="160" y1="67" x2="211" y2="67"/><line x1="345" y1="67" x2="396" y2="67"/><line x1="550" y1="67" x2="601" y2="67"/>
+  </g>
+  <text x="475" y="125" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">خوانش‌های کم‌کیفیت دور ریخته می‌شوند</text>
+  <line x1="475" y1="96" x2="475" y2="110" class="s-bad" stroke-width="1.6" stroke-dasharray="3 3"/>
+</svg>
+<figcaption><b>شکل ۱۳.۲</b> — read ← filter ← write. چون <code>parse</code> iterator است، حتی فایل بسیار بزرگ هم رکورد به رکورد پردازش می‌شود.</figcaption>
+</figure>
+
+<h2 id="seq">متدهای Seq و k-mer</h2>
+
+<p>شیء <code>Seq</code> علاوه بر کارهای رشته‌ها، متدهای زیستی هم دارد (فصل‌های <a href="04-dna.html">DNA</a>، <a href="06-transcription.html">رونویسی</a> و <a href="07-translation.html">ترجمه</a>):</p>
+
+<pre data-lang="PYTHON"><code><span class="k">from</span> Bio.Seq <span class="k">import</span> Seq
+
+s = Seq(<span class="s">"ATGGCCATT"</span>)
+s.reverse_complement()   <span class="c"># Seq('AATGGCCAT')</span>
+s.transcribe()           <span class="c"># Seq('AUGGCCAUU')</span>
+s.translate()            <span class="c"># Seq('MAI')   ATG=M, GCC=A, ATT=I</span>
+s.count(<span class="s">"G"</span>)             <span class="c"># 2</span></code></pre>
+
+<div class="worked" data-title="چک کردن reverse_complement با دست">
+  <p class="problem">چرا <code>Seq("ATGGCCATT").reverse_complement()</code> برابر AATGGCCAT است؟</p>
+  <ol class="steps">
+    <li>مکمل هر حرف: ATGGCCATT → TACCGGTAA.</li>
+    <li>برعکس کردن ترتیب: TACCGGTAA → AATGGCCAT.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> AATGGCCAT (همان روش فصل DNA).</p>
+</div>
+
+<h3>k-mer</h3>
+<p><span class="term" data-en="k-mer">k-mer</span> یک زیررشتهٔ k حرفی است. k-merها همپوشان‌اند و کاربردهای زیادی دارند (فصل‌های بعد). یک رشتهٔ به طول L دقیقاً <code>L − k + 1</code> تا k-mer دارد.</p>
+
+<pre data-lang="PYTHON"><code><span class="k">def</span> kmers(seq, k):
+    <span class="k">return</span> [seq[i:i + k] <span class="k">for</span> i <span class="k">in</span> range(len(seq) - k + <span class="n">1</span>)]
+
+print(kmers(<span class="s">"ATGGCC"</span>, <span class="n">3</span>))   <span class="c"># ['ATG', 'TGG', 'GGC', 'GCC']</span></code></pre>
+
+<div class="fill" data-answer="7" data-id="ch13:f-kmer">
+  <p class="q">یک توالی ۱۰ حرفی چند k-mer با k = 4 دارد؟ <input class="blank" type="text"></p>
+  <div class="explain">L − k + 1 = 10 − 4 + 1 = 7.</div>
+</div>
+
+<h2 id="exercises">تمرین‌ها با پاسخ</h2>
+
+<h3>تمرین ۱: فیلتر خوانش‌ها با کیفیت میانگین حداقل ۳۰</h3>
+<p>خوانش‌هایی را که میانگین Q آن‌ها ۳۰ یا بیشتر است در <code>good.fastq</code> ذخیره کن.</p>
+
+<details class="think">
+  <summary>پاسخ</summary>
+  <div>
+<pre data-lang="PYTHON"><code><span class="k">from</span> Bio <span class="k">import</span> SeqIO
+
+<span class="k">def</span> mean_q(record):
+    q = record.letter_annotations[<span class="s">"phred_quality"</span>]
+    <span class="k">return</span> sum(q) / len(q)
+
+good = (r <span class="k">for</span> r <span class="k">in</span> SeqIO.parse(<span class="s">"reads.fastq"</span>, <span class="s">"fastq"</span>) <span class="k">if</span> mean_q(r) &gt;= <span class="n">30</span>)
+count = SeqIO.write(good, <span class="s">"good.fastq"</span>, <span class="s">"fastq"</span>)
+print(count, <span class="s">"reads kept"</span>)</code></pre>
+<p>عبارت داخل پرانتز یک generator است و خوانش‌ها یکی‌یکی فیلتر و مستقیم نوشته می‌شوند؛ پس حافظهٔ زیادی لازم نیست.</p>
+  </div>
+</details>
+
+<h3>تمرین ۲: درصد GC برای هر رکورد</h3>
+<details class="think">
+  <summary>پاسخ</summary>
+  <div>
+<pre data-lang="PYTHON"><code><span class="k">for</span> r <span class="k">in</span> SeqIO.parse(<span class="s">"sequences.fasta"</span>, <span class="s">"fasta"</span>):
+    s = str(r.seq).upper()
+    gc = (s.count(<span class="s">"G"</span>) + s.count(<span class="s">"C"</span>)) / len(s) * <span class="n">100</span>
+    print(r.id, round(gc, <span class="n">1</span>))
+<span class="c"># seq1 56.4</span>
+<span class="c"># chr_demo 50.0</span></code></pre>
+  </div>
+</details>
+
+<h3>پیش‌بینی خروجی</h3>
+
+<div class="quiz" data-id="ch13:t1">
+  <p class="q">خروجی این کد چیست؟</p>
+  <pre data-lang="PYTHON"><code>s = "ATGCGC"
+print(s.count("GC"), s[1:4], len(s))</code></pre>
+  <ol class="opts">
+    <li>1 TGC 6</li>
+    <li data-correct>2 TGC 6</li>
+    <li>2 ATG 6</li>
+    <li>2 TGC 5</li>
+  </ol>
+  <div class="explain">"GC" دو بار می‌آید (اندیس ۲ و ۴). <code>s[1:4]</code> اندیس‌های ۱ تا ۳ است: T، G، C. طول رشته ۶ است.</div>
+</div>
+
+<div class="quiz" data-id="ch13:t2">
+  <p class="q">خروجی چیست؟</p>
+  <pre data-lang="PYTHON"><code>q = "5?I+"
+scores = [ord(c) - 33 for c in q]
+print(scores, sum(scores) / len(scores))</code></pre>
+  <ol class="opts">
+    <li>[53, 63, 73, 43] 58.0</li>
+    <li>[20, 30, 40, 10] 100.0</li>
+    <li data-correct>[20, 30, 40, 10] 25.0</li>
+    <li>[20, 30, 40, 10] 4</li>
+  </ol>
+  <div class="explain">هر کاراکتر منهای ۳۳ می‌شود: 20، 30، 40، 10. جمع 100 است و تقسیم بر 4 می‌شود 25.0 (در پایتون ۳ تقسیم <code>/</code> اعشاری است).</div>
+</div>
+
+<div class="quiz" data-id="ch13:t3">
+  <p class="q">اگر <code>records = SeqIO.parse("a.fasta", "fasta")</code> و فایل ۳ رکورد داشته باشد، <code>print(len(list(records)), len(list(records)))</code> چه چاپ می‌کند؟</p>
+  <ol class="opts">
+    <li>3 3</li>
+    <li data-correct>3 0</li>
+    <li>0 3</li>
+    <li>خطا می‌دهد</li>
+  </ol>
+  <div class="explain">parse یک iterator است و بار اول مصرف می‌شود. بار دوم چیزی باقی نمانده و لیست خالی است.</div>
+</div>
+
+<h2 id="geo">دادهٔ واقعی: NCBI GEO</h2>
+
+<p><span class="term" data-en="Gene Expression Omnibus">GEO</span> مخزن عمومی داده‌های بیان ژن در مرکز NCBI است؛ مقاله‌ها دادهٔ آزمایش‌هایشان را اینجا می‌گذارند. چهار نوع شناسه (accession) داریم:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 240" width="720" role="img" aria-labelledby="geo-t">
+  <title id="geo-t">سلسله‌مراتب GEO: یک سری GSE شامل چند نمونهٔ GSM است و هر نمونه روی یک پلتفرم GPL اندازه‌گیری شده است</title>
+  <rect x="240" y="16" width="240" height="56" rx="10" class="f-accent"/>
+  <text x="360" y="40" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">GSE  (series)</text>
+  <text x="360" y="60" font-size="12" text-anchor="middle" class="t-white" style="direction:rtl">یک مطالعه / آزمایش</text>
+  <g>
+    <rect x="40" y="130" width="160" height="56" rx="10" class="f-info"/>
+    <text x="120" y="154" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">GSM</text>
+    <text x="120" y="174" font-size="12" text-anchor="middle" class="t-white" style="direction:rtl">یک نمونه (ردیف)</text>
+    <rect x="280" y="130" width="160" height="56" rx="10" class="f-info"/>
+    <text x="360" y="154" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">GSM</text>
+    <text x="360" y="174" font-size="12" text-anchor="middle" class="t-white" style="direction:rtl">نمونهٔ دیگر</text>
+    <rect x="520" y="130" width="160" height="56" rx="10" class="f-hl"/>
+    <text x="600" y="154" font-size="14" font-weight="700" text-anchor="middle" class="t-white mono">GPL</text>
+    <text x="600" y="174" font-size="12" text-anchor="middle" class="t-white" style="direction:rtl">پلتفرم (چیپ یا دستگاه)</text>
+  </g>
+  <g class="s-muted" stroke-width="1.6">
+    <path d="M300 72 L120 130"/><path d="M360 72 L360 130"/><path d="M420 72 L600 130"/>
+  </g>
+  <text x="360" y="220" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">GDS: نسخهٔ کیوریت‌شدهٔ برخی مطالعه‌ها (مجموعه‌دادهٔ پردازش‌شده)</text>
+</svg>
+<figcaption><b>شکل ۱۳.۳</b> — یک GSE چند GSM را در بر می‌گیرد و پلتفرم (GPL) روش اندازه‌گیری را مشخص می‌کند.</figcaption>
+</figure>
+
+<table>
+  <thead><tr><th>شناسه</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td>GSE</td><td>Series: کل یک مطالعه</td></tr>
+    <tr><td>GSM</td><td>Sample: یک نمونه</td></tr>
+    <tr><td>GPL</td><td>Platform: دستگاه یا چیپ اندازه‌گیری</td></tr>
+    <tr><td>GDS</td><td>DataSet: مجموعه‌دادهٔ کیوریت‌شده</td></tr>
+  </tbody>
+</table>
+
+<h3>پنج گام دریافت دادهٔ RNA-seq</h3>
+<ol class="steps">
+  <li><b>گام ۱:</b> به سایت NCBI برو: <code>https://ncbi.nlm.nih.gov/</code>.</li>
+  <li><b>گام ۲:</b> از منوی کشویی کنار نوار جستجو، پایگاه <b>GEO DataSets</b> را انتخاب کن.</li>
+  <li><b>گام ۳:</b> شمارهٔ دسترسی مطالعه (مثلاً GSE…) یا یک کلیدواژه را جستجو کن و نتیجهٔ موردنظر را باز کن.</li>
+  <li><b>گام ۴:</b> صفحهٔ مطالعه (series) را ببین: عنوان، خلاصه، طراحی آزمایش، پلتفرم و فهرست نمونه‌ها (GSM).</li>
+  <li><b>گام ۵:</b> پایین صفحه، فایل‌های تکمیلی (supplementary) را دانلود کن؛ مثلاً جدول count. دادهٔ خام (خوانش‌ها) از طریق SRA در دسترس است.</li>
+</ol>
+
+<details class="think">
+  <summary>چرا جدول count در فایل‌های تکمیلی است و خوانش‌ها جای دیگر؟</summary>
+  <div><p>جدول count (تعداد خوانش هر ژن در هر نمونه) حجم کمی دارد و برای بسیاری از تحلیل‌ها کافی است. خوانش‌های خام (FASTQ) میلیون‌ها خط‌اند و در پایگاه SRA نگه‌داری می‌شوند. اگر بخواهی خودت دوباره نگاشت کنی، از SRA می‌گیری.</p></div>
+</details>
+
+<div class="quiz" data-id="ch13:s-geo">
+  <p class="q">کدام شناسه یک <b>نمونه</b> را نشان می‌دهد؟</p>
+  <ol class="opts">
+    <li>GSE</li>
+    <li data-correct>GSM</li>
+    <li>GPL</li>
+    <li>GDS</li>
+  </ol>
+  <div class="explain">GSM = Sample؛ GSE کل سری است، GPL پلتفرم و GDS مجموعه‌دادهٔ کیوریت‌شده.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>توالی‌های زیستی رشته‌اند و Biopython (<code>pip install biopython</code>) با <code>SeqIO</code> همهٔ فرمت‌ها را با یک الگو می‌خواند و می‌نویسد.</li>
+    <li><code>SeqIO.parse(file, format)</code> یک iterator از رکوردهاست؛ <code>record.id</code> و <code>record.seq</code> را بده، و فقط یک بار پیمایش می‌شود.</li>
+    <li>در FASTQ، <code>record.letter_annotations["phred_quality"]</code> لیست Q هاست (۳۳ از قبل کم شده)؛ <code>sum/len</code> میانگین کیفیت.</li>
+    <li><code>SeqRecord</code> + <code>SeqIO.write</code> فایل خروجی می‌سازد و سرآیند را خودش می‌نویسد.</li>
+    <li>process_fasta: برای هر رکورد id، طول، درصد GC و تعداد N را در لیستی از دیکشنری‌ها برمی‌گرداند.</li>
+    <li>متدهای Seq: <code>reverse_complement()</code>، <code>transcribe()</code>، <code>translate()</code>، <code>count()</code>. k-merها زیررشته‌های همپوشان‌اند: L − k + 1 تا.</li>
+    <li>فیلتر کیفیت: بخوان، میانگین Q را حساب کن، اگر ≥ ۳۰ بود با <code>SeqIO.write</code> بنویس.</li>
+    <li>GEO: GSE = مطالعه، GSM = نمونه، GPL = پلتفرم، GDS = مجموعهٔ کیوریت‌شده.</li>
+    <li>پنج گام: NCBI ← GEO DataSets ← جستجو ← صفحهٔ سری ← دانلود فایل‌های تکمیلی (خوانش خام در SRA).</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>بیان ژن: هر سلول یک بردار · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="بیان ژن، پروفایل بیان، نمایش هر سلول با یک بردار، فاصلهٔ اقلیدسی و کسینوسی، خوشه‌بندی سلول‌ها و تشخیص بیماری.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch08">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۳ (پارت سوم)، اسلایدهای ۱ تا ۱۲؛ فایل ۱، اسلایدهای ۱۳۴ تا ۱۴۱" data-motif="ACGTTGCAACGTAGCTAGCTTACGA">
+  <h1>بیان ژن: هر سلول یک بردار</h1>
+  <p class="lead">سلول مغز و سلول قلب هر دو یک DNA دارند. پس چرا یکی فکر می‌کند و دیگری می‌تپد؟ اگر بتوانیم این تفاوت را با چند عدد بنویسیم، سلول‌ها تبدیل می‌شوند به چیزی که تو خوب بلدی: بردارهایی که می‌شود فاصله‌شان را حساب کرد و دسته‌بندی‌شان کرد.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>بیان ژن و پروفایل بیان را <b>تعریف کنی</b> و بگویی چرا سلول‌هایی با DNA یکسان رفتار متفاوت دارند.</li>
+    <li>یک سلول را به یک بردار عددی <b>تبدیل کنی</b> و طول آن بردار را <b>مشخص کنی</b>.</li>
+    <li>از روی جدول بیان، ژنی را که نوع سلول را لو می‌دهد از ژنی که اطلاعاتی ندارد <b>تشخیص بدهی</b>.</li>
+    <li>فاصلهٔ اقلیدسی و شباهت کسینوسی بین دو سلول را <b>حساب کنی</b>.</li>
+    <li>توضیح بدهی که خوشه‌بندی سلول‌ها و تشخیص سرطان چطور از پروفایل بیان استفاده می‌کنند.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch08:pre1">
+  <p class="q">سلول عصبی و سلول ماهیچه‌ای یک انسان در کدام مورد تفاوت اصلی دارند؟</p>
+  <ol class="opts">
+    <li>توالی DNA هسته‌شان کاملاً متفاوت است</li>
+    <li>تعداد ژن‌هایی که دارند فرق می‌کند</li>
+    <li data-correct>اینکه کدام ژن‌ها چقدر فعال‌اند</li>
+    <li>هیچ تفاوتی ندارند</li>
+  </ol>
+  <div class="explain">تقریباً همهٔ سلول‌های بدن یک DNA یکسان دارند. تفاوتشان در این است که هر ژن چقدر «روشن» است، یعنی چقدر mRNA از آن ساخته می‌شود. این فصل همین را اندازه‌گیری می‌کند.</div>
+</div>
+
+<h2 id="intro">ورود به بخش محاسباتی</h2>
+
+<p>تا فصل ۷ زیست‌شناسی یاد گرفتی: سلول، پروتئین، DNA، همانندسازی، رونویسی و ترجمه. از این فصل به بعد درس به بخش <b>محاسباتی</b> می‌رسد. سؤال دیگر این نیست که «سلول چه می‌کند»، سؤال این است که <b>چطور از سلول داده بسازیم و روی آن محاسبه کنیم</b>. اسلاید اول جلسه همین را با جملهٔ «We want to enter into computational part» اعلام می‌کند.</p>
+
+<aside class="callout analogy">
+  <p>DNA مثل <b>سورس‌کد</b> کل سلول است (حدود ۳ میلیارد حرف). هر <b>ژن</b> مثل یک تابع در این کد است، و <b>mRNA</b> مثل هر بار فراخوانی آن تابع. بیان ژن یعنی شمردن اینکه هر تابع چند بار صدا زده شده.</p>
+</aside>
+
+<h2 id="biodiversity">تنوع زیستی و دو سؤال اصلی</h2>
+
+<p>روی زمین موجودات بسیار متفاوتی هست. اسم این تنوع <span class="term" data-en="Biodiversity">تنوع زیستی</span> است. بسیاری از سؤال‌های زیست‌شناسی از همین تفاوت‌ها می‌آید: چرا انسان با موش فرق دارد؟ چرا یک سلول با سلول دیگر فرق دارد؟ و کار اصلی زیست‌شناس اغلب شناسایی همین تفاوت‌هاست. این تفاوت‌ها در <b>DNA</b> موجودات رمزگذاری شده‌اند (اسلاید ۶).</p>
+
+<p>اسلاید ۷ دو سؤال اصلی می‌پرسد:</p>
+
+<div class="compare">
+  <div><h4>سؤال اول: خواندن</h4><p>DNA را چطور بخوانیم؟ چطور ژنوم انسان را به یک رشته مثل <code class="seq">ACGTAA…</code> تبدیل کنیم؟ و بعد چطور دو رشته را با هم مقایسه کنیم؟ یعنی از مولکول به <b>string</b> برسیم. جواب این سؤال در فصل‌های بعد (PCR، ریزآرایه، توالی‌یابی) می‌آید.</p></div>
+  <div><h4>سؤال دوم: تفاوت سلول‌ها</h4><p>سلول‌های مختلف چه فرقی دارند، وقتی همه حدود ۳۰٬۰۰۰ ژن دارند؟ فرق در <b>مقدار پروتئین</b> است یا <b>مقدار mRNA</b>؟ موضوع این فصل است.</p></div>
+</div>
+
+<aside class="callout simple">
+  <p>عدد ۳۰٬۰۰۰ را اسلاید می‌گوید. برآوردهای جدیدتر تعداد ژن‌های <b>پروتئین‌ساز</b> انسان را حدود ۲۰٬۰۰۰ می‌دانند. در امتحان عدد اسلاید را بنویس، ولی بدان که مرتبهٔ بزرگی (چند ده هزار) مهم است نه عدد دقیق.</p>
+</aside>
+
+<h2 id="expression">بیان ژن و پروفایل بیان</h2>
+
+<p>هر سلول بدن همهٔ ژن‌ها را دارد، ولی همه را به یک اندازه استفاده نمی‌کند. سلول ماهیچه ژن‌های ساخت پروتئین‌های انقباضی را زیاد استفاده می‌کند و سلول پوست کمتر. استفادهٔ یک ژن را با مقدار mRNA آن اندازه می‌گیریم (یادآوری رونویسی: فصل ۶):</p>
+
+<aside class="callout key">
+  <p><span class="term" data-en="Gene expression">بیان ژن</span> = میزان فعالیت یک ژن = <b>غلظت mRNA</b> تولیدشده از آن (یا به بیان اسلاید، میزان پروتئینی که ژن تولید می‌کند). ژنی که mRNA زیادی دارد «بیان بالا» دارد.</p>
+</aside>
+
+<p>چرا mRNA و نه پروتئین؟ چون اندازه‌گیری پروتئین سخت، گران و کند است (فصل ۹)، ولی mRNA را می‌شود با روش‌های سریع اندازه گرفت. mRNA هم معیار خوبی برای میزان فعالیت ژن است، چون هر چه ژن بیشتر خوانده شود نسخهٔ بیشتری از آن می‌سازد.</p>
+
+<p>حالا <span class="term" data-en="Gene expression profile">پروفایل بیان ژن</span> را تعریف کن: فهرست بیان <b>همهٔ</b> ژن‌های یک سلول. هدف اصلی اسلاید ۸ این است که <b>یک سلول را به یک بردار نگاشت کنیم</b>.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 270" width="720" role="img" aria-labelledby="mp-t">
+  <title id="mp-t">نگاشت یک سلول به بردار بیان: هر درایه بیان یک ژن است و طول بردار حدود ۳۰۰۰۰ است</title>
+  <defs><marker id="mp-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <circle cx="110" cy="135" r="80" class="f-surface-2 s-line" stroke-width="3"/>
+  <circle cx="110" cy="135" r="30" class="f-accent-soft s-accent" stroke-width="2.5"/>
+  <text x="110" y="140" font-size="12" text-anchor="middle">هسته</text>
+  <text x="110" y="240" font-size="13" font-weight="700" text-anchor="middle">یک سلول</text>
+  <text x="110" y="258" font-size="11.5" text-anchor="middle" class="t-muted">DNA ثابت، mRNA متغیر</text>
+  <line x1="205" y1="135" x2="340" y2="135" class="s-muted" stroke-width="2" marker-end="url(#mp-ah)"/>
+  <text x="272" y="122" font-size="12" text-anchor="middle" class="t-muted">اندازه‌گیری mRNA</text>
+  <text x="272" y="156" font-size="12" text-anchor="middle" class="t-muted">هر ژن</text>
+  <g>
+    <rect x="400" y="20" width="110" height="38" class="f-info-soft s-info" stroke-width="1.5"/>
+    <rect x="400" y="58" width="110" height="38" class="f-info-soft s-info" stroke-width="1.5"/>
+    <rect x="400" y="96" width="110" height="38" class="f-info-soft s-info" stroke-width="1.5"/>
+    <rect x="400" y="190" width="110" height="38" class="f-info-soft s-info" stroke-width="1.5"/>
+    <g class="mono" font-size="15" font-weight="700" text-anchor="middle">
+      <text x="455" y="45">0</text><text x="455" y="83">10</text><text x="455" y="121">100</text><text x="455" y="215">12</text>
+    </g>
+    <g class="mono" font-size="12" class="t-muted">
+      <text x="530" y="45">gene 1</text><text x="530" y="83">gene 2</text><text x="530" y="121">gene 3</text><text x="530" y="215">gene 30,000</text>
+    </g>
+    <text x="455" y="166" font-size="22" text-anchor="middle" class="t-muted">⋮</text>
+  </g>
+  <path d="M385 20 v208" class="f-none s-ink-2" stroke-width="2"/>
+  <path d="M385 20 h8 M385 228 h8" class="f-none s-ink-2" stroke-width="2"/>
+  <text x="660" y="128" font-size="13" font-weight="700" text-anchor="middle" class="t-accent">طول بردار</text>
+  <text x="660" y="148" font-size="13" text-anchor="middle" class="t-accent">≈ تعداد ژن‌ها</text>
+</svg>
+<figcaption><b>شکل ۸.۱</b> — هر درایهٔ بردار بیان یک ژن است. عددها از اسلاید ۸ است.</figcaption>
+</figure>
+
+<details class="think">
+  <summary>طول این بردار چقدر است؟ (سؤال اسلاید ۸)</summary>
+  <div><p>به اندازهٔ تعداد ژن‌ها: حدود <b>۳۰٬۰۰۰</b> طبق اسلاید. یعنی هر سلول یک نقطه در فضایی با ۳۰٬۰۰۰ بُعد است.</p></div>
+</details>
+
+<aside class="callout analogy">
+  <p>این دقیقاً همان <b>feature vector</b> در یادگیری ماشین است. هر ژن یک ویژگی (feature) است و هر سلول یک نمونه (sample). هر مدلی که روی داده‌های جدولی کار می‌کند، روی سلول‌ها هم کار می‌کند.</p>
+</aside>
+
+<h2 id="table">بیان در سلول‌های مختلف</h2>
+
+<p>اسلاید ۹ جدول کوچکی از بیان سه ژن در سه سلول می‌دهد. هر <b>ستون</b> بردار یک سلول است.</p>
+
+<table>
+  <thead><tr><th>ژن</th><th>سلول قلب</th><th>سلول جنین</th><th>سلول مغز</th></tr></thead>
+  <tbody>
+    <tr><td><code>OCT4</code></td><td><code>0</code></td><td><code>500</code></td><td><code>10</code></td></tr>
+    <tr><td><code>P53</code></td><td><code>100</code></td><td><code>0</code></td><td><code>0</code></td></tr>
+    <tr><td><code>X</code></td><td><code>30</code></td><td><code>30</code></td><td><code>30</code></td></tr>
+  </tbody>
+</table>
+
+<p>DNA هر سه سلول یکسان است، ولی عددها فرق می‌کنند. حالا بخوان که جدول چه می‌گوید:</p>
+<ul>
+  <li><b>ژن X</b> در هر سه سلول <code>30</code> است. با دیدن آن نمی‌شود نوع سلول را حدس زد، پس برای تشخیص نوع سلول <b>اطلاعاتی ندارد</b>.</li>
+  <li><b>ژن OCT4</b> در جنین بسیار بالاست (<code>500</code>) و در بقیه نزدیک صفر. پس سلول جنینی را <b>لو می‌دهد</b>. (اسلاید OCT4 را ژنی مهم در چرخهٔ سلولی معرفی می‌کند؛ در واقعیت یک ژن مهم برای حفظ حالت «بنیادی» سلول‌های جنینی است.)</li>
+  <li><b>ژن P53</b> فقط در سلول قلب این جدول مقدار دارد.</li>
+</ul>
+
+<div class="quiz" data-id="ch08:s1">
+  <p class="q">سلولی را آزمایش کرده‌ایم و OCT4 آن ۴۸۰ و P53 آن ۲ است. به کدام ستون جدول بالا شبیه‌تر است؟</p>
+  <ol class="opts"><li>قلب</li><li data-correct>جنین</li><li>مغز</li><li>با این اطلاعات نمی‌شود گفت</li></ol>
+  <div class="explain">OCT4 بالا فقط در سلول جنین دیده شد. ژن X هم در همه ۳۰ است، پس در این مقایسه تفاوتی نمی‌سازد.</div>
+</div>
+
+<h2 id="space">هر سلول یک نقطه در فضای ژن‌ها</h2>
+
+<p>اگر هر ژن را یک محور بگیری، هر سلول یک نقطه در فضا می‌شود (اسلاید ۱۰). در واقعیت ۳۰٬۰۰۰ محور داریم، ولی برای دیدن، سه محور می‌کشیم. در شکل زیر محورها OCT4، P53 و X هستند و نقطه‌ها سه سلول جدول.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 300" width="720" role="img" aria-labelledby="sp-t">
+  <title id="sp-t">فضای سه‌محوری ژن‌ها با سه سلول قلب، جنین و مغز و فاصله‌های اقلیدسی بین آن‌ها</title>
+  <defs><marker id="sp-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <g class="s-ink-2" stroke-width="2" marker-end="url(#sp-ah)">
+    <line x1="80" y1="260" x2="440" y2="260"/>
+    <line x1="80" y1="260" x2="240" y2="170"/>
+    <line x1="80" y1="260" x2="80" y2="90"/>
+  </g>
+  <text x="450" y="266" font-size="13" font-weight="700" class="mono">OCT4</text>
+  <text x="248" y="172" font-size="13" font-weight="700" class="mono">P53</text>
+  <text x="86" y="84" font-size="13" font-weight="700" class="mono">X</text>
+  <g class="s-muted" stroke-width="2.5" stroke-dasharray="5 4" fill="none">
+    <line x1="106" y1="150" x2="385" y2="150"/>
+    <line x1="106" y1="150" x2="165" y2="105"/>
+    <line x1="385" y1="150" x2="165" y2="105"/>
+  </g>
+  <circle cx="106" cy="150" r="9" class="f-info"/>
+  <circle cx="385" cy="150" r="9" class="f-hl"/>
+  <circle cx="165" cy="105" r="9" class="f-bad"/>
+  <text x="106" y="180" font-size="13" font-weight="700" text-anchor="middle">مغز</text>
+  <text x="385" y="180" font-size="13" font-weight="700" text-anchor="middle">جنین</text>
+  <text x="165" y="86" font-size="13" font-weight="700" text-anchor="middle">قلب</text>
+  <text x="245" y="142" font-size="12" text-anchor="middle" class="t-ink-2">فاصله ۴۹۰</text>
+  <text x="112" y="118" font-size="12" text-anchor="end" class="t-ink-2">≈ ۱۰۰٫۵</text>
+  <text x="290" y="108" font-size="12" text-anchor="middle" class="t-ink-2">≈ ۵۰۹٫۹</text>
+  <text x="560" y="60" font-size="12" text-anchor="middle" class="t-muted">هر محور = یک ژن</text>
+  <text x="560" y="80" font-size="12" text-anchor="middle" class="t-muted">هر نقطه = یک سلول</text>
+  <text x="560" y="100" font-size="12" text-anchor="middle" class="t-muted">نزدیک = پروفایل مشابه</text>
+</svg>
+<figcaption><b>شکل ۸.۲</b> — سه سلول جدول اسلاید ۹ در فضای سه‌بعدی ژن‌ها. فاصله‌ها مقیاس دقیق ندارند ولی عددها درست‌اند.</figcaption>
+</figure>
+
+<p>سلول‌هایی که بیان مشابه دارند در این فضا نزدیک هم می‌افتند. پس برای مقایسهٔ سلول‌ها به یک <b>معیار فاصله</b> نیاز داریم. اسلاید ۱۰ دو معیار را نام می‌برد: <b>فاصلهٔ اقلیدسی</b> و <b>کسینوسی</b>. این همان <span class="term" data-en="Vector Space Model">مدل فضای برداری</span> در بازیابی اطلاعات است: هر سند یک بردار از شمارش کلمه‌هاست و اسناد مشابه نزدیک هم‌اند. اینجا به جای کلمه ژن داریم، و به جای سند سلول.</p>
+
+<div class="worked" data-title="فاصلهٔ اقلیدسی و شباهت کسینوسی سه سلول">
+  <p class="problem">بردارها را به ترتیب (OCT4, P53, X) بنویس: قلب = (0, 100, 30)، جنین = (500, 0, 30)، مغز = (10, 0, 30). فاصلهٔ هر دو سلول را حساب کن.</p>
+  <ol class="steps">
+    <li>فرمول فاصلهٔ اقلیدسی: <code>d(u,v) = √( Σ (uᵢ − vᵢ)² )</code>، یعنی تفاضل هر ژن را به توان دو برسان، جمع کن، جذر بگیر.</li>
+    <li>مغز و جنین: تفاضل‌ها (10−500, 0−0, 30−30) = (−490, 0, 0). فاصله = √(490²) = <b>۴۹۰</b>.</li>
+    <li>مغز و قلب: تفاضل‌ها (10−0, 0−100, 0) = (10, −100, 0). فاصله = √(100 + 10000) = √10100 ≈ <b>۱۰۰٫۵</b>.</li>
+    <li>جنین و قلب: تفاضل‌ها (500−0, 0−100, 0) = (500, −100, 0). فاصله = √(250000 + 10000) = √260000 ≈ <b>۵۰۹٫۹</b>.</li>
+    <li>نتیجه: مغز و قلب از همه به هم نزدیک‌ترند (۱۰۰٫۵). جنین از هر دو دور است، چون OCT4 بالایش یک اختلاف بزرگ می‌سازد. ژن X در هر سه یکی است و در هیچ فاصله‌ای سهم ندارد.</li>
+    <li><b>شباهت کسینوسی</b> زاویهٔ بین دو بردار را می‌سنجد و به بزرگی بردار کاری ندارد: <code>cos θ = (u·v) / (‖u‖ ‖v‖)</code>. مثلاً برای مغز و جنین: u·v = 10×500 + 0 + 30×30 = 5900 و ‖مغز‖ ≈ ۳۱٫۶، ‖جنین‖ ≈ ۵۰۰٫۹، پس cos ≈ <b>۰٫۳۷</b>. برای مغز و قلب: u·v = 900، ‖قلب‖ ≈ ۱۰۴٫۴ و cos ≈ <b>۰٫۲۷</b>. هر چه cos به ۱ نزدیک‌تر، جهت دو بردار شبیه‌تر.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> مغز–جنین ۴۹۰، مغز–قلب ≈ ۱۰۰٫۵، جنین–قلب ≈ ۵۰۹٫۹. هر معیار فاصله ممکن است ترتیب متفاوتی بدهد: اقلیدسی مغز را به قلب نزدیک‌تر می‌داند و کسینوسی (چون ژن X همه را شبیه هم کرده) اندکی مغز را به جنین. انتخاب معیار بر نتیجه اثر دارد.</p>
+</div>
+
+<aside class="callout pitfall">
+  <p>«فاصلهٔ کسینوسی» و «شباهت کسینوسی» یکی نیستند: فاصله معمولاً <code>1 − cos θ</code> است. شباهت بالا یعنی فاصلهٔ کم.</p>
+</aside>
+
+<div class="fill" data-answer="490|۴۹۰" data-id="ch08:f1">
+  <p class="q">اگر سلولی با بردار (500, 0, 30) و سلول دیگری با بردار (10, 0, 30) داشته باشیم، فاصلهٔ اقلیدسی‌شان چند است؟ <input class="blank" type="text"></p>
+  <div class="explain">فقط ژن اول فرق دارد: |500−10| = 490، و جذر مربع آن همان ۴۹۰ است.</div>
+</div>
+
+<div data-widget="cell-vectors"></div>
+
+<h2 id="differentiation">تمایز سلولی و خوشه‌بندی</h2>
+
+<p>بدن انسان حدود <b>۱۰¹³</b> سلول دارد. اگر پروفایل بیان هر کدام را حساب کنیم، یک ماتریس <b>۳۰٬۰۰۰ × ۱۰¹³</b> می‌شود. اسلاید ۱۱ می‌گوید با <span class="term" data-en="Dimensionality reduction">کاهش ابعاد</span> (فشردن ۳۰٬۰۰۰ محور به ۲ یا ۳ محور که بیشترین تفاوت را نگه می‌دارند) و رسم نتیجه، سلول‌های با پروفایل مشابه کنار هم <b>خوشه</b> می‌سازند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 280" width="720" role="img" aria-labelledby="cl-t">
+  <title id="cl-t">نمودار پراکندگی سلول‌ها پس از کاهش ابعاد: سه خوشهٔ مغز، خون و ماهیچه</title>
+  <defs><marker id="cl-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <g class="s-ink-2" stroke-width="2" marker-end="url(#cl-ah)">
+    <line x1="60" y1="250" x2="600" y2="250"/>
+    <line x1="60" y1="250" x2="60" y2="20"/>
+  </g>
+  <text x="330" y="272" font-size="12" text-anchor="middle" class="t-muted">محور ۱ پس از کاهش ابعاد</text>
+  <text x="48" y="30" font-size="12" text-anchor="end" class="t-muted">محور ۲</text>
+  <ellipse cx="170" cy="90" rx="75" ry="48" class="f-info-soft s-info" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <ellipse cx="400" cy="100" rx="80" ry="45" class="f-hl-soft s-hl" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <ellipse cx="290" cy="195" rx="85" ry="42" class="f-ok-soft s-ok" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <g class="f-info">
+    <circle cx="140" cy="80" r="4"/><circle cx="160" cy="105" r="4"/><circle cx="185" cy="75" r="4"/><circle cx="205" cy="100" r="4"/><circle cx="125" cy="100" r="4"/><circle cx="170" cy="90" r="4"/><circle cx="150" cy="65" r="4"/><circle cx="195" cy="115" r="4"/>
+  </g>
+  <g class="f-hl">
+    <circle cx="370" cy="90" r="4"/><circle cx="395" cy="115" r="4"/><circle cx="420" cy="85" r="4"/><circle cx="445" cy="108" r="4"/><circle cx="385" cy="75" r="4"/><circle cx="410" cy="105" r="4"/><circle cx="350" cy="110" r="4"/><circle cx="435" cy="125" r="4"/>
+  </g>
+  <g class="f-ok">
+    <circle cx="260" cy="185" r="4"/><circle cx="285" cy="210" r="4"/><circle cx="310" cy="180" r="4"/><circle cx="335" cy="205" r="4"/><circle cx="240" cy="205" r="4"/><circle cx="295" cy="190" r="4"/><circle cx="320" cy="222" r="4"/><circle cx="275" cy="170" r="4"/>
+  </g>
+  <text x="170" y="150" font-size="13" font-weight="700" text-anchor="middle">سلول‌های مغزی</text>
+  <text x="400" y="162" font-size="13" font-weight="700" text-anchor="middle">سلول‌های خونی</text>
+  <text x="290" y="244" font-size="13" font-weight="700" text-anchor="middle">سلول‌های ماهیچه‌ای</text>
+  <text x="640" y="110" font-size="12" text-anchor="middle" class="t-muted">هر نقطه = یک سلول</text>
+  <text x="640" y="130" font-size="12" text-anchor="middle" class="t-muted">که ۳۰٬۰۰۰ عدد داشت</text>
+</svg>
+<figcaption><b>شکل ۸.۳</b> — بعد از کاهش ابعاد، سلول‌های هم‌نوع در یک خوشه جمع می‌شوند. داده‌ها نمونهٔ ساختگی است.</figcaption>
+</figure>
+
+<aside class="callout simple">
+  <p>خوشه‌بندی یعنی بدون اینکه برچسب بدهیم، از روی شباهت پروفایل‌ها سلول‌ها را دسته‌بندی کنیم. اگر خوشه‌ای جدید پیدا شود که شبیه هیچ نوع شناخته‌شده‌ای نیست، شاید نوع سلول جدیدی کشف کرده‌ایم.</p>
+</aside>
+
+<details class="think">
+  <summary>چرا قبل از رسم، ابعاد را کم می‌کنیم؟</summary>
+  <div><p>چون ما فقط ۲ یا ۳ بعد را می‌توانیم ببینیم، ولی داده ۳۰٬۰۰۰ بعد دارد. کاهش ابعاد جهت‌هایی را نگه می‌دارد که بیشترین تفاوت بین سلول‌ها را نشان می‌دهند. همچنین محاسبهٔ فاصله و خوشه‌بندی روی ماتریس بسیار بزرگ را سریع‌تر می‌کند.</p></div>
+</details>
+
+<h2 id="disease">بیان ژن و تشخیص بیماری</h2>
+
+<p>اسلاید ۱۲ یک تصویر نشان می‌دهد و می‌پرسد: «این تصویر چه نوعی است؟» پاسخ: <b>PET Scan</b>. در این روش گلوکز نشان‌دار (رادیواکتیو) به بدن تزریق می‌شود. سلول سرطانی بسیار فعال و پرمصرف است و گلوکز بیشتری می‌گیرد، پس جاهایی که مصرف گلوکز بالاست احتمالاً سلول سرطانی دارند. <b>مغز استثناست</b>، چون مغز به‌طور طبیعی هم گلوکز زیادی مصرف می‌کند.</p>
+
+<p>ارتباط با بیان ژن: سلول سرطانی علاوه بر جهش در ژنوم، <b>بیان ژنش هم تغییر می‌کند</b>. مثلاً ژن‌های چرخهٔ سلولی (چرخهٔ تقسیم سلول، فصل ۵) به‌شدت بیان می‌شوند، چون سلول سرطانی بی‌وقفه تقسیم می‌شود. اسلاید یک مثال هم می‌دهد: در سرطان پوست، بیان <code>OCT4</code> بالا می‌رود. پس:</p>
+
+<aside class="callout key">
+  <p>با مقایسهٔ <b>پروفایل بیان ژن</b> سلول سالم و سلول مشکوک می‌توانیم سرطان را تشخیص بدهیم. این همان مسئلهٔ دسته‌بندی در یادگیری ماشین است: بردار ورودی، برچسب سالم/سرطانی.</p>
+</aside>
+
+<div class="quiz" data-id="ch08:s2">
+  <p class="q">چرا در تصویر PET مصرف بالای گلوکز در مغز لزوماً نشانهٔ سرطان نیست؟</p>
+  <ol class="opts"><li>مغز اصلاً گلوکز مصرف نمی‌کند</li><li data-correct>مغز در حالت طبیعی هم گلوکز زیادی مصرف می‌کند</li><li>گلوکز رادیواکتیو فقط وارد مغز می‌شود</li><li>سلول‌های مغز هرگز سرطانی نمی‌شوند</li></ol>
+  <div class="explain">اسلاید می‌گوید «به‌جز مغز». مغز طبیعتاً پرمصرف است، پس روشنایی آن در PET به‌تنهایی دلیل بر سرطان نیست.</div>
+</div>
+
+<details class="think">
+  <summary>چرا برای تشخیص سرطان به جای یک ژن از کل پروفایل استفاده می‌کنیم؟</summary>
+  <div><p>یک ژن ممکن است در چند حالت متفاوت بالا برود و به‌تنهایی گمراه‌کننده باشد. الگوی هزاران ژن با هم، مثل بردار ویژگی در یادگیری ماشین، مطمئن‌تر است و می‌شود از روی آن مدل دسته‌بندی ساخت. در فصل ۱۰ می‌بینی این پروفایل را چطور با ریزآرایه می‌سازند.</p></div>
+</details>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>تفاوت‌های موجودات در DNA کد شده است؛ ولی سلول‌های یک بدن DNA یکسان دارند و فرقشان در <b>بیان ژن</b> است.</li>
+    <li>دو سؤال اصلی: ۱) DNA را چطور بخوانیم و به string تبدیل کنیم؛ ۲) سلول‌ها در چه چیزی فرق دارند؟ (مقدار mRNA)</li>
+    <li>بیان ژن = غلظت mRNA تولیدشده؛ پروفایل بیان = بیان همهٔ ژن‌ها.</li>
+    <li>هر سلول یک <b>بردار</b> به طول تعداد ژن‌ها (حدود ۳۰٬۰۰۰ طبق اسلاید) است: همان feature vector.</li>
+    <li>ژنی که در همهٔ سلول‌ها یکسان است (X) اطلاعاتی ندارد؛ ژنی مثل OCT4 نوع سلول را لو می‌دهد.</li>
+    <li>سلول‌ها نقطه‌هایی در فضای ژن‌ها هستند. شباهتشان را با فاصلهٔ اقلیدسی یا کسینوسی می‌سنجیم (Vector Space Model).</li>
+    <li>ماتریس ۳۰٬۰۰۰ × ۱۰¹³ با کاهش ابعاد و خوشه‌بندی نوع سلول‌ها را نشان می‌دهد.</li>
+    <li>تصویر PET با گلوکز رادیواکتیو سلول سرطانی را نشان می‌دهد (به‌جز مغز)؛ پروفایل بیان هم می‌تواند سرطان را تشخیص دهد.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

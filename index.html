@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root=".">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جزوهٔ تعاملی بیوانفورماتیک</title>
+<meta name="description" content="جزوهٔ کامل و تعاملی درس بیوانفورماتیک (مباحث ویژه در علوم کامپیوتر) برای دانشجوی کامپیوتر بدون پیش‌زمینهٔ زیستی: از سلول و DNA تا PCR، توالی‌یابی، فرمت فایل‌ها و هم‌ترازی.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="assets/js/core.js"></script>
+<script defer src="assets/js/pages.js"></script>
+</head>
+<body data-page="home">
+<main class="page" data-no-toc>
+
+<section class="home-hero wide">
+  <span class="kicker">مباحث ویژه در علوم کامپیوتر · بیوانفورماتیک پیشرفته</span>
+  <h1>بیوانفورماتیک را <em>از صفر</em> یاد بگیر</h1>
+  <p class="lead">جزوهٔ کامل و تعاملی درس که از روی اسلایدهای کلاس و نمونه سؤال میان‌ترم ساخته شده. برای دانشجوی کامپیوتری نوشته شده که هیچ پیش‌زمینهٔ زیست‌شناسی ندارد: هر فصل با یک سؤال شروع می‌شود، با شکل، قیاس برنامه‌نویسی و مثال حل‌شده جلو می‌رود و با تمرین به سبک امتحان تمام می‌شود.</p>
+  <div class="hero-actions">
+    <a id="continue-btn" class="btn primary" href="chapters/01-intro.html">شروع از فصل ۱</a>
+    <a id="review-btn" class="btn" href="flashcards.html">مرور با فلش‌کارت</a>
+    <a class="btn ghost" href="exam.html">نمونه سؤال میان‌ترم، حل‌شده</a>
+  </div>
+  <div class="helix-wrap"><canvas id="helix" aria-hidden="true"></canvas><span class="helix-label">5′-ATGCGTACGTTAGCGATTACAGG…-3′</span></div>
+</section>
+
+<div id="stats" class="stats wide" aria-live="polite"></div>
+
+<h2 id="exam-path">اگر امتحان نزدیک است</h2>
+<p>همهٔ سؤال‌های نمونهٔ میان‌ترم استاد از <b>بخش ۱ (مبانی زیستی)</b> بودند: ویژگی پروکاریوت‌ها، میتوکندری، آمینواسیدها، DNA، تعداد کروموزوم، دگمای مرکزی و اسپلایسینگ RNA. اگر وقت کم داری، این مسیر را برو:</p>
+<ol class="steps">
+  <li><a href="exam.html#sample">نمونه سؤال میان‌ترم</a> را یک بار بدون آمادگی جواب بده تا ببینی کجای کار هستی.</li>
+  <li>فصل‌های <a href="chapters/06-transcription.html">۶ (رونویسی و اسپلایسینگ)</a> و <a href="chapters/07-translation.html">۷ (ترجمه و یوکاریوت در برابر پروکاریوت)</a> را بخوان؛ هر دو سؤال تشریحی و سؤال شکل‌دار از همین‌جاست.</li>
+  <li>فصل‌های <a href="chapters/02-cell.html">۲ (سلول)</a>، <a href="chapters/03-proteins.html">۳ (پروتئین)</a> و <a href="chapters/04-dna.html">۴ (DNA)</a> را بخوان؛ سؤال‌های چهارگزینه‌ای و جای خالی از این‌هاست.</li>
+  <li>در <a href="exam.html#practice">آزمون تمرینی ترکیبی</a> گزینهٔ «شبیه‌ساز میان‌ترم» را بزن و چند دور تمرین کن.</li>
+  <li>شب قبل از امتحان فقط <a href="flashcards.html">فلش‌کارت‌ها</a> و <a href="cheatsheet.html">خلاصهٔ فرمول‌ها</a> را مرور کن؛ خواندن دوباره و طولانی کمترین بازده را دارد.</li>
+</ol>
+
+<h2 id="map">نقشهٔ درس</h2>
+<p>درس سه بخش دارد و هر بخش روی بخش قبلی سوار است: اول زبان زیست‌شناسی را یاد می‌گیری، بعد می‌بینی این مولکول‌ها چطور اندازه‌گیری و به فایل تبدیل می‌شوند، و آخر الگوریتم‌هایی را که روی این فایل‌ها کار می‌کنند.</p>
+<div id="course-map" class="wide"></div>
+
+<h2 id="method">این جزوه چطور درس می‌دهد</h2>
+<p>ساختار هر فصل بر اساس روش‌هایی است که پژوهش‌های یادگیری بیشترین اثر را برایشان نشان داده‌اند. خلاصه‌اش این است: <b>چیزی که از حافظه بیرون بکشی، می‌ماند؛ چیزی که فقط دوباره بخوانی، نه.</b></p>
+<div class="method-grid wide">
+  <div class="method"><h3>یادآوری فعال</h3><span class="cite">Roediger &amp; Karpicke, 2006 · Dunlosky et al., 2013</span><p>بعد از هر بخش سؤال کوتاه هست و جوابش بلافاصله با دلیل نمایش داده می‌شود. تلاش برای به یاد آوردن، حافظه را قوی‌تر از دوباره‌خواندن می‌کند.</p></div>
+  <div class="method"><h3>مرور فاصله‌دار</h3><span class="cite">Cepeda et al., 2006 · Leitner system</span><p>کارت‌های هر فصل در پنج جعبه می‌چرخند و با فاصلهٔ ۱، ۲، ۴، ۸ و ۱۶ روز دوباره می‌آیند؛ دقیقاً وقتی که کمی فراموش کرده‌ای.</p></div>
+  <div class="method"><h3>مثال حل‌شده، بعد تمرین</h3><span class="cite">Sweller &amp; Cooper, 1985 · Cognitive Load Theory</span><p>هر محاسبه اول گام‌به‌گام حل می‌شود (قبل از دیدن هر گام حدس بزن)، بعد یک مسئلهٔ مشابه به خودت سپرده می‌شود.</p></div>
+  <div class="method"><h3>شکل کنار متن</h3><span class="cite">Paivio, 1971 · Mayer, Multimedia Learning</span><p>هر فرایند مهم یک شکل برچسب‌دار یا یک ابزار تعاملی دارد. وقتی هم کلمه و هم تصویر در ذهنت باشد، به یاد آوردن آسان‌تر است.</p></div>
+  <div class="method"><h3>پرسیدن «چرا؟»</h3><span class="cite">Pressley et al., 1987 · Elaborative interrogation</span><p>کادرهای «مکث کن و فکر کن» سؤال‌های خود استاد در اسلایدهاست. اول خودت جواب بده، بعد باز کن.</p></div>
+  <div class="method"><h3>پیش‌آزمون و تمرین درهم</h3><span class="cite">Richland, Kornell &amp; Kao, 2009 · Rohrer &amp; Taylor, 2007</span><p>هر فصل با یک حدس شروع می‌شود و آزمون ترکیبی سؤال‌های فصل‌های مختلف را قاطی می‌کند تا یاد بگیری تشخیص بدهی کدام مفهوم لازم است.</p></div>
+</div>
+
+<h2 id="how">هر فصل را این‌طور بخوان</h2>
+<ol class="steps">
+  <li><b>پیش‌آزمون را حدس بزن</b>، حتی اگر هیچ ایده‌ای نداری.</li>
+  <li><b>بخش‌به‌بخش جلو برو.</b> به کادر «مکث کن و فکر کن» که رسیدی، اول جواب را در ذهنت بگو.</li>
+  <li><b>مثال‌های حل‌شده را گام‌به‌گام باز کن</b> و قبل از هر گام حدس بزن چه می‌شود. با ابزارهای تعاملی ور برو؛ عددها را عوض کن و ببین چه تغییر می‌کند.</li>
+  <li><b>سؤال‌های آخر فصل را بدون نگاه به متن جواب بده.</b> هر جا اشتباه کردی، همان بخش را دوباره بخوان.</li>
+  <li><b>فصل را علامت بزن</b> و از فردا کارت‌هایش را در بخش فلش‌کارت مرور کن.</li>
+</ol>
+
+<h2 id="tools">ابزارهای مرور</h2>
+<div class="tools-grid wide">
+  <a class="tool-card" href="exam.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6M9 4a2 2 0 0 0-2 2H5v15h14V6h-2a2 2 0 0 0-2-2"/><path d="M8.5 13l2.5 2.5 4.5-5"/></svg><div><b>آزمون‌ها</b><span>نمونه سؤال میان‌ترم حل‌شده و آزمون ترکیبی از هر فصلی که بخواهی</span></div></a>
+  <a class="tool-card" href="flashcards.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="13" height="13" rx="2"/><path d="M8 4h11a2 2 0 0 1 2 2v11"/></svg><div><b>فلش‌کارت</b><span>مرور روزانه با جعبه‌های لایتنر؛ فقط کارت‌هایی که موعدشان رسیده</span></div></a>
+  <a class="tool-card" href="glossary.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7"/></svg><div><b>واژه‌نامه</b><span>همهٔ اصطلاح‌ها به فارسی و انگلیسی، با جستجو</span></div></a>
+  <a class="tool-card" href="cheatsheet.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 5H6l6 7-6 7h12"/></svg><div><b>خلاصهٔ فرمول‌ها</b><span>همهٔ فرمول‌ها، جدول‌ها و عددهای مهم در یک صفحه</span></div></a>
+</div>
+
+<footer class="site-foot">
+  <p>این جزوه از روی اسلایدهای کلاس و نمونه سؤال میان‌ترم نوشته شده و جای کلاس و کتاب مرجع درس (<span class="en">Essential Cell Biology</span>) را نمی‌گیرد. هر جا با گفتهٔ استاد فرق داشت، حرف استاد ملاک است.</p>
+  <p>پیشرفتت (فصل‌های خوانده‌شده، پاسخ‌ها و جعبه‌های فلش‌کارت) فقط در همین مرورگر ذخیره می‌شود.</p>
+</footer>
+
+</main>
+</body>
+</html>

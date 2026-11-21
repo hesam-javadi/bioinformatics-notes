@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>پوشش و عمق خوانش · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="عمق و عرض پوشش، فرمول لندر–واترمن، محاسبهٔ تعداد خوانش لازم، پوشش پیشنهادی و samtools coverage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch14">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۳ (توالی‌یابی تا فرمت فایل‌ها)، اسلایدهای ۸۶ تا ۹۸" data-motif="ACGTTAGCCATGGACTTACGGATCA">
+  <h1>پوشش و عمق خوانش</h1>
+  <p class="lead">یک ژنوم را به میلیون‌ها تکهٔ کوتاه شکسته‌ایم و تکه‌ها را خوانده‌ایم. آیا واقعاً هر حرف ژنوم خوانده شده؟ چند بار؟ و چند میلیون تکه باید بخوانیم تا مطمئن شویم، بدون اینکه پول و زمان را هدر بدهیم؟ این فصل با یک فرمول ساده به همهٔ این سؤال‌ها جواب می‌دهد.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>پوشش، عمق و عرض پوشش را <b>تعریف کنی</b> و فرقشان را با یک مثال <b>توضیح بدهی</b>.</li>
+    <li>با فرمول لندر–واترمن <code>C = L × N / G</code> پوشش یا تعداد خوانش لازم را <b>حساب کنی</b>.</li>
+    <li>عمق یک جایگاه مشخص را با شمردن خوانش‌ها <b>به دست بیاوری</b> و بگویی چرا فرمول برای یک نقطه جواب نمی‌دهد.</li>
+    <li>پوشش پیشنهادی برای WGS، WES، RNA-seq و ChIP-seq را <b>نام ببری</b> و دلیل فرقشان را <b>شرح بدهی</b>.</li>
+    <li>خروجی دستور <code>samtools coverage</code> را <b>بخوانی</b> و تفسیر کنی.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch14:pre1">
+  <p class="q">ژنوم کوچکی ۲۰ حرف دارد و ۵ خوانش ۸ حرفی از آن گرفته‌ایم. به‌طور میانگین هر حرف ژنوم چند بار خوانده شده است؟</p>
+  <ol class="opts">
+    <li>۰٫۲۵ بار</li>
+    <li data-correct>۲ بار</li>
+    <li>۵ بار</li>
+    <li>۴۰ بار</li>
+  </ol>
+  <div class="explain">در کل ۵ × ۸ = ۴۰ حرف خوانده‌ایم و این ۴۰ حرف روی ۲۰ جایگاه پخش شده‌اند: ۴۰ ÷ ۲۰ = ۲. اگر حدست غلط بود نگران نباش؛ در بخش ۴ همین مثال را قدم‌به‌قدم حل می‌کنیم.</div>
+</div>
+
+<h2 id="what-is-coverage">پوشش چیست؟</h2>
+
+<p>در فصل‌های قبل دیدی که دستگاه توالی‌یابی ژنوم را یک‌جا نمی‌خواند. DNA به تکه‌های کوتاه شکسته می‌شود و هر تکه یک <span class="term" data-en="Read">خوانش</span> می‌شود. خوانش‌ها در فایل FASTQ ذخیره می‌شوند و بعد روی ژنوم مرجع نگاشت می‌شوند (فصل‌های ۱۵ تا ۱۷). حالا یک سؤال کنترل کیفیت داریم: <b>هر جایگاه ژنوم را چند خوانش پوشانده است؟</b></p>
+
+<p>جواب این سؤال <span class="term" data-en="Coverage">پوشش</span> است. پوشش نشان می‌دهد داده‌های ما یک ناحیه را تا چه حد کامل و دقیق دیده‌اند، و هرچه بیشتر باشد به صحت داده‌ها اطمینان بیشتری داریم (اسلاید ۸۷).</p>
+
+<ul>
+  <li><b>پوشش بالا (High coverage):</b> خوانش‌های زیادی روی هم افتاده‌اند.</li>
+  <li><b>پوشش پایین (Low coverage):</b> فقط چند خوانش آن ناحیه را می‌پوشانند.</li>
+</ul>
+
+<aside class="callout analogy">
+  <p>یک متن را با چند نفر پروف‌ریدینگ کردن را در نظر بگیر. اگر هر جمله را فقط یک نفر خوانده باشد و اشتباهی ببیند، نمی‌دانی اشتباه از متن است یا از چشم او. اگر ۳۰ نفر یک جمله را خوانده باشند و ۲۹ نفر بگویند «الف» و یکی بگوید «ب»، خطای آن یک نفر را راحت تشخیص می‌دهی. پوشش یعنی همین: تعداد «رأی‌دهنده‌ها» برای هر جایگاه.</p>
+</aside>
+
+<figure class="fig">
+<svg viewBox="0 0 690 254" width="690" role="img" aria-labelledby="cv1-t">
+  <title id="cv1-t">شش خوانش روی ژنومی با ۲۰ جایگاه؛ جایگاه‌های ۱۱ و ۱۲ هیچ خوانشی ندارند و عمق هر جایگاه زیر آن نوشته شده</title>
+  <rect x="72" y="34" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="47" font-size="11.5" text-anchor="end" class="t-muted mono">r1</text>
+  <rect x="132" y="54" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="67" font-size="11.5" text-anchor="end" class="t-muted mono">r2</text>
+  <rect x="192" y="74" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="87" font-size="11.5" text-anchor="end" class="t-muted mono">r3</text>
+  <rect x="432" y="94" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="107" font-size="11.5" text-anchor="end" class="t-muted mono">r4</text>
+  <rect x="462" y="114" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="127" font-size="11.5" text-anchor="end" class="t-muted mono">r5</text>
+  <rect x="492" y="134" width="176" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="147" font-size="11.5" text-anchor="end" class="t-muted mono">r6</text>
+  <rect x="70" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="85.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">1</text>
+  <rect x="100" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="115.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">2</text>
+  <rect x="130" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="145.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">3</text>
+  <rect x="160" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="175.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">4</text>
+  <rect x="190" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="205.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">5</text>
+  <rect x="220" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="235.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">6</text>
+  <rect x="250" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="265.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">7</text>
+  <rect x="280" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="295.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">8</text>
+  <rect x="310" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="325.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">9</text>
+  <rect x="340" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="355.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">10</text>
+  <rect x="370" y="162" width="30" height="26" class="f-bad-soft s-bad" stroke-width="1.5"/>
+  <text x="385.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">11</text>
+  <rect x="400" y="162" width="30" height="26" class="f-bad-soft s-bad" stroke-width="1.5"/>
+  <text x="415.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">12</text>
+  <rect x="430" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="445.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">13</text>
+  <rect x="460" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="475.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">14</text>
+  <rect x="490" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="505.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">15</text>
+  <rect x="520" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="535.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">16</text>
+  <rect x="550" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="565.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">17</text>
+  <rect x="580" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="595.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">18</text>
+  <rect x="610" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="625.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">19</text>
+  <rect x="640" y="162" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="655.0" y="179" font-size="11" text-anchor="middle" class="t-muted mono">20</text>
+  <text x="60" y="179" font-size="12" text-anchor="end" style="direction:rtl">ژنوم</text>
+  <text x="85.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <text x="115.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <text x="145.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="175.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="205.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="235.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="265.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="295.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="325.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <text x="355.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <rect x="373" y="196" width="24" height="22" rx="4" class="f-bad"/>
+  <text x="385.0" y="212" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">0</text>
+  <rect x="403" y="196" width="24" height="22" rx="4" class="f-bad"/>
+  <text x="415.0" y="212" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">0</text>
+  <text x="445.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <text x="475.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="505.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="535.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="565.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="595.0" y="212" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="625.0" y="212" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="655.0" y="212" font-size="13" text-anchor="middle" class="mono">1</text>
+  <text x="60" y="212" font-size="12" text-anchor="end" style="direction:rtl">عمق</text>
+  <text x="345.0" y="246" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">قرمز: جایگاه بدون خوانش (عمق ۰)؛ عرض = ۱۸ از ۲۰ = ۹۰٪</text>
+</svg>
+<figcaption><b>شکل ۱۴.۱</b> — شش خوانش (مستطیل‌های آبی) روی ژنومی با ۲۰ جایگاه. عدد زیر هر جایگاه عمق همان جایگاه است. دو جایگاه ۱۱ و ۱۲ را هیچ خوانشی نپوشانده (قرمز).</figcaption>
+</figure>
+
+<p>در شکل ۱۴.۱ عمق از جایی به جای دیگر فرق می‌کند: جایگاه‌های ۵ و ۶ عمق ۳ دارند، جایگاه ۱ عمق ۱ و جایگاه‌های ۱۱ و ۱۲ عمق ۰. توالی‌یابی تصادفی است و خوانش‌ها یکنواخت پخش نمی‌شوند، پس عمق هر جایگاه با دیگری فرق دارد و برای همین به یک عدد خلاصه نیاز داریم.</p>
+
+<h2 id="depth-breadth">عمق و عرض پوشش</h2>
+
+<p>اسلاید ۸۸ دو شاخص جدا تعریف می‌کند که اغلب با هم قاطی می‌شوند:</p>
+
+<div class="compare">
+  <div><h4><span class="term" data-en="Depth">عمق پوشش</span></h4><p>میانگین تعداد دفعاتی که هر باز خوانده شده. مثال: اگر هر باز به‌طور متوسط ۳۰ بار خوانده شود، عمق <code>30×</code> است.</p></div>
+  <div><h4><span class="term" data-en="Breadth">عرض پوشش</span></h4><p>درصدی از ژنوم که حداقل یک بار خوانده شده. مثال: اگر ۹۵٪ ژنوم حداقل یک بار خوانده شود، عرض ۹۵٪ است.</p></div>
+</div>
+
+<p style="text-align:center"><code>Depth = مجموع بازهای توالی‌یابی‌شده ÷ طول ژنوم</code></p>
+<p style="text-align:center"><code>Breadth = تعداد بازهایی که حداقل یک بار خوانده شده‌اند ÷ کل بازهای ژنوم</code></p>
+
+<div class="worked" data-title="عمق و عرض در شکل ۱۴.۱">
+  <p class="problem">عمق و عرض پوشش را برای شکل ۱۴.۱ حساب کن. هر خوانش ۶ حرف دارد.</p>
+  <ol class="steps">
+    <li>مجموع بازهای توالی‌یابی‌شده: ۶ خوانش × ۶ حرف = ۳۶.</li>
+    <li>طول ژنوم ۲۰ است، پس عمق = ۳۶ ÷ ۲۰ = <b>۱٫۸×</b>. (چک: مجموع اعداد زیر جایگاه‌ها هم ۳۶ است.)</li>
+    <li>جایگاه‌های بدون خوانش: ۱۱ و ۱۲، یعنی ۲ جایگاه. پس ۱۸ جایگاه حداقل یک بار خوانده شده‌اند.</li>
+    <li>عرض = ۱۸ ÷ ۲۰ = <b>۹۰٪</b>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> عمق ۱٫۸× و عرض ۹۰٪. عمق میانگین است و جایگاه‌های بی‌پوشش هم در آن حساب می‌شوند، ولی عرض فقط می‌پرسد «خوانده شد یا نه».</p>
+</div>
+
+<aside class="callout pitfall">
+  <p>عمق زیاد به معنی عرض کامل نیست. ممکن است یک ناحیهٔ سخت (مثلاً پر از تکرار) هیچ خوانشی نگیرد و میانگین عمق باز هم ۳۰× باشد، چون ناحیه‌های دیگر عمق بیشتری دارند. برعکس هم درست است: عرض ۱۰۰٪ با عمق ۱× یعنی هر جایگاه فقط یک بار دیده شده و نمی‌شود به آن اعتماد کرد.</p>
+</aside>
+
+<h3>چرا عمق مهم است؟</h3>
+
+<p>عمق تعیین می‌کند هر نوکلئوتید چند بار خوانده شده و برای دقت تشخیص جهش (variant calling) حیاتی است (اسلاید ۸۹). عمق بیشتر یعنی تشخیص دقیق‌تر جهش.</p>
+
+<ul>
+  <li><b>۳۰×:</b> استاندارد رایج برای توالی‌یابی ژنوم کامل انسان. هر باز تقریباً ۳۰ بار خوانده می‌شود و می‌توان به جهش‌های پیدا شده اطمینان کرد.</li>
+  <li><b>۵۰×:</b> در مطالعات سرطان لازم است. جهش‌هایی که فقط در بخشی از سلول‌های تومور هستند کم‌تکرارند و برای دیدنشان باید عمق بالا باشد.</li>
+</ul>
+
+<details class="think">
+  <summary>چرا برای دیدن جهشی که فقط در بخشی از سلول‌های تومور است عمق بیشتری لازم داریم؟</summary>
+  <div><p>فرض کن جهشی فقط در ۱۰٪ سلول‌های نمونه باشد. در عمق ۳۰× انتظار داریم حدود ۳ خوانش از ۳۰ تا حامل جهش باشند. ۳ خوانش در میان ۳۰ تا را به‌سختی می‌شود از خطای دستگاه جدا کرد. در عمق ۵۰۰× همین جهش در حدود ۵۰ خوانش دیده می‌شود و سیگنال روشن‌تر است. جهش کم‌تکرار یعنی سهم کوچک‌تری از خوانش‌ها، پس برای شمارش مطمئن به خوانش‌های بیشتری نیاز داریم.</p></div>
+</details>
+
+<h3>چرا عرض مهم است؟</h3>
+
+<p>عرض نشان می‌دهد چه نسبتی از ناحیهٔ هدف اصلاً دیده شده (اسلاید ۹۰). مثال اسلاید: عرض ۹۰٪ یعنی ۹۰٪ از RNAی هدف توالی‌یابی شده، که برای تحلیل کامل بیان ژن لازم است. در تحلیل ترنسکریپتوم عرض ۱۰۰٪ تضمین می‌کند همهٔ ژن‌های بیان‌شده تشخیص داده شوند، چون ژنی که هیچ خوانشی نگیرد برای ما «خاموش» به نظر می‌رسد حتی اگر روشن باشد. در عمل باید بین عمق و عرض تعادل برقرار کرد؛ خوانش‌های محدودی داریم و باید تصمیم بگیریم آن‌ها را عمیق‌تر کنیم یا گسترده‌تر.</p>
+
+<div class="fill" data-answer="عمق|Depth|عمق پوشش" data-id="ch14:f1">
+  <p class="q">شاخصی که «میانگین دفعاتی که هر باز خوانده شده» را نشان می‌دهد ____ نام دارد. <input class="blank" type="text"></p>
+  <div class="explain">عمق (Depth). شاخصی که درصد ژنوم خوانده‌شده را می‌گوید عرض (Breadth) است.</div>
+</div>
+
+<h3>چرا پوشش مهم است؟ خلاصه</h3>
+
+<p>اسلاید ۹۱ چهار دلیل می‌آورد:</p>
+<ol class="steps">
+  <li><b>افزایش دقت:</b> با پوشش بیشتر احتمال خطاهای تصادفی کم می‌شود، چون خطای دستگاه معمولاً فقط در یکی دو خوانش ظاهر می‌شود و بقیه تصحیحش می‌کنند.</li>
+  <li><b>تشخیص جهش‌ها:</b> برای دیدن تغییرات نادر ژنتیکی به پوشش بالا نیاز داریم.</li>
+  <li><b>کامل بودن داده‌ها:</b> پوشش خوب تضمین می‌کند هیچ بخش مهمی از ژنوم از دست نرفته باشد.</li>
+  <li><b>مقایسهٔ بهتر نمونه‌ها:</b> پوشش یکنواخت و کافی، مقایسهٔ چند نمونه را قابل‌اعتمادتر می‌کند.</li>
+</ol>
+
+<h2 id="lander-waterman">فرمول لندر–واترمن</h2>
+
+<p>پوشش را قبل از شروع آزمایش هم می‌توان تخمین زد. اگر خوانش‌ها هم‌طول باشند و تصادفی روی ژنوم بیفتند:</p>
+
+<p style="text-align:center"><code>C = L × N / G</code></p>
+
+<table class="center">
+  <tr><th>نماد</th><th>معنی</th></tr>
+  <tr><td><code>C</code></td><td>پوشش (Coverage)</td></tr>
+  <tr><td><code>L</code></td><td>طول هر خوانش (Length of reads)، برحسب باز</td></tr>
+  <tr><td><code>N</code></td><td>تعداد خوانش‌ها (Number of reads)</td></tr>
+  <tr><td><code>G</code></td><td>طول ژنوم (Genome length)، برحسب باز</td></tr>
+</table>
+
+<p>منطقش ساده است: <code>L × N</code> مجموع همهٔ بازهایی است که خوانده‌ایم. وقتی آن را بر <code>G</code> تقسیم می‌کنیم، به‌طور میانگین هر باز ژنوم چند بار خوانده شده را به دست می‌آوریم. این همان تعریف عمق است.</p>
+
+<aside class="callout analogy">
+  <p>اگر ۱۰ نفر هر کدام یک کتاب ۱۰۰ صفحه‌ای را ورق بزنند (در مجموع ۱۰۰۰ صفحه‌ورق‌زدن) و کتابی که همه‌شان را بین خودشان تقسیم کرده‌اند ۳۰ صفحه داشته باشد، هر صفحه به‌طور متوسط ۱۰۰۰ ÷ ۳۰ ≈ ۳۳ بار دیده می‌شود. صفحه‌های تکی ممکن است اصلاً دیده نشوند و بعضی چند بار؛ فقط میانگین از فرمول می‌آید.</p>
+</aside>
+
+<h3>سه مثال اسلاید</h3>
+
+<div class="worked" data-title="مثال ۱: کل ژنوم (G = 20)">
+  <p class="problem">۵ خوانش داریم، هر کدام ۸ باز، و ژنوم ۲۰ باز است. پوشش چقدر است؟ (اسلاید ۹۳)</p>
+  <ol class="steps">
+    <li>L = 8، N = 5، G = 20.</li>
+    <li>C = L × N / G = 8 × 5 / 20 = 40 / 20.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code>2X</code>؛ هر باز به‌طور میانگین ۲ بار خوانده شده است.</p>
+</div>
+
+<div class="worked" data-title="مثال ۲: فقط یک ناحیه (G = 10)">
+  <p class="problem">همان ۵ خوانش را فقط روی یک ناحیهٔ ۱۰ بازی حساب می‌کنیم (اسلاید ۹۴). پوشش چقدر است؟</p>
+  <ol class="steps">
+    <li>L = 8، N = 5 مثل قبل، ولی G = 10.</li>
+    <li>C = 8 × 5 / 10 = 40 / 10.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code>4X</code>. ناحیه کوچک‌تر است ولی همان‌قدر خوانش در آن ریخته، پس پوشش در آن ناحیه بیشتر می‌شود.</p>
+</div>
+
+<figure class="fig compact">
+<svg viewBox="0 0 390 212" width="390" role="img" aria-labelledby="cv2-t">
+  <title id="cv2-t">پنج خوانش هشت‌بازی روی ناحیه‌ای ده‌بازی؛ عمق جایگاه پنجم برابر ۵ است</title>
+  <rect x="72" y="34" width="236" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="47" font-size="11.5" text-anchor="end" class="t-muted mono">r1</text>
+  <rect x="72" y="54" width="236" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="67" font-size="11.5" text-anchor="end" class="t-muted mono">r2</text>
+  <rect x="102" y="74" width="236" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="87" font-size="11.5" text-anchor="end" class="t-muted mono">r3</text>
+  <rect x="132" y="94" width="236" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="107" font-size="11.5" text-anchor="end" class="t-muted mono">r4</text>
+  <rect x="132" y="114" width="236" height="15" rx="4" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="60" y="127" font-size="11.5" text-anchor="end" class="t-muted mono">r5</text>
+  <rect x="70" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="85.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">1</text>
+  <rect x="100" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="115.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">2</text>
+  <rect x="130" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="145.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">3</text>
+  <rect x="160" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="175.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">4</text>
+  <rect x="190" y="142" width="30" height="26" class="f-hl-soft s-hl" stroke-width="1.5"/>
+  <text x="205.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">5</text>
+  <rect x="220" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="235.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">6</text>
+  <rect x="250" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="265.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">7</text>
+  <rect x="280" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="295.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">8</text>
+  <rect x="310" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="325.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">9</text>
+  <rect x="340" y="142" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <text x="355.0" y="159" font-size="11" text-anchor="middle" class="t-muted mono">10</text>
+  <text x="60" y="159" font-size="12" text-anchor="end" style="direction:rtl">ناحیه</text>
+  <text x="85.0" y="192" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="115.0" y="192" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="145.0" y="192" font-size="13" text-anchor="middle" class="mono">5</text>
+  <text x="175.0" y="192" font-size="13" text-anchor="middle" class="mono">5</text>
+  <text x="205.0" y="192" font-size="13" text-anchor="middle" font-weight="800" class="t-hl mono">5</text>
+  <text x="235.0" y="192" font-size="13" text-anchor="middle" class="mono">5</text>
+  <text x="265.0" y="192" font-size="13" text-anchor="middle" class="mono">5</text>
+  <text x="295.0" y="192" font-size="13" text-anchor="middle" class="mono">5</text>
+  <text x="325.0" y="192" font-size="13" text-anchor="middle" class="mono">3</text>
+  <text x="355.0" y="192" font-size="13" text-anchor="middle" class="mono">2</text>
+  <text x="60" y="192" font-size="12" text-anchor="end" style="direction:rtl">عمق</text>
+</svg>
+<figcaption><b>شکل ۱۴.۲</b> — همان ۵ خوانش ۸ بازی روی ناحیه‌ای با ۱۰ جایگاه. مجموع اعداد عمق ۴۰ است (۲+۳+۵+۵+۵+۵+۵+۵+۳+۲) و میانگینشان ۴۰ ÷ ۱۰ = ۴. جایگاه ۵ (نارنجی) را دقیقاً ۵ خوانش پوشانده است.</figcaption>
+</figure>
+
+<div class="worked" data-title="مثال ۳: تله، یک جایگاه (G = 1)">
+  <p class="problem">اگر فرمول را کورکورانه برای یک باز (G = 1) به کار ببریم چه می‌شود؟ (اسلاید ۹۵)</p>
+  <ol class="steps">
+    <li>8 × 5 / 1 = 40، یعنی <code>40X</code>؟</li>
+    <li>ولی در شکل فقط ۵ خوانش آن جایگاه را می‌پوشانند. پس خوانش‌های روی آن نقطه را می‌شماریم.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> عمق واقعی این جایگاه <code>5X</code> است. فرمول لندر–واترمن میانگین یک ناحیه است، نه عمق یک نقطه. عمق یک نقطه را باید با شمردن خوانش‌های روی آن به دست آورد.</p>
+</div>
+
+<aside class="callout exam">
+  <p>اگر در امتحان «عمق یک موقعیت» از روی شکل پرسیدند، خوانش‌های روی آن موقعیت را بشمار. اگر «پوشش ناحیه یا ژنوم» با L، N و G پرسیدند، از فرمول استفاده کن. فرمول با G = 1 جواب غلط می‌دهد.</p>
+</aside>
+
+<div class="quiz" data-id="ch14:q1">
+  <p class="q">۱۰ خوانش ۱۰۰ بازی، ناحیه‌ای به طول ۲۵۰ باز را می‌پوشانند. پوشش میانگین چقدر است؟</p>
+  <ol class="opts"><li>۲×</li><li data-correct>۴×</li><li>۱۰×</li><li>۲۵×</li></ol>
+  <div class="explain">C = 100 × 10 / 250 = 1000 / 250 = 4.</div>
+</div>
+
+<h2 id="planning">برنامه‌ریزی آزمایش: چند خوانش لازم است؟</h2>
+
+<p>فرمول را می‌شود برعکس هم نوشت تا بدانیم برای پوشش دلخواه چند خوانش لازم است:</p>
+<p style="text-align:center"><code>N = C × G / L</code></p>
+
+<div class="worked" data-title="ژنوم انسان با پوشش 30X (اسلاید ۹۶)">
+  <p class="problem">ژنوم انسان <code>G = 3×10<sup>9</sup></code> باز است. خوانش‌های ایلومینا <code>L = 150</code> باز و پوشش موردنظر <code>C = 30X</code> است. چند خوانش و چند گیگاباز داده لازم است؟</p>
+  <ol class="steps">
+    <li>N = C × G / L = 30 × 3×10<sup>9</sup> / 150.</li>
+    <li>صورت: 30 × 3×10<sup>9</sup> = 9×10<sup>10</sup>.</li>
+    <li>تقسیم بر ۱۵۰: 9×10<sup>10</sup> / 150 = 6×10<sup>8</sup>.</li>
+    <li>داده: 6×10<sup>8</sup> × 150 = 9×10<sup>10</sup> باز = ۹۰ گیگاباز (همان C × G).</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> N = 600,000,000 خوانش، یعنی ۶۰۰ میلیون خوانش ۱۵۰ بازی، حدود ۹۰ گیگاباز داده. با همین فرمول پیش از آزمایش مقدار توالی‌یابی لازم (و هزینه) را تخمین می‌زنیم.</p>
+</div>
+
+<div class="worked" data-title="تمرین ۱: ژنوم باکتری">
+  <p class="problem">ژنوم باکتری ۵ مگاباز (<code>5×10<sup>6</sup></code> باز) است. با خوانش‌های ۱۵۰ بازی می‌خواهیم پوشش ۱۰۰× بگیریم. چند خوانش لازم است؟</p>
+  <ol class="steps">
+    <li>N = C × G / L = 100 × 5×10<sup>6</sup> / 150.</li>
+    <li>صورت = 5×10<sup>8</sup>.</li>
+    <li>5×10<sup>8</sup> / 150 ≈ 3٫33×10<sup>6</sup>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> حدود ۳٫۳۳ میلیون خوانش (۳٬۳۳۳٬۳۳۳). مقدار داده ۵۰۰ مگاباز است.</p>
+</div>
+
+<div class="worked" data-title="تمرین ۲: محاسبهٔ پوشش">
+  <p class="problem">یک ژنوم ۴ مگاباز را با ۲ میلیون خوانش ۱۰۰ بازی توالی‌یابی کرده‌ایم. پوشش چقدر است؟ اگر ژنوم ۱۰ برابر بزرگ‌تر و داده همان بود، چه؟</p>
+  <ol class="steps">
+    <li>L = 100، N = 2×10<sup>6</sup>، G = 4×10<sup>6</sup>.</li>
+    <li>C = 100 × 2×10<sup>6</sup> / 4×10<sup>6</sup> = 2×10<sup>8</sup> / 4×10<sup>6</sup> = 50.</li>
+    <li>برای ژنوم ۱۰ برابر بزرگ‌تر (G = 4×10<sup>7</sup>): 2×10<sup>8</sup> / 4×10<sup>7</sup> = 5.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code>50X</code> و در حالت دوم <code>5X</code>. پوشش با اندازهٔ ژنوم رابطهٔ عکس دارد.</p>
+</div>
+
+<div class="fill" data-answer="10|۱۰|10X|10×" data-id="ch14:f2">
+  <p class="q">یک ژنوم ۱ گیگاباز را با ۱۰ گیگاباز داده توالی‌یابی کرده‌ایم. پوشش برابر ____ × است. <input class="blank" type="text"></p>
+  <div class="explain">C = (L × N) / G = مجموع بازها ÷ طول ژنوم = ۱۰ ÷ ۱ = ۱۰.</div>
+</div>
+
+<div data-widget="coverage"></div>
+
+<h2 id="recommended">پوشش پیشنهادی برای هر آزمایش</h2>
+
+<p>پوشش لازم به هدف آزمایش بستگی دارد (اسلاید ۹۷):</p>
+
+<table class="center">
+  <tr><th>آزمایش</th><th>پوشش پیشنهادی</th><th>توضیح</th></tr>
+  <tr><td>WGS (توالی‌یابی ژنوم کامل)</td><td><code>30×</code> تا <code>50×</code></td><td>کل ژنوم؛ ۳۰× استاندارد انسان</td></tr>
+  <tr><td>WES (توالی‌یابی اگزوم کامل)</td><td><code>100×</code></td><td>فقط بخش‌های کدکنندهٔ پروتئین؛ ناحیهٔ کوچک‌تر، عمق بیشتر</td></tr>
+  <tr><td>RNA-seq</td><td>برحسب «میلیون خوانش»</td><td>ژن‌های کم‌بیان عمق بیشتری می‌خواهند</td></tr>
+  <tr><td>ChIP-seq</td><td><code>100×</code></td><td>مطابق اسلاید</td></tr>
+</table>
+
+<details class="think">
+  <summary>چرا برای RNA-seq پوشش را با «میلیون خوانش» می‌گوییم و نه با ×؟</summary>
+  <div><p>چون در RNA-seq همهٔ ژنوم یکنواخت خوانده نمی‌شود. هر ژن به اندازهٔ بیانش RNA تولید می‌کند، پس ژن پربیان هزاران خوانش می‌گیرد و ژن کم‌بیان چند تا. یک عدد ثابت × برای کل ژنوم معنی ندارد. به جایش می‌گوییم در کل چند میلیون خوانش می‌گیریم تا ژن‌های کم‌بیان هم به عمق کافی برسند.</p></div>
+</details>
+
+<details class="think">
+  <summary>چرا WES با ناحیهٔ بسیار کوچک‌تر، پوشش ۱۰۰× می‌گیرد ولی WGS فقط ۳۰×؟</summary>
+  <div><p>اگزوم حدود ۱ تا ۲٪ ژنوم است و هزینهٔ توالی‌یابی هر باز ثابت است؛ پس همان بودجه روی ناحیهٔ کوچک‌تر عمق بالاتری می‌دهد. (طبق فرمول، G کوچک‌تر یعنی C بزرگ‌تر.) این عمق بالا برای ناحیه‌ای که بیشترین جهش‌های مهم را دارد ارزشمند است.</p></div>
+</details>
+
+<h2 id="samtools">محاسبهٔ پوشش در عمل: samtools coverage</h2>
+
+<p>در عمل پوشش را از فایل نگاشت (BAM) محاسبه می‌کنیم. ابزار <code>samtools</code> دستور <code>coverage</code> را دارد که جدول یا هیستوگرام پوشش هر کروموزوم یا یک ناحیهٔ دلخواه را می‌دهد (اسلاید ۹۸):</p>
+
+<pre data-lang="BASH"><code>$ samtools coverage -w 50 -r chr1 aligned_reads.bam</code></pre>
+
+<table class="center">
+  <tr><th>بخش</th><th>معنی</th></tr>
+  <tr><td><code>-r chr1</code></td><td>فقط کروموزوم ۱ (ناحیه یا region)</td></tr>
+  <tr><td><code>-w 50</code></td><td>عرض هیستوگرام (تعداد ستون‌های نمودار متنی)</td></tr>
+  <tr><td><code>aligned_reads.bam</code></td><td>ورودی: خروجی هم‌ترازی (BAM)</td></tr>
+  <tr><td>خروجی</td><td><code>Mean coverage</code> (عمق میانگین)، <code>Percent covered</code> (عرض) و یک هیستوگرام</td></tr>
+</table>
+
+<aside class="callout simple">
+  <p>خروجی این دستور هر دو شاخص این فصل را یک‌جا می‌دهد: <b>Mean coverage = عمق</b> و <b>Percent covered = عرض</b>.</p>
+</aside>
+
+<div class="quiz" data-id="ch14:q2">
+  <p class="q">در خروجی samtools coverage، ستون «Percent covered» کدام مفهوم را نشان می‌دهد؟</p>
+  <ol class="opts"><li>عمق پوشش</li><li data-correct>عرض پوشش</li><li>طول خوانش</li><li>تعداد خوانش‌ها</li></ol>
+  <div class="explain">درصد جایگاه‌هایی که حداقل یک بار پوشانده شده‌اند، یعنی عرض. میانگین عمق در Mean coverage است.</div>
+</div>
+
+<div class="quiz" data-id="ch14:q3">
+  <p class="q">فرمول لندر–واترمن برای یک جایگاه واحد (G = 1) با ۵ خوانش ۸ بازی ۴۰X می‌دهد. چرا این عدد برای آن جایگاه غلط است؟</p>
+  <ol class="opts">
+    <li>چون G باید همیشه بیشتر از ۱۰۰ باشد</li>
+    <li data-correct>چون فرمول میانگین یک ناحیه را می‌دهد و عمق یک نقطه از شمردن خوانش‌های روی آن به دست می‌آید</li>
+    <li>چون خوانش‌ها از یک نقطه عبور نمی‌کنند</li>
+    <li>چون L باید برابر ۱ شود</li>
+  </ol>
+  <div class="explain">هر خوانش ۸ بازی فقط بخشی از جایگاه‌ها را می‌پوشاند. تقسیم همهٔ ۴۰ باز بر یک جایگاه فرض می‌کند همهٔ بازهای خوانده‌شده روی همان جایگاه افتاده‌اند. جواب درست ۵X است.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li><b>پوشش</b> یعنی یک جایگاه ژنوم چند بار خوانده شده؛ پوشش بیشتر یعنی اطمینان بیشتر به داده.</li>
+    <li><b>عمق</b> = مجموع بازهای توالی‌یابی‌شده ÷ طول ژنوم (مثلاً ۳۰×). <b>عرض</b> = بازهایی که حداقل یک بار خوانده شده‌اند ÷ کل ژنوم (مثلاً ۹۵٪).</li>
+    <li>۳۰× استاندارد ژنوم انسان است؛ ۵۰× در سرطان برای دیدن جهش‌های کم‌تکرار؛ عرض ۱۰۰٪ در ترنسکریپتوم برای دیدن همهٔ ژن‌های بیان‌شده.</li>
+    <li>پوشش به دقت، تشخیص جهش، کامل بودن داده و مقایسهٔ نمونه‌ها کمک می‌کند.</li>
+    <li><b>لندر–واترمن:</b> <code>C = L × N / G</code>؛ <code>L × N</code> همهٔ بازهای خوانده‌شده است. برعکسش <code>N = C × G / L</code>.</li>
+    <li>مثال‌ها: ۸×۵/۲۰ = ۲X؛ ۸×۵/۱۰ = ۴X؛ برای یک جایگاه ۸×۵/۱ = ۴۰X غلط است و باید خوانش‌ها را شمرد (۵X).</li>
+    <li>انسان ۳۰× با خوانش ۱۵۰ بازی: ۶۰۰ میلیون خوانش ≈ ۹۰ گیگاباز.</li>
+    <li>پوشش پیشنهادی: WGS ۳۰ تا ۵۰×، WES ۱۰۰×، ChIP-seq ۱۰۰×، RNA-seq برحسب میلیون خوانش.</li>
+    <li><code>samtools coverage -w 50 -r chr1 aligned_reads.bam</code> ورودی BAM می‌گیرد و Mean coverage، Percent covered و هیستوگرام می‌دهد.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی، محاسباتی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>توالی‌یابی: از سنگر تا نسل سوم · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="روش سنگر، پروژهٔ ژنوم انسان، توالی‌یابی نسل دوم (ایلومینا)، خطا و کیفیت، هزینه و مقایسهٔ فناوری‌های توالی‌یابی.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch11">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۳ (اسلایدهای ۴۹ تا ۶۰)، فایل ۱ (اسلایدهای ۱۶۲ تا ۱۶۸)، فایل ۲ (اسلاید ۱)" data-motif="GCTAGCATGGCCATTGTAATGGGCC">
+  <h1>توالی‌یابی: از سنگر تا نسل سوم</h1>
+  <p class="lead">یک رشتهٔ DNA خام به تو می‌دهند و می‌گویند «ترتیب A و T و C و G را بگو». هیچ میکروسکوپی حروف را نشان نمی‌دهد. پس چطور می‌شود یک ژنوم سه‌میلیارد حرفی را خواند، آن هم با هزینه‌ای که از سه میلیارد دلار به چند صد دلار رسیده؟ این فصل جواب را قدم‌به‌قدم می‌دهد.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>ایدهٔ روش سنگر (ddNTP، الکتروفورز و خواندن رنگ‌ها) را <b>توضیح بدهی</b> و از روی ترتیب باندها یک توالی <b>بخوانی</b>.</li>
+    <li>مراحل پروژهٔ ژنوم انسان و اهداف آن را به ترتیب زمانی <b>شرح بدهی</b>.</li>
+    <li>سه مرحلهٔ ایلومینا (آداپتور، خوشه‌سازی، توالی‌یابی با سنتز) را <b>رسم کنی</b>.</li>
+    <li>بهای موازی‌سازی (خوانش کوتاه، خطا، افت کیفیت) را <b>توضیح بدهی</b>.</li>
+    <li>سنگر، ایلومینا، PacBio HiFi و Nanopore را از نظر طول خوانش، دقت و کاربرد <b>مقایسه کنی</b>.</li>
+    <li>بگویی بعد از توالی‌یابی، خوانش‌ها با مونتاژ یا با نگاشت به مرجع <b>پردازش می‌شوند</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch11:pre1">
+  <p class="q">در روش سنگر، چرا ساخت رشتهٔ DNA در جاهای تصادفی متوقف می‌شود؟</p>
+  <ol class="opts">
+    <li>چون دما بالا می‌رود</li>
+    <li data-correct>چون گاهی به‌جای نوکلئوتید معمولی، نوکلئوتید «بن‌بست» وارد رشته می‌شود</li>
+    <li>چون آنزیم پلیمراز خسته می‌شود</li>
+    <li>چون لیزر رشته را می‌برد</li>
+  </ol>
+  <div class="explain">نوکلئوتید بن‌بست (ddNTP) گروهی که رشته را ادامه می‌دهد ندارد؛ هر وقت یکی از آن‌ها وارد شود، ساخت همان‌جا تمام می‌شود. اگر غلط حدس زدی مشکلی نیست؛ حدس قبل از یادگیری حافظه را بهتر می‌کند.</div>
+</div>
+
+<h2 id="problem">مسئله: چطور حروف DNA را بخوانیم؟</h2>
+
+<p>تا اینجا یاد گرفتی بفهمیم یک ژن وجود دارد یا نه و چقدر بیان می‌شود (فصل‌های <a href="09-pcr.html">PCR</a> و <a href="10-microarray.html">ریزآرایه</a>). اما این روش‌ها خودِ <b>ترتیب حروف</b> را نمی‌گویند. ریزآرایه فقط بیان ژن‌های <em>شناخته‌شده</em> را با رنگ می‌سنجد و PCR فقط یک قطعه را تکثیر می‌کند. کاری که اینجا می‌خواهیم <span class="term" data-en="Sequencing">توالی‌یابی</span> است: خواندن مستقیم حروف DNA.</p>
+
+<p>مشکل دوم اندازه است. یک کروموزوم مثل یک نوار بلند کاغذ است و هیچ دستگاهی کل آن را یک‌جا نمی‌خواند. پس DNA را مثل یک روزنامه خرد می‌کنیم، تکه‌ها را می‌خوانیم و بعد کنار هم می‌چینیم. تکهٔ خوانده‌شده را <span class="term" data-en="Read">خوانش</span> (read) می‌گویند. هر فناوری توالی‌یابی با دو مشخصه سنجیده می‌شود: خوانش‌هایش چقدر بلندند و چند خوانش را هم‌زمان می‌دهد.</p>
+
+<h2 id="sanger">روش سنگر (دههٔ ۱۹۷۰)</h2>
+
+<aside class="callout story">
+  <p>فردریک سنگر روشش را در سال ۱۹۷۷ منتشر کرد. این روش حدود سی سال تنها ابزار توالی‌یابی بود و پروژهٔ ژنوم انسان با آن انجام شد.</p>
+</aside>
+
+<h3>ایده: نوکلئوتید بن‌بست</h3>
+
+<p>برای ساختن یک رشتهٔ DNA، آنزیم پلیمراز نوکلئوتیدهای معمولی (dNTP) را یکی‌یکی به انتهای رشته می‌چسباند (فصل <a href="05-replication.html">همانندسازی</a>). سنگر کنار dNTPهای معمولی <b>مقدار خیلی کمی</b> نوکلئوتید «بن‌بست» به نام <span class="term" data-en="Dideoxynucleotide, ddNTP">ddNTP</span> اضافه کرد. اگر یکی از این‌ها وارد رشته شود، ساخت رشته همان‌جا متوقف می‌شود. چهار نوع ddNTP داریم (برای A، T، C و G) و هر کدام یک <b>رنگ فلورسانس مخصوص</b> دارد.</p>
+
+<p>چون ddNTP کم است و ورودش تصادفی، در یک لوله <b>هزاران قطعه با طول‌های مختلف</b> ساخته می‌شود و انتهای هر قطعه یک حرف رنگی است. برای هر طول ممکن، قطعه‌ای وجود دارد که دقیقاً همان‌جا تمام شده است.</p>
+
+<h3>الکتروفورز و خواندن رنگ‌ها</h3>
+
+<p>حالا باید قطعه‌ها را بر اساس طول مرتب کنیم. این کار را <span class="term" data-en="Electrophoresis">الکتروفورز</span> می‌کند: DNA بار منفی دارد (به‌خاطر فسفات‌ها)، پس در میدان الکتریکی به سمت قطب مثبت می‌رود. قطعه‌های کوتاه‌تر راحت‌تر از میان ژل رد می‌شوند و <b>سریع‌تر</b> حرکت می‌کنند. در پایان کوتاه‌ترین قطعه دورتر از چاهک و بلندترین نزدیک چاهک است. یک لیزر رنگ هر باند را می‌خواند: <b>کوتاه‌ترین قطعه = اولین حرف</b>، قطعهٔ بعدی = حرف دوم و همین‌طور تا آخر.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 340" width="740" role="img" aria-labelledby="sg-t">
+<title id="sg-t">توالی‌یابی سنگر: قطعه‌هایی با طول‌های ۱ تا ۸ که هر کدام به یک ddNTP رنگی ختم می‌شوند، مرتب‌شدن آن‌ها در ژل و خواندن رنگ‌ها از پایین به بالا</title>
+<defs><marker id="sg-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+<text x="130" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۱. قطعه‌های حاصل از ساخت</text>
+<text x="395" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۲. الکتروفورز (ژل)</text>
+<text x="620" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۳. خواندن رنگ‌ها</text>
+<rect x="20" y="289" width="22" height="22" rx="4" class="f-g"/>
+<text x="31" y="305" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">G</text>
+<line x1="48" y1="300" x2="340" y2="300" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="255" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="271" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="255" width="22" height="22" rx="4" class="f-c"/>
+<text x="55" y="271" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">C</text>
+<line x1="72" y1="266" x2="340" y2="266" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="221" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="237" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="221" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="237" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="221" width="22" height="22" rx="4" class="f-t"/>
+<text x="79" y="237" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">T</text>
+<line x1="96" y1="232" x2="340" y2="232" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="187" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="203" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="187" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="203" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="187" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="79" y="203" font-size="12" text-anchor="middle" class="t-muted mono">T</text>
+<rect x="92" y="187" width="22" height="22" rx="4" class="f-a"/>
+<text x="103" y="203" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">A</text>
+<line x1="120" y1="198" x2="340" y2="198" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="153" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="169" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="153" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="169" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="153" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="79" y="169" font-size="12" text-anchor="middle" class="t-muted mono">T</text>
+<rect x="92" y="153" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="103" y="169" font-size="12" text-anchor="middle" class="t-muted mono">A</text>
+<rect x="116" y="153" width="22" height="22" rx="4" class="f-g"/>
+<text x="127" y="169" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">G</text>
+<line x1="144" y1="164" x2="340" y2="164" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="119" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="135" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="119" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="135" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="119" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="79" y="135" font-size="12" text-anchor="middle" class="t-muted mono">T</text>
+<rect x="92" y="119" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="103" y="135" font-size="12" text-anchor="middle" class="t-muted mono">A</text>
+<rect x="116" y="119" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="127" y="135" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="140" y="119" width="22" height="22" rx="4" class="f-c"/>
+<text x="151" y="135" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">C</text>
+<line x1="168" y1="130" x2="340" y2="130" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="101" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="101" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="79" y="101" font-size="12" text-anchor="middle" class="t-muted mono">T</text>
+<rect x="92" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="103" y="101" font-size="12" text-anchor="middle" class="t-muted mono">A</text>
+<rect x="116" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="127" y="101" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="140" y="85" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="151" y="101" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="164" y="85" width="22" height="22" rx="4" class="f-a"/>
+<text x="175" y="101" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">A</text>
+<line x1="192" y1="96" x2="340" y2="96" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="20" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="31" y="67" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="44" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="55" y="67" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="68" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="79" y="67" font-size="12" text-anchor="middle" class="t-muted mono">T</text>
+<rect x="92" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="103" y="67" font-size="12" text-anchor="middle" class="t-muted mono">A</text>
+<rect x="116" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="127" y="67" font-size="12" text-anchor="middle" class="t-muted mono">G</text>
+<rect x="140" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="151" y="67" font-size="12" text-anchor="middle" class="t-muted mono">C</text>
+<rect x="164" y="51" width="22" height="22" rx="4" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="175" y="67" font-size="12" text-anchor="middle" class="t-muted mono">A</text>
+<rect x="188" y="51" width="22" height="22" rx="4" class="f-t"/>
+<text x="199" y="67" font-size="13" font-weight="800" text-anchor="middle" class="t-white mono">T</text>
+<line x1="216" y1="62" x2="340" y2="62" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="340" y="34" width="110" height="292" rx="6" class="f-surface s-line" stroke-width="1.5"/>
+<text x="395" y="50" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">قطب منفی (چاهک)</text>
+<text x="395" y="338" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">قطب مثبت</text>
+<rect x="360" y="295" width="70" height="10" rx="3" class="f-g"/>
+<rect x="360" y="261" width="70" height="10" rx="3" class="f-c"/>
+<rect x="360" y="227" width="70" height="10" rx="3" class="f-t"/>
+<rect x="360" y="193" width="70" height="10" rx="3" class="f-a"/>
+<rect x="360" y="159" width="70" height="10" rx="3" class="f-g"/>
+<rect x="360" y="125" width="70" height="10" rx="3" class="f-c"/>
+<rect x="360" y="91" width="70" height="10" rx="3" class="f-a"/>
+<rect x="360" y="57" width="70" height="10" rx="3" class="f-t"/>
+<line x1="470" y1="70" x2="470" y2="310" class="s-muted" stroke-width="1.6" marker-end="url(#sg-ah)"/>
+<text x="478" y="190" font-size="11.5" class="t-muted" style="direction:rtl" transform="rotate(90 478 190)" text-anchor="middle">جهت حرکت DNA</text>
+<line x1="500" y1="300" x2="560" y2="300" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="288" width="24" height="24" rx="5" class="f-g"/>
+<text x="580" y="305" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">G</text>
+<text x="660" y="304" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف اول</text>
+<line x1="500" y1="266" x2="560" y2="266" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="254" width="24" height="24" rx="5" class="f-c"/>
+<text x="580" y="271" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">C</text>
+<text x="660" y="270" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۲</text>
+<line x1="500" y1="232" x2="560" y2="232" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="220" width="24" height="24" rx="5" class="f-t"/>
+<text x="580" y="237" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">T</text>
+<text x="660" y="236" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۳</text>
+<line x1="500" y1="198" x2="560" y2="198" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="186" width="24" height="24" rx="5" class="f-a"/>
+<text x="580" y="203" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">A</text>
+<text x="660" y="202" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۴</text>
+<line x1="500" y1="164" x2="560" y2="164" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="152" width="24" height="24" rx="5" class="f-g"/>
+<text x="580" y="169" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">G</text>
+<text x="660" y="168" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۵</text>
+<line x1="500" y1="130" x2="560" y2="130" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="118" width="24" height="24" rx="5" class="f-c"/>
+<text x="580" y="135" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">C</text>
+<text x="660" y="134" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۶</text>
+<line x1="500" y1="96" x2="560" y2="96" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="84" width="24" height="24" rx="5" class="f-a"/>
+<text x="580" y="101" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">A</text>
+<text x="660" y="100" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۷</text>
+<line x1="500" y1="62" x2="560" y2="62" class="s-line" stroke-width="1" stroke-dasharray="2 4"/>
+<rect x="568" y="50" width="24" height="24" rx="5" class="f-t"/>
+<text x="580" y="67" font-size="14" font-weight="800" text-anchor="middle" class="t-white mono">T</text>
+<text x="660" y="66" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">حرف شمارهٔ ۸</text>
+</svg>
+<figcaption><b>شکل ۱۱.۱</b> — توالی GCTAGCAT. قطعه‌ای به طول ۱ به G ختم می‌شود، قطعه‌ای به طول ۲ به C و همین‌طور تا طول ۸ که به T ختم می‌شود. ژل آن‌ها را مرتب می‌کند و رنگ باندها از پایین به بالا خوانده می‌شود. رنگ‌های این شکل رنگ ثابت خود سایت برای بازهاست؛ در اسلاید A سبز، T قرمز، C سیاه/زرد و G آبی است.</figcaption>
+</figure>
+
+<aside class="callout analogy">
+  <p>قطعه‌ها را مثل رشته‌های متنی در نظر بگیر که آخرین کاراکتر هر کدام مشخص است. کاری که ژل و لیزر می‌کنند معادل این است: <code>sorted(fragments, key=len)</code> و بعد خواندن <code>f[-1]</code> برای هر عنصر. توالی همان ردیف آخرین کاراکترهاست.</p>
+</aside>
+
+<div class="worked" data-title="خواندن توالی از روی باندها">
+  <p class="problem">در یک ژل سنگر، باندها از پایین (دورترین از چاهک) به بالا این رنگ‌ها را دارند: سبز، قرمز، آبی، سبز (با رنگ‌های اسلاید: A سبز، T قرمز، G آبی، C زرد). توالی ساخته‌شده چیست؟</p>
+  <ol class="steps">
+    <li>پایین‌ترین باند کوتاه‌ترین قطعه است، پس حرف اول است: سبز = A.</li>
+    <li>باند بعدی قرمز = T، حرف دوم.</li>
+    <li>باند بعدی آبی = G، حرف سوم.</li>
+    <li>باند بالایی سبز = A، حرف چهارم.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code class="seq">5′-ATGA-3′</code> (رشتهٔ تازه‌ساخته‌شده از ۵′ به ۳′)</p>
+</div>
+
+<div data-widget="sanger" data-seq="GCTAGCAT"></div>
+
+<details class="think">
+  <summary>چرا قطعه‌های کوتاه‌تر سریع‌تر حرکت می‌کنند؟</summary>
+  <div><p>ژل مثل یک جنگل است. قطعهٔ کوتاه راحت‌تر از میان تارهای ژل رد می‌شود و قطعهٔ بلند گیر می‌کند. بار الکتریکی هر نوکلئوتید تقریباً یکسان است، پس نیروی کشش به‌ازای طول ثابت می‌ماند و فقط مقاومت ژل فرق می‌کند.</p></div>
+</details>
+
+<aside class="callout simple">
+  <p>سنگر دقیق ولی کند بود: هر بار فقط چند ده تا چند صد قطعه، و کل پروژهٔ ژنوم انسان با همین روش سیزده سال طول کشید.</p>
+</aside>
+
+<h2 id="hgp">پروژهٔ ژنوم انسان</h2>
+
+<p>پروژهٔ ژنوم انسان (<span class="term" data-en="Human Genome Project">HGP</span>) بزرگ‌ترین پروژهٔ توالی‌یابی تاریخ بود و با همکاری چند کشور اجرا شد. خط زمانی‌اش:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 200" width="740" role="img" aria-labelledby="tl-t">
+  <title id="tl-t">خط زمانی توالی‌یابی از ۱۹۷۷ تا ۲۰۲۲</title>
+  <line x1="40" y1="90" x2="700" y2="90" class="s-muted" stroke-width="3"/>
+  <g class="f-accent"><circle cx="70" cy="90" r="9"/><circle cx="215" cy="90" r="9"/><circle cx="355" cy="90" r="9"/><circle cx="470" cy="90" r="9"/><circle cx="585" cy="90" r="9"/><circle cx="690" cy="90" r="9"/></g>
+  <g font-size="14" font-weight="800" text-anchor="middle" class="mono">
+    <text x="70" y="70">1977</text><text x="215" y="70">1990</text><text x="355" y="70">2001</text><text x="470" y="70">2003</text><text x="585" y="70">2007</text><text x="690" y="70">2022</text>
+  </g>
+  <g font-size="12" text-anchor="middle" style="direction:rtl">
+    <text x="70" y="118">روش سنگر</text>
+    <text x="215" y="118">شروع پروژهٔ ژنوم</text>
+    <text x="355" y="118">پیش‌نویس ژنوم</text>
+    <text x="470" y="118">اعلام پایان پروژه</text>
+    <text x="585" y="118">افت سریع هزینه با NGS</text>
+    <text x="690" y="118">T2T: ژنوم کامل</text>
+  </g>
+  <g font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">
+    <text x="215" y="140">حدود ۳ میلیارد دلار</text>
+    <text x="470" y="140">حدود ۸٪ مانده بود</text>
+    <text x="690" y="140">نواحی تکراری</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۱.۲</b> — از سنگر تا ژنوم کامل. نزدیک ۲۰ سال طول کشید تا پیش‌نویس و بیش از ۴۰ سال تا ژنوم واقعاً کامل.</figcaption>
+</figure>
+
+<ul>
+  <li><b>۱۹۹۰</b>: شروع پروژه.</li>
+  <li><b>۲۰۰۱</b>: پیش‌نویس ژنوم منتشر شد.</li>
+  <li><b>۲۰۰۳</b>: پایان پروژه اعلام شد. هزینهٔ کل حدود ۳ میلیارد دلار بود.</li>
+  <li><b>۲۰۲۲</b>: کنسرسیوم T2T (Telomere-to-Telomere، یعنی از سر تا سر کروموزوم) اولین توالی واقعاً کامل را منتشر کرد. «پایان» سال ۲۰۰۳ کامل نبود: حدود <b>۸٪</b> ژنوم، عمدتاً نواحی تکراری، خالی مانده بود، چون خوانش‌های کوتاه از روی تکرارها گیج می‌شوند.</li>
+</ul>
+
+<h3>اهداف پروژه</h3>
+<ol class="steps">
+  <li>خواندن <b>کل ژنوم</b> انسان.</li>
+  <li>شناسایی <b>همهٔ ژن‌ها</b> (حدود ۲۰ تا ۲۵ هزار).</li>
+  <li>ساختن <b>ابزارهای تحلیلی</b> برای داده‌ها؛ همین باعث رشد بیوانفورماتیک شد.</li>
+  <li><b>انتشار رایگان</b> داده‌ها برای همه.</li>
+</ol>
+
+<aside class="callout exam">
+  <p>اعداد این بخش را به خاطر بسپار: ۱۹۹۰ شروع، ۲۰۰۱ پیش‌نویس، ۲۰۰۳ اعلام پایان، حدود ۳ میلیارد دلار، حدود ۱۳ سال، ۲۰ تا ۲۵ هزار ژن، ۸٪ مانده تا T2T در ۲۰۲۲.</p>
+</aside>
+
+<h3>میراث سنگر</h3>
+<p>سنگر امروز دیگر برای ژنوم کامل استفاده نمی‌شود، ولی هنوز کاربرد دارد: خوانش‌هایش حدود <b>۷۰۰ تا ۱۰۰۰ باز</b> است و دقتش حدود <b>۹۹٫۹۹٪</b>. به همین دلیل هنوز استاندارد <b>تأیید یک جهش مشخص</b> است: وقتی NGS جهشی را پیدا کرده، با سنگر روی همان ناحیه دوباره می‌خوانند.</p>
+
+<div class="quiz" data-id="ch11:s-sanger">
+  <p class="q">ژل سنگر باندهایی به طول ۵، ۶، ۷ و ۸ دارد. کدام باند به نقطهٔ شروع (چاهک) نزدیک‌تر است و چرا؟</p>
+  <ol class="opts">
+    <li>طول ۵، چون سبک‌تر است</li>
+    <li data-correct>طول ۸، چون بلندتر است و کندتر حرکت می‌کند</li>
+    <li>هر چهار باند در یک جا می‌مانند</li>
+    <li>طول ۶، چون بار منفی ندارد</li>
+  </ol>
+  <div class="explain">بلندترین قطعه کندترین حرکت را دارد و نزدیک چاهک می‌ماند؛ کوتاه‌ترین قطعه دورترین باند را می‌سازد و حرف اول توالی است.</div>
+</div>
+
+<h2 id="ngs">نسل دوم: NGS</h2>
+
+<p>از حدود سال‌های ۲۰۰۳ تا ۲۰۰۴ فناوری‌هایی آمدند که توالی‌یابی را از نظر سرعت و حجم خروجی متحول کردند: <span class="term" data-en="Next Generation Sequencing, NGS">توالی‌یابی نسل بعد (NGS)</span>. چند پلتفرم اولیه عبارت بودند از Roche 454، SOLiD، Illumina و Ion Torrent. امروز <b>ایلومینا</b> رایج‌ترین است.</p>
+
+<h3>ایلومینا در سه مرحله</h3>
+
+<p>ایدهٔ اصلی: به‌جای خواندن چند صد قطعه در لوله‌های جدا، میلیاردها قطعه را <b>هم‌زمان روی یک سطح شیشه‌ای</b> به نام <span class="term" data-en="Flow cell">فلوسل</span> می‌خوانیم.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 330" width="760" role="img" aria-labelledby="il-t">
+  <title id="il-t">سه مرحلهٔ ایلومینا: خرد کردن و آداپتور، خوشه‌سازی روی فلوسل، چهار چرخهٔ توالی‌یابی با سنتز</title>
+  <text x="130" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۱. خرد کردن + آداپتور</text>
+  <text x="380" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۲. خوشه‌سازی روی فلوسل</text>
+  <text x="620" y="22" font-size="12.5" font-weight="700" text-anchor="middle" style="direction:rtl">۳. چرخه‌های خواندن</text>
+  <path d="M30 60 h200" class="f-none s-ink-2" stroke-width="4"/>
+  <text x="130" y="52" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">DNA بلند</text>
+  <path d="M110 80 v18" class="s-muted" stroke-width="1.6"/>
+  <g>
+    <rect x="30" y="112" width="30" height="14" rx="3" class="f-info"/><rect x="60" y="112" width="100" height="14" rx="3" class="f-surface-2 s-line"/><rect x="160" y="112" width="30" height="14" rx="3" class="f-info"/>
+    <rect x="30" y="140" width="30" height="14" rx="3" class="f-info"/><rect x="60" y="140" width="70" height="14" rx="3" class="f-surface-2 s-line"/><rect x="130" y="140" width="30" height="14" rx="3" class="f-info"/>
+  </g>
+  <text x="130" y="180" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">آبی = آداپتور؛ وسط = قطعه (چند صد باز)</text>
+  <rect x="270" y="50" width="220" height="200" rx="8" class="f-surface s-line" stroke-width="2"/>
+  <g class="f-accent-soft s-accent" stroke-width="1.5"><circle cx="310" cy="90" r="16"/><circle cx="390" cy="110" r="16"/><circle cx="450" cy="80" r="16"/><circle cx="330" cy="170" r="16"/><circle cx="430" cy="190" r="16"/></g>
+  <g font-size="11" text-anchor="middle" class="mono"><text x="310" y="94">×1000</text><text x="390" y="114">×1000</text><text x="450" y="84">×1000</text><text x="330" y="174">×1000</text><text x="430" y="194">×1000</text></g>
+  <text x="380" y="272" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">هر دایره یک خوشه: حدود ۱۰۰۰ نسخهٔ یکسان با PCR روی سطح</text>
+  <text x="380" y="290" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">میلیاردها خوشه روی یک فلوسل</text>
+  <g font-size="11.5" text-anchor="middle" style="direction:rtl">
+    <text x="560" y="62" class="t-muted">چرخه ۱</text><text x="600" y="62" class="t-muted">۲</text><text x="640" y="62" class="t-muted">۳</text><text x="680" y="62" class="t-muted">۴</text>
+  </g>
+  <g>
+    <circle cx="560" cy="90" r="14" class="f-g"/><circle cx="600" cy="90" r="14" class="f-c"/><circle cx="640" cy="90" r="14" class="f-a"/><circle cx="680" cy="90" r="14" class="f-t"/>
+    <circle cx="560" cy="140" r="14" class="f-a"/><circle cx="600" cy="140" r="14" class="f-a"/><circle cx="640" cy="140" r="14" class="f-t"/><circle cx="680" cy="140" r="14" class="f-g"/>
+    <circle cx="560" cy="190" r="14" class="f-t"/><circle cx="600" cy="190" r="14" class="f-g"/><circle cx="640" cy="190" r="14" class="f-c"/><circle cx="680" cy="190" r="14" class="f-c"/>
+  </g>
+  <g font-size="12" font-weight="800" text-anchor="middle" class="t-white mono">
+    <text x="560" y="95">G</text><text x="600" y="95">C</text><text x="640" y="95">A</text><text x="680" y="95">T</text>
+    <text x="560" y="145">A</text><text x="600" y="145">A</text><text x="640" y="145">T</text><text x="680" y="145">G</text>
+    <text x="560" y="195">T</text><text x="600" y="195">G</text><text x="640" y="195">C</text><text x="680" y="195">C</text>
+  </g>
+  <text x="620" y="236" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">هر سطر یک خوشه، هر ستون یک چرخه:</text>
+  <text x="620" y="254" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">خوانش‌ها GCAT، AATG و TGCC</text>
+  <text x="620" y="272" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">همهٔ سطرها هم‌زمان خوانده می‌شوند</text>
+  <g class="s-muted" stroke-width="1.6" fill="none"><path d="M235 120 h30"/><path d="M495 120 h55"/></g>
+</svg>
+<figcaption><b>شکل ۱۱.۳</b> — ایلومینا. در هر چرخه یک باز به هر خوشه اضافه می‌شود و رنگ آن ثبت می‌شود؛ رنگ‌های شکل همان رنگ ثابت بازها در این سایت است.</figcaption>
+</figure>
+
+<ol class="steps">
+  <li><b>آداپتور + خرد کردن:</b> DNA به قطعات چندصدبازی خرد می‌شود و به دو سر هر قطعه توالی‌های کوتاه مشخصی به نام <span class="term" data-en="Adapter">آداپتور</span> چسبانده می‌شود. آداپتور هم قطعه را به شیشه می‌چسباند و هم نقطهٔ شروع خواندن است.</li>
+  <li><b>خوشه‌سازی روی فلوسل:</b> قطعه‌ها روی سطح شیشه می‌نشینند و با PCR روی سطح هر قطعه حدود <b>۱۰۰۰ نسخهٔ یکسان</b> می‌سازد. این گروه نسخه را <span class="term" data-en="Cluster">خوشه</span> می‌گویند. دلیلش این است که سیگنال یک مولکول تنها برای دیدن خیلی ضعیف است، ولی هزار مولکول هم‌رنگ یک نقطهٔ روشن می‌سازند.</li>
+  <li><b>توالی‌یابی با سنتز:</b> <span class="term" data-en="Sequencing by synthesis">توالی‌یابی با سنتز</span> یعنی در هر چرخه یک نوکلئوتید رنگی به همهٔ رشته‌ها اضافه می‌شود، دوربین رنگ هر خوشه را ثبت می‌کند و بعد رنگ برداشته می‌شود. <b>یک باز در هر چرخه</b> و همهٔ خوشه‌ها به‌طور <b>موازی</b>. نتیجه: میلیاردها خوانش در یک اجرا.</li>
+</ol>
+
+<aside class="callout analogy">
+  <p>سنگر مثل یک نفر است که یک کتاب را کلمه‌به‌کلمه می‌خواند. ایلومینا مثل میلیاردها کارگر است که هر کدام یک تکه کاغذ کوچک دارند و در هر دقیقه همه هم‌زمان یک حرف می‌خوانند. این همان <code>parallel for</code> است: هر خوشه یک thread مستقل.</p>
+</aside>
+
+<details class="think">
+  <summary>چرا ایلومینا دقیقاً یک باز در هر چرخه می‌خواند؟ اگر چند باز را با هم اضافه کنیم چه می‌شود؟</summary>
+  <div><p>نوکلئوتیدهای رنگی طوری ساخته شده‌اند که بعد از اتصال یک باز، ساخت متوقف شود تا دوربین فرصت ثبت رنگ داشته باشد؛ بعد رنگ و قفل برداشته می‌شود. اگر چند باز با هم وارد شوند رنگ‌ها قاطی می‌شود و نمی‌شود فهمید کدام حرف کجاست. پس سرعت از «موازی بودن خوشه‌ها» می‌آید، نه از سریع‌تر خواندن هر خوشه.</p></div>
+</details>
+
+<h2 id="price">بهای موازی‌سازی</h2>
+
+<p>میلیاردها خوانش ارزان همیشه چیزهایی را فدا می‌کند. سه هزینهٔ اصلی:</p>
+
+<div class="compare">
+  <div><h4>۱. خوانش‌ها کوتاه‌اند</h4><p>حدود ۱۰۰ تا ۳۰۰ باز. در تشبیه روزنامه، نوارها خیلی باریک‌اند و قطعه‌های تکراری مشکل ایجاد می‌کنند.</p></div>
+  <div><h4>۲. خطا دارند</h4><p>حدود ۰٫۱ تا ۱٪ بازها اشتباه خوانده می‌شوند. خطای غالب <b>جانشینی</b> است: یک حرف به‌جای حرف دیگر.</p></div>
+  <div><h4>۳. کیفیت افت می‌کند</h4><p>در چرخه‌های پایانی کیفیت پایین می‌آید. دستگاه برای هر باز یک امتیاز کیفیت گزارش می‌کند.</p></div>
+</div>
+
+<h3>چرا کیفیت در انتها افت می‌کند؟</h3>
+<p>در یک خوشه هزار مولکول داریم که باید همگی هم‌قدم باشند. در هر چرخه ممکن است چند مولکول یک چرخه <b>عقب</b> بیفتند (باز را اضافه نکرده‌اند) یا <b>جلو</b> بروند (دو باز اضافه کرده‌اند). این اختلاف‌ها در هر چرخه کمی جمع می‌شود. در چرخه‌های پایانی بخشی از مولکول‌های خوشه رنگ دیگری نشان می‌دهند و رنگ خوشه <b>مبهم</b> می‌شود. اینجا دستگاه امتیاز کیفیت پایین‌تری ثبت می‌کند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 700 240" width="700" role="img" aria-labelledby="ql-t">
+<title id="ql-t">نمودار میلهٔ کیفیت هر باز در طول یک خوانش: کیفیت در ابتدا بالا و در انتها پایین است</title>
+<line x1="60" y1="190" x2="680" y2="190" class="s-ink-2" stroke-width="1.5"/>
+<line x1="60" y1="20" x2="60" y2="190" class="s-ink-2" stroke-width="1.5"/>
+<line x1="60" y1="150" x2="680" y2="150" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="52" y="154" font-size="11.5" text-anchor="end" class="t-muted mono">Q10</text>
+<line x1="60" y1="110" x2="680" y2="110" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="52" y="114" font-size="11.5" text-anchor="end" class="t-muted mono">Q20</text>
+<line x1="60" y1="70" x2="680" y2="70" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="52" y="74" font-size="11.5" text-anchor="end" class="t-muted mono">Q30</text>
+<line x1="60" y1="30" x2="680" y2="30" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="52" y="34" font-size="11.5" text-anchor="end" class="t-muted mono">Q40</text>
+<rect x="68.0" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="88.4" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="108.8" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="129.2" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="149.6" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="170.0" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="190.4" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="210.8" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="231.2" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="251.6" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="272.0" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="292.4" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="312.8" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="333.2" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="353.6" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="374.0" y="34" width="15" height="156" rx="2" class="f-ok"/>
+<rect x="394.4" y="38" width="15" height="152" rx="2" class="f-ok"/>
+<rect x="414.8" y="42" width="15" height="148" rx="2" class="f-ok"/>
+<rect x="435.2" y="50" width="15" height="140" rx="2" class="f-ok"/>
+<rect x="455.6" y="70" width="15" height="120" rx="2" class="f-ok"/>
+<rect x="476.0" y="74" width="15" height="116" rx="2" class="f-warn"/>
+<rect x="496.4" y="94" width="15" height="96" rx="2" class="f-warn"/>
+<rect x="516.8" y="98" width="15" height="92" rx="2" class="f-warn"/>
+<rect x="537.2" y="118" width="15" height="72" rx="2" class="f-bad"/>
+<rect x="557.6" y="122" width="15" height="68" rx="2" class="f-bad"/>
+<rect x="578.0" y="142" width="15" height="48" rx="2" class="f-bad"/>
+<rect x="598.4" y="146" width="15" height="44" rx="2" class="f-bad"/>
+<rect x="618.8" y="166" width="15" height="24" rx="2" class="f-bad"/>
+<rect x="639.2" y="170" width="15" height="20" rx="2" class="f-bad"/>
+<rect x="659.6" y="174" width="15" height="16" rx="2" class="f-bad"/>
+<text x="370" y="214" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">موقعیت باز در خوانش ←  (چرخهٔ ۱ تا ۳۰)</text>
+<text x="200" y="14" font-size="12" text-anchor="middle" class="t-accent" style="direction:rtl">ابتدای خوانش: قابل‌اعتماد</text>
+<text x="560" y="14" font-size="12" text-anchor="middle" class="t-hl" style="direction:rtl">انتها: افت کیفیت (دم را برش می‌دهند)</text>
+</svg>
+<figcaption><b>شکل ۱۱.۴</b> — شماتیک افت کیفیت (نه داده‌ای واقعی). بازهای ابتدایی بالاتر از Q30 (سبز) و بازهای انتهایی پایین‌تر (زرد و قرمز). در فصل بعد معنی Q و نحوهٔ ذخیره‌اش را می‌بینی.</figcaption>
+</figure>
+
+<div class="quiz" data-id="ch11:s-price">
+  <p class="q">خطای غالب در ایلومینا کدام است؟</p>
+  <ol class="opts">
+    <li>درج و حذف در هموپلیمرها</li>
+    <li data-correct>جانشینی (یک حرف به‌جای حرف دیگر)</li>
+    <li>قطع شدن رشته در جای تصادفی</li>
+    <li>خطا ندارد</li>
+  </ol>
+  <div class="explain">در ایلومینا خطا حدود ۰٫۱ تا ۱٪ و بیشتر از نوع جانشینی است. درج/حذف خطای مخصوص Nanopore است.</div>
+</div>
+
+<aside class="callout simple">
+  <p>جمع‌بندی هزینه و فایده: ژنوم انسان از حدود ۳ میلیارد دلار به چند صد دلار رسید. همین موازی‌سازی زیست‌شناسی را به یک رشتهٔ <b>داده‌محور</b> تبدیل کرد؛ و دقیقاً همین‌جاست که به بیوانفورماتیک نیاز پیدا می‌کنیم.</p>
+</aside>
+
+<h2 id="cost">هزینه و حجم خروجی</h2>
+
+<h3>هزینهٔ یک ژنوم (اسلاید ۵۸)</h3>
+<p>نمودار هزینه دو خط دارد. خط صاف <b>قانون مور</b> است (هزینه هر حدود دو سال نصف می‌شود). خط دیگر هزینهٔ واقعی توالی‌یابی است. تا حدود سال ۲۰۰۷ هر دو تقریباً هم‌شیب بودند. بعد از ۲۰۰۷ تا ۲۰۰۸ با آمدن NGS خط هزینه <b>خیلی سریع‌تر از قانون مور</b> سقوط کرد.</p>
+
+<aside class="callout pitfall">
+  <p>اشتباه نکن: «خط سبز» هزینهٔ واقعی است و «خط صاف» قانون مور. کاهش هزینهٔ توالی‌یابی از قانون مور <b>سریع‌تر</b> بود، نه کندتر.</p>
+</aside>
+
+<p>سیستم <span class="term" data-en="Illumina HiSeq X">Illumina HiSeq X</span> با ده دستگاه موازی هزینهٔ کل توالی‌یابی یک ژنوم انسان را به حدود <b>۱۰۰۰ دلار</b> رساند.</p>
+
+<h3>حجم خروجی (اسلاید ۵۷)</h3>
+<p>در نمودار حجم خروجی، <b>محور افقی طول خوانش است</b> (مقیاس لگاریتمی) و <b>محور عمودی گیگاباز در هر اجرا</b> (لگاریتمی). هر نقطه یک دستگاه است و خطوط، نسل‌های پیاپی یک شرکت‌اند. دو مسیر دیده می‌شود: ایلومینا در بالا-چپ (خروجی خیلی زیاد، خوانش کوتاه) و PacBio و Nanopore در راست (خوانش‌های بلند، خروجی کمتر).</p>
+
+<details class="think">
+  <summary>چرا محورها لگاریتمی‌اند؟</summary>
+  <div><p>چون مقدارها از چند ده تا میلیون‌ها باز و از کسری از گیگاباز تا چند ترابازی تغییر می‌کنند. روی مقیاس خطی همهٔ نقاط در گوشه‌ای جمع می‌شدند. مقیاس لگاریتمی رشد چندین مرتبه‌ای را قابل دیدن می‌کند.</p></div>
+</details>
+
+<h2 id="third">نسل سوم و مقایسهٔ فناوری‌ها</h2>
+
+<p>کمبود اصلی ایلومینا خوانش کوتاه است. فناوری‌های <b>نسل سوم</b> (خوانش بلند)، یعنی PacBio و Nanopore، قطعه‌های ده‌ها هزار بازی و بلندتر می‌خوانند و از روی تکرارها عبور می‌کنند. در عوض دقت یا خروجی‌شان در مقاطع مختلف پایین‌تر بوده است.</p>
+
+<table>
+  <thead><tr><th>ویژگی</th><th>سنگر</th><th>ایلومینا</th><th>PacBio HiFi</th><th>Nanopore</th></tr></thead>
+  <tbody>
+    <tr><td>طول معمول خوانش</td><td>~700–1000 bp</td><td>100–300 bp</td><td>~15–25 kb</td><td>ده‌ها kb تا بیش از 1 Mb</td></tr>
+    <tr><td>دقت تقریبی هر باز</td><td>~99.99%</td><td>~99–99.9%</td><td>&gt;99.9%</td><td>~95–99% (بسته به شیمی) یا بیشتر</td></tr>
+    <tr><td>نوع خطای غالب</td><td>کم</td><td>جانشینی</td><td>کم (تصادفی)</td><td>درج/حذف، به‌خصوص هموپلیمر</td></tr>
+    <tr><td>تعداد خوانش در اجرا</td><td>ده‌ها تا صدها</td><td>میلیاردها</td><td>میلیون‌ها</td><td>میلیون‌ها</td></tr>
+    <tr><td>کاربرد شاخص</td><td>تأیید یک جهش</td><td>ژنوم، اگزوم، RNA-seq</td><td>مونتاژ دقیق، واریانت ساختاری</td><td>مونتاژ، کار میدانی، RNA مستقیم</td></tr>
+  </tbody>
+</table>
+
+<aside class="callout exam">
+  <p>اعداد جدول <b>تقریبی</b> و روندی‌اند و هر سال تغییر می‌کنند (استاد هم در اسلاید همین را نوشته). روند را یاد بگیر: سنگر دقیق و کم‌خروجی؛ ایلومینا کوتاه و پرخروجی؛ PacBio/Nanopore بلند.</p>
+</aside>
+
+<aside class="callout deep">
+  <p>هموپلیمر یعنی تکرار یک حرف مثل AAAAAA. در Nanopore سیگنال الکتریکی هنگام عبور رشته از منفذ اندازه‌گیری می‌شود و شمردن دقیق تعداد حرف‌های تکراری سخت است؛ برای همین خطاها بیشتر درج و حذف‌اند.</p>
+</aside>
+
+<div class="quiz" data-id="ch11:s-table">
+  <p class="q">برای مونتاژ ناحیه‌ای پر از تکرارهای بلند، کدام فناوری مناسب‌تر است؟</p>
+  <ol class="opts">
+    <li>سنگر</li>
+    <li>ایلومینا</li>
+    <li data-correct>PacBio HiFi یا Nanopore</li>
+    <li>هیچ‌کدام، چون تکرار قابل خواندن نیست</li>
+  </ol>
+  <div class="explain">خوانش‌های بلند از روی تمام ناحیهٔ تکراری رد می‌شوند و موقعیتشان یکتا می‌شود؛ خوانش ۱۰۰ تا ۳۰۰ بازی داخل تکرار گم می‌شود.</div>
+</div>
+
+<h2 id="next">بعد از توالی‌یابی: هر خوانش کجا می‌رود؟</h2>
+
+<p>یک اجرای ایلومینا مثلاً ۶۲۰ میلیون خوانش کوتاه می‌دهد. سؤال: هر خوانش به کجا برود؟ دو حالت:</p>
+<div class="compare">
+  <div><h4>بدون مرجع: مونتاژ</h4><p>ژنوم کامل در دست نیست. باید روزنامه را از صفر بسازیم: خوانش‌های هم‌پوشان را به هم می‌چسبانیم.</p></div>
+  <div><h4>با مرجع: نگاشت (هم‌ترازی)</h4><p>ژنوم کامل (مرجع) داریم. هر نوار را سر جایش روی مرجع پیدا می‌کنیم. این موضوع بخش سوم جزوه است (<a href="15-mapping.html">مسئلهٔ نگاشت</a>).</p></div>
+</div>
+
+<p>پیش از آن باید بدانیم خوانش‌ها در چه فایلی ذخیره می‌شوند و کیفیتشان چطور نوشته می‌شود: موضوع <a href="12-formats.html">فصل بعد</a>.</p>
+
+<details class="think">
+  <summary>چرا خوانش‌های کوتاه برای مونتاژ نواحی تکراری مشکل ساز هستند؟</summary>
+  <div><p>اگر یک خوانش کاملاً درون یک تکرار بیفتد، نمی‌شود فهمید از کدام نسخهٔ تکرار آمده؛ مثل نوار روزنامه‌ای که فقط یک جملهٔ تکراری دارد. باید خوانش آن‌قدر بلند باشد که از تکرار بیرون بزند و بخش یکتای کنارش را هم ببیند.</p></div>
+</details>
+
+<div class="fill" data-answer="چیدن|مونتاژ|assembly" data-id="ch11:f1">
+  <p class="q">اگر ژنوم مرجع نداشته باشیم، خوانش‌ها را با روش <input class="blank" type="text"> به هم می‌چسبانیم.</p>
+  <div class="explain">بدون مرجع از مونتاژ استفاده می‌کنیم و با مرجع از نگاشت.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li><b>سنگر</b> (۱۹۷۰ها): ddNTP رنگی ساخت رشته را در جای تصادفی متوقف می‌کند؛ الکتروفورز قطعه‌ها را بر اساس طول مرتب می‌کند؛ لیزر رنگ هر باند را می‌خواند و کوتاه‌ترین = حرف اول.</li>
+    <li>DNA بار منفی دارد و در الکتروفورز به قطب مثبت می‌رود؛ کوتاه‌ها سریع‌ترند.</li>
+    <li><b>پروژهٔ ژنوم انسان:</b> ۱۹۹۰ شروع، ۲۰۰۱ پیش‌نویس، ۲۰۰۳ پایان، حدود ۳ میلیارد دلار؛ ۸٪ تا T2T در ۲۰۲۲ مانده بود. اهداف: کل ژنوم، ۲۰ تا ۲۵ هزار ژن، ابزار تحلیلی، انتشار رایگان.</li>
+    <li>سنگر: ۷۰۰ تا ۱۰۰۰ باز، دقت حدود ۹۹٫۹۹٪، هنوز استاندارد تأیید یک جهش.</li>
+    <li><b>NGS</b> از حدود ۲۰۰۳–۲۰۰۴؛ ایلومینا: آداپتور، خوشه‌سازی (حدود ۱۰۰۰ نسخه) روی فلوسل، توالی‌یابی با سنتز (یک باز در هر چرخه، موازی).</li>
+    <li>بهای موازی‌سازی: خوانش ۱۰۰ تا ۳۰۰ باز، خطای ۰٫۱ تا ۱٪ (بیشتر جانشینی)، افت کیفیت در چرخه‌های پایانی.</li>
+    <li>بعد از ۲۰۰۷ هزینه از قانون مور سریع‌تر افتاد؛ HiSeq X حدود ۱۰۰۰ دلار برای هر ژنوم.</li>
+    <li>PacBio HiFi و Nanopore خوانش بلند می‌دهند (۱۵–۲۵ kb و ده‌ها kb تا بیش از Mb) و برای مونتاژ و واریانت ساختاری مناسب‌اند.</li>
+    <li>بدون مرجع: مونتاژ؛ با مرجع: نگاشت.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

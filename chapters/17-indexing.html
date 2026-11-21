@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جستجوی سریع: هش، k-mer و BWT · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="دو مرحله‌ای کردن نگاشت خوانش‌ها: هش، k-mer، اصل لانهٔ کبوتر، Trie، تبدیل برووز–ویلر، FM-index و جستجوی عقب‌گرد، و مقایسهٔ هم‌ترازکننده‌ها.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch17">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۲ (هم‌ترازی)، اسلایدهای ۲۲ تا ۳۸" data-motif="ACGTACGATTACAGGTACGTAC">
+  <h1>جستجوی سریع: هش، k-mer و BWT</h1>
+  <p class="lead">در فصل ۱۵ دیدی که مقایسهٔ یک خوانش با همهٔ موقعیت‌های ژنوم سال‌ها طول می‌کشد. در فصل ۱۶ هم‌ترازی دقیق را یاد گرفتی که برای هر جفت توالی ماتریس می‌سازد و برای ۳ میلیارد موقعیت بسیار کند است. پس چطور برنامه‌هایی مثل BWA و HISAT2 در چند دقیقه میلیون‌ها خوانش را روی ژنوم انسان می‌نشانند؟ جواب: قبل از هم‌ترازی دقیق، با یک «فهرست» سریع فقط چند ناحیهٔ محتمل را پیدا می‌کنند.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>روش دو مرحله‌ای <b>seed and extend</b> را <b>توضیح بدهی</b> و بگویی چرا از جستجوی کامل سریع‌تر است.</li>
+    <li>تعداد k-merهای یک خوانش را <b>حساب کنی</b> و با اصل لانهٔ کبوتر تعداد بلوک‌های لازم برای تحمل m ناجور را <b>تعیین کنی</b>.</li>
+    <li>محدودیت‌های جستجوی k-mer (تکرارها، حذف و درج، انتخاب k) را <b>نام ببری</b> و Trie یک مجموعه واژه را <b>رسم کنی</b>.</li>
+    <li>تبدیل برووز–ویلر یک رشته را با دست <b>محاسبه کنی</b> (مثل BANANA یا babaabdad).</li>
+    <li>جدول‌های C و Occ را <b>بسازی</b> و جستجوی عقب‌گرد یک الگو را مرحله به مرحله <b>اجرا کنی</b>.</li>
+    <li>جدول مقایسهٔ هم‌ترازکننده‌ها را بر اساس دقت، زمان و حافظه <b>تفسیر کنی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch17:pre1">
+  <p class="q">هدف مرحلهٔ اول در روش دو مرحله‌ای نگاشت خوانش‌ها (جستجوی سریع با هش یا فهرست) چیست؟</p>
+  <ol class="opts">
+    <li>پیدا کردن دقیق بهترین هم‌ترازی و محاسبهٔ امتیاز آن</li>
+    <li data-correct>جدا کردن چند ناحیهٔ کاندید از ژنوم تا مرحلهٔ دوم فقط همان‌ها را بررسی کند</li>
+    <li>حذف بازهای کم‌کیفیت از خوانش</li>
+    <li>ساختن ژنوم مرجع از روی خوانش‌ها</li>
+  </ol>
+  <div class="explain">مرحلهٔ اول سریع و تقریبی است و فقط «کاندید» می‌دهد. مرحلهٔ دوم (بسط یا extend) با هم‌ترازی دقیق، کاندیدها را بررسی می‌کند. اگر غلط حدس زدی مهم نیست؛ حدس قبل از یادگیری به ماندگاری مطلب کمک می‌کند.</div>
+</div>
+
+<h2 id="two-stage">راه‌حل دو مرحله‌ای: seed and extend</h2>
+
+<p>مشکل را مرور کنیم. ژنوم انسان حدود ۳ میلیارد باز است و خوانش‌ها حدود ۱۰۰ تا ۱۵۰ باز. اگر خوانش را روی هر موقعیت ژنوم بگذاری و مقایسه کنی، هزینه حدود <code>N × L</code> می‌شود (فصل ۱۵)؛ و اگر برای هر موقعیت ماتریس هم‌ترازی پر کنی (فصل ۱۶) خیلی بدتر. ولی تقریباً همهٔ موقعیت‌ها اصلاً شبیه خوانش نیستند.</p>
+
+<p>ایدهٔ اسلاید ۲۲: کار را به <b>دو مرحله</b> بشکنیم.</p>
+
+<ol class="steps">
+  <li><b>مرحلهٔ اول: جستجوی سریع.</b> با یک ساختار از پیش ساخته‌شده (هش یا فهرست فشرده) تکه‌های کوچک خوانش را که <span class="term" data-en="Seed">دانه (seed)</span> نامیده می‌شوند، دقیقاً جستجو می‌کنیم. نتیجه چند ناحیهٔ <b>کاندید</b> است، نه کل ژنوم.</li>
+  <li><b>مرحلهٔ دوم: بسط (extend).</b> اطراف هر کاندید را با هم‌ترازی دقیق (Needleman–Wunsch یا Smith–Waterman، فصل ۱۶) بررسی می‌کنیم و بهترین را نگه می‌داریم.</li>
+</ol>
+
+<figure class="fig">
+<svg viewBox="0 0 740 260" width="740" role="img" aria-labelledby="se-t">
+  <title id="se-t">خط لولهٔ seed and extend: خوانش، جستجوی سریع دانه‌ها، چند ناحیهٔ کاندید، هم‌ترازی دقیق</title>
+  <defs><marker id="se-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="12.5" text-anchor="middle" style="direction:rtl">
+    <rect x="565" y="30" width="150" height="70" rx="10" class="f-surface-2 s-line" stroke-width="1.5"/>
+    <text x="640" y="58">خوانش</text><text x="640" y="78" class="t-muted">حدود ۱۰۰ باز</text>
+    <rect x="385" y="30" width="150" height="70" rx="10" class="f-accent-soft s-accent" stroke-width="1.5"/>
+    <text x="460" y="54" font-weight="700">مرحلهٔ ۱: دانه‌ها</text><text x="460" y="74">جستجوی دقیق در هش</text><text x="460" y="90" class="t-muted">یا FM-index</text>
+    <rect x="205" y="30" width="150" height="70" rx="10" class="f-warn-soft s-warn" stroke-width="1.5"/>
+    <text x="280" y="58" font-weight="700">چند کاندید</text><text x="280" y="78" class="t-muted">مثلاً ۳ موقعیت</text>
+    <rect x="25" y="30" width="150" height="70" rx="10" class="f-info-soft s-info" stroke-width="1.5"/>
+    <text x="100" y="54" font-weight="700">مرحلهٔ ۲: بسط</text><text x="100" y="74">هم‌ترازی دقیق</text><text x="100" y="90" class="t-muted">NW / SW</text>
+  </g>
+  <g class="s-muted" stroke-width="1.8" marker-end="url(#se-ah)">
+    <line x1="562" y1="65" x2="540" y2="65"/><line x1="382" y1="65" x2="360" y2="65"/><line x1="202" y1="65" x2="180" y2="65"/>
+  </g>
+  <rect x="60" y="170" width="640" height="18" rx="4" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <rect x="190" y="166" width="10" height="26" class="f-hl"/>
+  <rect x="402" y="166" width="10" height="26" class="f-hl"/>
+  <rect x="580" y="166" width="10" height="26" class="f-hl"/>
+  <g font-size="12" text-anchor="middle" style="direction:rtl">
+    <text x="380" y="150" class="t-muted">ژنوم مرجع (۳ میلیارد باز)</text>
+    <text x="380" y="222">فقط ۳ ناحیه (نشانه‌های پررنگ) به مرحلهٔ دوم می‌رسد، نه ۳ میلیارد موقعیت</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۷.۱</b> — seed and extend. مرحلهٔ اول ارزان و سریع است و تعداد جاهایی را که مرحلهٔ گران دوم باید بررسی کند از میلیاردها به چند تا می‌رساند.</figcaption>
+</figure>
+
+<aside class="callout analogy">
+  <p>مثل پیدا کردن یک جمله در یک کتاب هزار صفحه‌ای است. به‌جای خواندن همهٔ صفحه‌ها اول به <b>فهرست واژگان آخر کتاب</b> نگاه می‌کنی (مرحلهٔ ۱) تا چند صفحهٔ محتمل را پیدا کنی؛ بعد فقط همان صفحه‌ها را کامل می‌خوانی (مرحلهٔ ۲).</p>
+</aside>
+
+<h2 id="hashing">هش: از رشته به عدد</h2>
+
+<p><span class="term" data-en="Hash function">تابع هش</span> رشته‌ای از حروف را به یک عدد تبدیل می‌کند. دو ویژگی مهم دارد: ورودی یکسان همیشه عدد یکسان می‌دهد، و ورودی متفاوت (تقریباً همیشه) عدد متفاوت. شبیه <code>hash()</code> در پایتون یا کلیدهای <code>dict</code>.</p>
+
+<p>نمی‌شود کل ژنوم را به <b>یک</b> عدد هش کرد؛ این عدد فقط می‌گوید «ژنوم همین است» و نمی‌گوید خوانش کجاست. پس مطابق اسلاید ۲۳ این‌طور عمل می‌کنیم:</p>
+
+<ol class="steps">
+  <li>ژنوم را بر اساس <b>طول خوانش</b> به قطعه‌ها (پنجره‌ها) تقسیم می‌کنیم.</li>
+  <li>هر قطعه را هش می‌کنیم و یک جدول می‌سازیم: <b>مقدار هش ← بازهٔ موقعیت‌ها</b>. جدول را بر حسب مقدار هش مرتب می‌کنیم.</li>
+  <li>برای هر خوانش، خود خوانش را هش می‌کنیم و در جدول دنبالش می‌گردیم. اگر پیدا شد، بازهٔ موقعیت را می‌دهد.</li>
+</ol>
+
+<table>
+  <thead><tr><th>مقدار هش</th><th>بازهٔ موقعیت در ژنوم</th></tr></thead>
+  <tbody>
+    <tr><td><code>3524</code></td><td><code>1–100</code></td></tr>
+    <tr><td><code>7022</code></td><td><code>101–200</code></td></tr>
+    <tr><td><code>8223</code></td><td><code>201–300</code></td></tr>
+  </tbody>
+</table>
+
+<p>اگر هش خوانش ۷۰۲۲ شود، می‌دانیم خوانش در ناحیهٔ ۱۰۱ تا ۲۰۰ است. جستجو در جدول مرتب با جستجوی دودویی سریع است، و در یک جدول هش واقعی (<code>dict</code>) به‌طور میانگین حتی <code>O(1)</code> است؛ یعنی دیگر به طول ژنوم بستگی ندارد.</p>
+
+<h3>چرا هش کردن کل خوانش کافی نیست؟</h3>
+
+<p>اسلاید ۲۴ مشکل را نشان می‌دهد. در توالی‌یابی همیشه کمی خطا هست. اگر در یک خوانش فقط <b>یک</b> باز اشتباه خوانده شود، رشتهٔ تازه کلید دیگری دارد و هش کاملاً عوض می‌شود؛ جستجوی دقیق در جدول شکست می‌خورد، هرچند ۹۹ باز دیگر درست‌اند.</p>
+
+<aside class="callout pitfall">
+  <p>هش «شباهت» را حفظ نمی‌کند. دو رشتهٔ تقریباً یکسان هش‌های بی‌ارتباط دارند. جستجوی هش فقط تطابق <b>دقیق</b> پیدا می‌کند؛ برای همین باید قطعه‌های کوچک‌تری را هش کنیم که احتمال سالم ماندنشان بیشتر است.</p>
+</aside>
+
+<div data-widget="hash-index"></div>
+
+<details class="think">
+  <summary>چرا برای پیدا کردن خوانش با خطا، قطعه‌های کوتاه‌تر هش می‌کنیم؟</summary>
+  <div><p>چون قطعهٔ کوتاه احتمال کمتری دارد که یک خطای تصادفی روی آن بیفتد. اگر فقط بخشی از خوانش سالم باشد و همان بخش دقیقاً در ژنوم وجود داشته باشد، جستجوی دقیق آن بخش ناحیهٔ درست را به ما می‌دهد. بعد مرحلهٔ دوم خطاها را تحمل می‌کند.</p></div>
+</details>
+
+<h2 id="kmers">k-merها و اصل لانهٔ کبوتر</h2>
+
+<p><span class="term" data-en="k-mer">k-mer</span> هر زیررشتهٔ <b>پیوستهٔ</b> به طول ثابت k است. با یک پنجرهٔ k تایی روی توالی لغزیده و هر جا را یادداشت می‌کنیم. برای خوانش <code class="seq">ACGTACG</code> با <code>k = 4</code> چهار k-mer به‌دست می‌آید (اسلاید ۲۵):</p>
+
+<table>
+  <thead><tr><th>شروع از موقعیت</th><th>۰</th><th>۱</th><th>۲</th><th>۳</th></tr></thead>
+  <tbody><tr><td>k-mer</td><td><code class="seq">ACGT</code></td><td><code class="seq">CGTA</code></td><td><code class="seq">GTAC</code></td><td><code class="seq">TACG</code></td></tr></tbody>
+</table>
+
+<p>k-merها <b>همپوشان</b> هستند: هر کدام فقط یک باز با قبلی جابه‌جا شده. پنجره از موقعیت ۰ تا آخرین جایی که هنوز k حرف باقی مانده می‌لغزد، پس:</p>
+
+<p style="text-align:center"><code>تعداد k-merها = L − k + 1</code></p>
+
+<div class="worked" data-title="شمارش k-mer">
+  <p class="problem">یک خوانش ۱۰۰ بازی با k = ۲۰ چند k-mer دارد؟ و ACGTACG با k = ۴؟</p>
+  <ol class="steps">
+    <li>فرمول را بنویس: <code>L − k + 1</code>.</li>
+    <li>جایگذاری برای خوانش ۱۰۰ بازی: <code>100 − 20 + 1 = 81</code>.</li>
+    <li>چک با مثال کوچک: <code>7 − 4 + 1 = 4</code>، که با چهار k-merی که بالا نوشتیم برابر است.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> ۸۱ k-mer برای خوانش ۱۰۰ بازی، و ۴ k-mer برای ACGTACG.</p>
+</div>
+
+<div class="fill" data-answer="120" data-id="ch17:f-kmer">
+  <p class="q">یک خوانش ۱۵۰ بازی را به k-merهای ۳۱ تایی می‌شکنیم. تعداد k-merها: <input class="blank" type="text"></p>
+  <div class="explain"><code>150 − 31 + 1 = 120</code>.</div>
+</div>
+
+<div data-widget="kmer"></div>
+
+<h3>اصل لانهٔ کبوتر (Pigeonhole)</h3>
+
+<p>اسلاید ۲۶ یک ترفند زیبا نشان می‌دهد. خوانش ۱۰۰ بازی را به <b>۵ بلوک مستقل</b> ۲۰ بازی تقسیم کن. فرض کن حداکثر <b>۴</b> جانشینی (substitution، یعنی ناجوری) در خوانش داریم. ۴ خطا نهایتاً روی ۴ بلوک از ۵ بلوک می‌افتند؛ پس <b>حداقل یک بلوک کاملاً سالم</b> می‌ماند. جستجوی دقیق همان بلوک، ناحیهٔ درست را پیدا می‌کند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 210" width="720" role="img" aria-labelledby="ph-t">
+  <title id="ph-t">خوانش ۱۰۰ بازی در ۵ بلوک ۲۰ بازی؛ ۴ بلوک یک ناجور دارند و بلوک چهارم سالم است</title>
+  <g font-size="12.5" text-anchor="middle" style="direction:rtl">
+    <text x="360" y="22" class="t-muted">خوانش ۱۰۰ بازی = ۵ بلوک ۲۰ بازی</text>
+    <rect x="60" y="40" width="120" height="50" rx="6" class="f-bad-soft s-bad" stroke-width="1.5"/>
+    <rect x="180" y="40" width="120" height="50" rx="6" class="f-bad-soft s-bad" stroke-width="1.5"/>
+    <rect x="300" y="40" width="120" height="50" rx="6" class="f-bad-soft s-bad" stroke-width="1.5"/>
+    <rect x="420" y="40" width="120" height="50" rx="6" class="f-ok-soft s-ok" stroke-width="3"/>
+    <rect x="540" y="40" width="120" height="50" rx="6" class="f-bad-soft s-bad" stroke-width="1.5"/>
+    <text x="120" y="70">بلوک ۱</text><text x="240" y="70">بلوک ۲</text><text x="360" y="70">بلوک ۳</text><text x="480" y="70" font-weight="700">بلوک ۴</text><text x="600" y="70">بلوک ۵</text>
+    <g class="t-white"><circle cx="140" cy="108" r="11" class="f-bad"/><circle cx="260" cy="108" r="11" class="f-bad"/><circle cx="380" cy="108" r="11" class="f-bad"/><circle cx="620" cy="108" r="11" class="f-bad"/></g>
+    <g class="t-white" font-weight="800"><text x="140" y="113">×</text><text x="260" y="113">×</text><text x="380" y="113">×</text><text x="620" y="113">×</text></g>
+    <text x="260" y="145" class="t-muted">۴ ناجور، هر کدام در یک بلوک</text>
+    <text x="480" y="145" class="t-ok" font-weight="700">سالم</text>
+    <line x1="480" y1="152" x2="480" y2="172" class="s-ok" stroke-width="2"/>
+    <text x="480" y="190">جستجوی دقیق این بلوک ← ناحیهٔ درست</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۷.۲</b> — اصل لانهٔ کبوتر. اگر تعداد خطاها از تعداد بلوک‌ها کمتر باشد، دست‌کم یک بلوک بی‌خطاست.</figcaption>
+</figure>
+
+<aside class="callout key">
+  <p>قاعدهٔ کلی: برای تحمل حداکثر <code>m</code> ناجور، خوانش را به <code>m + 1</code> بلوک بشکن. چون m خطا حداکثر m بلوک را خراب می‌کند، دست‌کم یک بلوک سالم می‌ماند. طول هر بلوک تقریباً <code>L ÷ (m + 1)</code> است.</p>
+</aside>
+
+<div class="quiz" data-id="ch17:q-pigeon">
+  <p class="q">خوانشی ۱۵۰ بازی داریم و می‌خواهیم تا ۲ ناجور را تحمل کنیم. خوانش را به چند بلوک چند بازی بشکنیم؟</p>
+  <ol class="opts"><li>۲ بلوک ۷۵ بازی</li><li data-correct>۳ بلوک ۵۰ بازی</li><li>۵ بلوک ۳۰ بازی</li><li>۱۵۰ بلوک تک‌بازی</li></ol>
+  <div class="explain">m = ۲ پس m + 1 = ۳ بلوک، و ۱۵۰ ÷ ۳ = ۵۰. دو بلوک ۷۵ بازی کافی نیست: دو ناجور می‌توانند هر دو بلوک را خراب کنند. ۵ بلوک هم جواب می‌دهد ولی بی‌دلیل بیشتر از لازم است و بلوک‌های کوتاه‌تر کاندیدهای تصادفی بیشتری می‌دهند.</div>
+</div>
+
+<h3>محدودیت‌های جستجوی k-mer</h3>
+<p>اسلاید ۲۷ سه مشکل را فهرست می‌کند:</p>
+<ul>
+  <li><b>تکرارها:</b> یک k-mer ممکن است در ژنوم جاهای زیادی وجود داشته باشد (توالی‌های تکراری). یک بلوک سالم همیشه یک موقعیت یکتا نمی‌دهد.</li>
+  <li><b>درج و حذف:</b> درج یا حذف یک باز، همهٔ بازهای بعدی را جابه‌جا می‌کند و موقعیت‌ها با هم نمی‌خوانند. لانهٔ کبوتر برای جانشینی ساده‌تر است.</li>
+  <li><b>انتخاب k:</b> k کوچک ← کاندید تصادفی و تکراری زیاد. k بزرگ ← احتمال اینکه یک بلوک بی‌خطا بماند کمتر می‌شود.</li>
+</ul>
+
+<aside class="callout deep">
+  <p>چرا k کوچک بد است؟ تعداد k-merهای ممکن <code>4^k</code> است. برای ژنوم ۳ میلیارد بازی و k = ۱۲، <code>4^12 ≈ 16.8</code> میلیون است، پس هر k-mer تصادفی حدود <code>3×10^9 ÷ 16.8×10^6 ≈ 179</code> بار به‌طور اتفاقی ظاهر می‌شود. با k = ۱۶، <code>4^16 ≈ 4.3</code> میلیارد است و میانگین حدود ۰٫۷ بار. (تخمین برای ژنوم تصادفی است؛ ژنوم واقعی تکرار دارد.)</p>
+</aside>
+
+<aside class="callout exam">
+  <p>جملهٔ کلیدی: k-merها <b>کاندید</b> تولید می‌کنند، نه جواب نهایی. جواب نهایی را مرحلهٔ بسط با هم‌ترازی دقیق می‌دهد.</p>
+</aside>
+
+<h2 id="trie">Trie: درخت پیشوندها</h2>
+
+<p><span class="term" data-en="Trie">Trie</span> (درخت پیشوندی) درختی است که هر یال یک حرف دارد و هر مسیر از ریشه یک پیشوند را می‌سازد. واژه‌هایی که پیشوند مشترک دارند، شاخهٔ ابتدایی را به اشتراک می‌گذارند. اسلاید ۲۸ سه واژهٔ <code class="seq">ACG</code>، <code class="seq">ACT</code> و <code class="seq">AGT</code> را می‌گذارد:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 330" width="720" role="img" aria-labelledby="tr-t">
+  <title id="tr-t">Trie برای ACG، ACT و AGT: ریشه، گره A، دو شاخه C و G، و برگ‌ها</title>
+  <g class="s-ink-2" stroke-width="2">
+    <line x1="360" y1="50" x2="360" y2="120"/>
+    <line x1="360" y1="120" x2="260" y2="200"/><line x1="360" y1="120" x2="460" y2="200"/>
+    <line x1="260" y1="200" x2="200" y2="280"/><line x1="260" y1="200" x2="320" y2="280"/>
+    <line x1="460" y1="200" x2="460" y2="280"/>
+  </g>
+  <g class="mono" font-size="14" font-weight="700" text-anchor="middle" style="direction:ltr">
+    <circle cx="360" cy="50" r="20" class="f-surface-2 s-ink-2" stroke-width="2"/><text x="360" y="55">root</text>
+    <circle cx="360" cy="120" r="18" class="f-surface s-accent" stroke-width="2"/><text x="360" y="125">A</text>
+    <circle cx="260" cy="200" r="18" class="f-surface s-accent" stroke-width="2"/><text x="260" y="205">AC</text>
+    <circle cx="460" cy="200" r="18" class="f-surface s-accent" stroke-width="2"/><text x="460" y="205">AG</text>
+    <circle cx="200" cy="280" r="20" class="f-ok-soft s-ok" stroke-width="2.5"/><text x="200" y="285">ACG</text>
+    <circle cx="320" cy="280" r="20" class="f-ok-soft s-ok" stroke-width="2.5"/><text x="320" y="285">ACT</text>
+    <circle cx="460" cy="280" r="20" class="f-ok-soft s-ok" stroke-width="2.5"/><text x="460" y="285">AGT</text>
+  </g>
+  <g class="mono t-accent" font-size="15" font-weight="800" text-anchor="middle" style="direction:ltr">
+    <text x="372" y="88">A</text><text x="296" y="150">C</text><text x="436" y="150">G</text>
+    <text x="218" y="232">G</text><text x="312" y="232">T</text><text x="474" y="244">T</text>
+  </g>
+  <text x="600" y="285" font-size="12" class="t-muted" style="direction:rtl" text-anchor="middle">برگ‌های سبز = واژه‌های کامل</text>
+</svg>
+<figcaption><b>شکل ۱۷.۳</b> — Trie سه واژه. ACG و ACT مسیر <code>A→C</code> را مشترک دارند. برای جستجوی یک الگو از ریشه حرف به حرف پایین می‌رویم؛ هر جا یالی نبود، الگو وجود ندارد.</figcaption>
+</figure>
+
+<div data-widget="trie" data-words="ACG,ACT,AGT"></div>
+
+<p>Trie برای <b>جستجوی پیشوند</b> عالی است: زمان جستجو به طول الگو بستگی دارد، نه به تعداد واژه‌ها. ولی اگر بخواهیم همهٔ زیررشته‌های ژنوم انسان را در یک Trie بگذاریم، تعداد گره‌ها بسیار زیاد می‌شود (برای متنی به طول n تا حدود n² گره). حتی نسخهٔ فشردهٔ آن (suffix tree) برای ژنوم انسان ده‌ها گیگابایت حافظه می‌خواهد.</p>
+
+<div class="quiz" data-id="ch17:q-trie">
+  <p class="q">در Trie شکل ۱۷.۳، برای جستجوی الگوی AGT چند یال را باید طی کنیم؟</p>
+  <ol class="opts"><li>۱</li><li>۲</li><li data-correct>۳</li><li>۶</li></ol>
+  <div class="explain">مسیر root → A → AG → AGT سه یال دارد؛ تعداد مراحل برابر طول الگوست و به تعداد واژه‌های ذخیره‌شده بستگی ندارد.</div>
+</div>
+
+<h2 id="memory">سرعت در برابر حافظه</h2>
+
+<p>اسلاید ۲۹ یک نکتهٔ مهندسی می‌گوید: برای مرجع بزرگ، <b>حافظه</b> به اندازهٔ زمان اجرا مهم است. ساختاری که سریع است ولی ده‌ها گیگابایت می‌خورد، روی لپ‌تاپ یا سرور معمولی اجرا نمی‌شود. راه‌حل: یک فهرست <b>فشرده</b> که هم سریع جستجو شود و هم حافظهٔ کم بخواهد. این همان تبدیل برووز–ویلر (BWT) و FM-index است.</p>
+
+<h2 id="bwt">تبدیل برووز–ویلر (BWT)</h2>
+
+<p><span class="term" data-en="Burrows–Wheeler transform">تبدیل برووز–ویلر</span> یک رشته را بازآرایی می‌کند. ساختن آن چهار مرحله دارد (اسلایدهای ۳۰–۳۱):</p>
+
+<ol class="steps">
+  <li>به آخر رشته نماد <code>$</code> را اضافه کن. این نماد از همهٔ حروف <b>کوچک‌تر</b> در نظر گرفته می‌شود.</li>
+  <li>همهٔ <b>چرخش‌های</b> رشته را بنویس (هر بار حرف اول را به آخر ببر).</li>
+  <li>چرخش‌ها را به ترتیب الفبایی <b>مرتب</b> کن.</li>
+  <li><b>ستون آخر</b> ماتریس مرتب‌شده، همان BWT است.</li>
+</ol>
+
+<div class="worked" data-title="BWT رشتهٔ BANANA">
+  <p class="problem">BWT رشتهٔ BANANA را بساز.</p>
+  <ol class="steps">
+    <li>اضافه کردن $: <code>BANANA$</code> (۷ حرف).</li>
+    <li>چرخش‌ها: <code>BANANA$</code>، <code>ANANA$B</code>، <code>NANA$BA</code>، <code>ANA$BAN</code>، <code>NA$BANA</code>، <code>A$BANAN</code>، <code>$BANANA</code>.</li>
+    <li>مرتب‌سازی (با <code>$</code> کوچک‌ترین): <code>$BANANA</code>، <code>A$BANAN</code>، <code>ANA$BAN</code>، <code>ANANA$B</code>، <code>BANANA$</code>، <code>NA$BANA</code>، <code>NANA$BA</code>.</li>
+    <li>حرف آخر هر سطر مرتب‌شده را بخوان: <code>A, N, N, B, $, A, A</code>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code>BWT(BANANA) = ANNB$AA</code></p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 620 300" width="620" role="img" aria-labelledby="bw-t">
+  <title id="bw-t">چرخش‌های BANANA$ قبل و بعد از مرتب‌سازی؛ ستون اول F، ستون آخر L و آرایهٔ پسوندی SA</title>
+  <defs><marker id="bw-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="12" text-anchor="middle" style="direction:rtl">
+    <text x="115" y="38" class="t-muted">چرخش‌ها</text>
+    <text x="400" y="38" class="t-muted">بعد از مرتب‌سازی</text>
+    <text x="337" y="52" class="t-accent" font-weight="700" style="direction:ltr">F</text>
+    <text x="470" y="52" class="t-hl" font-weight="700" style="direction:ltr">L</text>
+    <text x="545" y="38" class="t-muted" style="direction:ltr">SA</text>
+    <text x="300" y="38" class="t-muted" style="direction:ltr">i</text>
+  </g>
+  <rect x="326" y="56" width="24" height="196" rx="4" class="f-accent-soft"/>
+  <rect x="458" y="56" width="24" height="196" rx="4" class="f-hl-soft"/>
+  <g class="mono" font-size="16" style="direction:ltr">
+    <text x="40" y="76" textLength="154" lengthAdjust="spacing">BANANA$</text>
+    <text x="40" y="104" textLength="154" lengthAdjust="spacing">ANANA$B</text>
+    <text x="40" y="132" textLength="154" lengthAdjust="spacing">NANA$BA</text>
+    <text x="40" y="160" textLength="154" lengthAdjust="spacing">ANA$BAN</text>
+    <text x="40" y="188" textLength="154" lengthAdjust="spacing">NA$BANA</text>
+    <text x="40" y="216" textLength="154" lengthAdjust="spacing">A$BANAN</text>
+    <text x="40" y="244" textLength="154" lengthAdjust="spacing">$BANANA</text>
+    <text x="330" y="76" textLength="154" lengthAdjust="spacing">$BANANA</text>
+    <text x="330" y="104" textLength="154" lengthAdjust="spacing">A$BANAN</text>
+    <text x="330" y="132" textLength="154" lengthAdjust="spacing">ANA$BAN</text>
+    <text x="330" y="160" textLength="154" lengthAdjust="spacing">ANANA$B</text>
+    <text x="330" y="188" textLength="154" lengthAdjust="spacing">BANANA$</text>
+    <text x="330" y="216" textLength="154" lengthAdjust="spacing">NA$BANA</text>
+    <text x="330" y="244" textLength="154" lengthAdjust="spacing">NANA$BA</text>
+  </g>
+  <g class="mono t-muted" font-size="13" text-anchor="middle" style="direction:ltr">
+    <text x="300" y="76">0</text><text x="300" y="104">1</text><text x="300" y="132">2</text><text x="300" y="160">3</text><text x="300" y="188">4</text><text x="300" y="216">5</text><text x="300" y="244">6</text>
+    <text x="545" y="76">6</text><text x="545" y="104">5</text><text x="545" y="132">3</text><text x="545" y="160">1</text><text x="545" y="188">0</text><text x="545" y="216">4</text><text x="545" y="244">2</text>
+  </g>
+  <line x1="205" y1="150" x2="285" y2="150" class="s-muted anim-flow" stroke-width="1.8" marker-end="url(#bw-ah)"/>
+  <text x="245" y="140" font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">مرتب‌سازی</text>
+  <text x="310" y="282" font-size="14" text-anchor="middle" class="mono" style="direction:ltr">BWT = L = A N N B $ A A</text>
+</svg>
+<figcaption><b>شکل ۱۷.۴</b> — ستون اول (F، آبی) و ستون آخر (L، نارنجی). ستون SA موقعیت شروع هر پسوند در رشتهٔ اصلی است.</figcaption>
+</figure>
+
+<aside class="callout key">
+  <p>هر سطر ماتریس مرتب‌شده با یک <b>پسوند</b> رشته شروع می‌شود (چون بعد از $ ادامه‌اش فقط چرخش است). حرف سطر در ستون L، <b>حرف قبل</b> از آن پسوند در رشتهٔ اصلی است. همین ویژگی جستجوی عقب‌گرد را ممکن می‌کند.</p>
+</aside>
+
+<h3>تمرین کلاسی: BWT رشتهٔ babaabdad</h3>
+
+<div class="worked" data-title="تمرین اسلاید ۳۶–۳۷">
+  <p class="problem">با افزودن <code>$</code> به آخر، BWT رشتهٔ <code>babaabdad</code> را بساز.</p>
+  <ol class="steps">
+    <li>رشته می‌شود <code>babaabdad$</code> (۱۰ حرف، پس ۱۰ چرخش). ترتیب نمادها: <code>$ &lt; a &lt; b &lt; d</code>.</li>
+    <li>چرخش‌ها به ترتیب: <code>babaabdad$</code>، <code>abaabdad$b</code>، <code>baabdad$ba</code>، <code>aabdad$bab</code>، <code>abdad$baba</code>، <code>bdad$babaa</code>، <code>dad$babaab</code>، <code>ad$babaabd</code>، <code>d$babaabda</code>، <code>$babaabdad</code>.</li>
+    <li>مرتب‌شده: <code>$babaabdad</code>، <code>aabdad$bab</code>، <code>abaabdad$b</code>، <code>abdad$baba</code>، <code>ad$babaabd</code>، <code>baabdad$ba</code>، <code>babaabdad$</code>، <code>bdad$babaa</code>، <code>d$babaabda</code>، <code>dad$babaab</code>.</li>
+    <li>حرف آخر هر سطر: <code>d, b, b, a, d, a, $, a, a, b</code>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code>BWT(babaabdad$) = dbbada$aab</code></p>
+</div>
+
+<div class="fill" data-answer="ANNB$AA" data-id="ch17:f-bwt">
+  <p class="q">BWT رشتهٔ BANANA (با $ در آخر) را بنویس: <input class="blank" type="text"></p>
+  <div class="explain">ستون آخر ماتریس مرتب‌شده: A، N، N، B، $، A، A.</div>
+</div>
+
+<h2 id="fm">FM-index: C، Occ و SA</h2>
+
+<p>برای جستجو لازم نیست کل ماتریس را نگه داریم. (اسلایدهای ۳۲–۳۳.) فقط سه چیز کافی است:</p>
+
+<ol class="steps">
+  <li><b>ستون L</b> (همان BWT): <code>A N N B $ A A</code>.</li>
+  <li><b>جدول C:</b> <code>C[c]</code> = تعداد نمادهای <b>کوچک‌تر</b> از c در کل متن = شمارهٔ سطر شروع بلوک c در ستون F.</li>
+  <li><b>تابع Occ:</b> <code>Occ(c, i)</code> = تعداد c در <code>L[0..i−1]</code> (i حرف اول ستون L).</li>
+</ol>
+
+<p>جدول C برای BANANA$:</p>
+<table>
+  <thead><tr><th>نماد</th><th><code>$</code></th><th><code>A</code></th><th><code>B</code></th><th><code>N</code></th></tr></thead>
+  <tbody><tr><td><code>C[c]</code></td><td><code>0</code></td><td><code>1</code></td><td><code>4</code></td><td><code>5</code></td></tr></tbody>
+</table>
+<p>مثلاً <code>C[B] = 4</code> چون نمادهای کوچک‌تر از B سه تا A و یک $ هستند (۴ تا).</p>
+
+<p>جدول Occ برای <code>L = A N N B $ A A</code> (ستون i ام یعنی «در i حرف اولِ L چند تا c هست»):</p>
+<table>
+  <thead><tr><th>i</th><th>۰</th><th>۱</th><th>۲</th><th>۳</th><th>۴</th><th>۵</th><th>۶</th><th>۷</th></tr></thead>
+  <tbody>
+    <tr><td><code>L[i−1]</code></td><td>-</td><td><code>A</code></td><td><code>N</code></td><td><code>N</code></td><td><code>B</code></td><td><code>$</code></td><td><code>A</code></td><td><code>A</code></td></tr>
+    <tr><td><code>Occ($, i)</code></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td><code>Occ(A, i)</code></td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td><td>3</td></tr>
+    <tr><td><code>Occ(B, i)</code></td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td><code>Occ(N, i)</code></td><td>0</td><td>0</td><td>1</td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+  </tbody>
+</table>
+
+<p>و برای تبدیل شمارهٔ سطر به موقعیت در متن، <b>آرایهٔ پسوندی</b> <span class="term" data-en="Suffix array">SA</span> را داریم: <code>SA = 6, 5, 3, 1, 0, 4, 2</code> (ستون سمت راست شکل ۱۷.۴). <code>SA[r]</code> یعنی پسوند سطر r از چه موقعیتی (شمارهٔ ۰-مبنا) در BANANA شروع می‌شود.</p>
+
+<h2 id="backward">جستجوی عقب‌گرد</h2>
+
+<p>الگو را از <b>آخرین حرف</b> به اول پردازش می‌کنیم. در هر لحظه یک بازهٔ نیم‌باز <code>[sp, ep)</code> از سطرهای ماتریس داریم که همهٔ آن‌ها با پسوند فعلی الگو شروع می‌شوند. در ابتدا بازه همهٔ سطرهاست: <code>[0, n)</code> که n = ۷. با خواندن حرف c:</p>
+
+<p style="text-align:center"><code>sp′ = C[c] + Occ(c, sp)</code> &nbsp;&nbsp;&nbsp; <code>ep′ = C[c] + Occ(c, ep)</code></p>
+
+<p>چرا کار می‌کند؟ سطرهای بازهٔ فعلی با پسوند P شروع می‌شوند. آن‌هایی که حرف قبل‌شان (ستون L) برابر c است، پسوند cP را می‌سازند. این سطرها در بلوک c در ستون F به همان ترتیبِ نسبی ظاهر می‌شوند؛ <code>C[c]</code> شروع بلوک است و <code>Occ</code> می‌شمارد چند c قبل از بازه آمده‌اند.</p>
+
+<div class="worked" data-title="جستجوی NAN در BANANA (اسلایدهای ۳۴–۳۵)">
+  <p class="problem">الگوی <code>NAN</code> چند بار و کجا در BANANA هست؟ از <code>C[$]=0, C[A]=1, C[B]=4, C[N]=5</code> و جدول Occ بالا استفاده کن.</p>
+  <ol class="steps">
+    <li><b>شروع:</b> <code>[sp, ep) = [0, 7)</code>.</li>
+    <li><b>حرف آخر 'N':</b> <code>sp = 5 + Occ(N,0) = 5 + 0 = 5</code>، <code>ep = 5 + Occ(N,7) = 5 + 2 = 7</code>. بازه <code>[5, 7)</code>: دو سطر با N شروع می‌شوند.</li>
+    <li><b>حرف 'A' (پسوند AN):</b> <code>sp = 1 + Occ(A,5) = 1 + 1 = 2</code>، <code>ep = 1 + Occ(A,7) = 1 + 3 = 4</code>. بازه <code>[2, 4)</code>.</li>
+    <li><b>حرف 'N' (پسوند NAN):</b> <code>sp = 5 + Occ(N,2) = 5 + 1 = 6</code>، <code>ep = 5 + Occ(N,4) = 5 + 2 = 7</code>. بازه <code>[6, 7)</code>: یک سطر، پس یک رخداد.</li>
+    <li><b>تبدیل به موقعیت:</b> <code>SA[6] = 2</code>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> NAN یک بار و از موقعیت ۲ (۰-مبنا) در BANANA شروع می‌شود (B=0، A=1، N=2، A=3، N=4، A=5).</p>
+</div>
+
+<div data-widget="bwt" data-text="BANANA" data-pattern="NAN"></div>
+
+<aside class="callout key">
+  <p>تعداد مراحل برابر <b>طول الگو</b> است و به طول متن بستگی ندارد. هر مرحله فقط دو بار جدول C و Occ را می‌خواند. برای همین BWA، Bowtie و HISAT حتی روی ژنوم ۳ میلیارد بازی سریع‌اند. اگر بازه خالی شد (<code>sp ≥ ep</code>)، الگو در متن نیست.</p>
+</aside>
+
+<div class="quiz" data-id="ch17:q-ana">
+  <p class="q">الگوی <code>ANA</code> در BANANA با جستجوی عقب‌گرد به بازهٔ نهایی <code>[2, 4)</code> می‌رسد. چند رخداد دارد و از کدام موقعیت‌ها شروع می‌شوند؟ (SA = 6, 5, 3, 1, 0, 4, 2)</p>
+  <ol class="opts"><li>یک رخداد در موقعیت ۱</li><li data-correct>دو رخداد در موقعیت‌های ۳ و ۱</li><li>دو رخداد در موقعیت‌های ۲ و ۴</li><li>سه رخداد</li></ol>
+  <div class="explain">اندازهٔ بازه <code>4 − 2 = 2</code> رخداد است و <code>SA[2] = 3</code>، <code>SA[3] = 1</code>. در BANANA، ANA از موقعیت ۱ (A N A) و از موقعیت ۳ (A N A) شروع می‌شود؛ دو رخداد همپوشان.</div>
+</div>
+
+<details class="think">
+  <summary>الگوی NB (از BANANA) چه می‌شود؟</summary>
+  <div><p>حرف آخر B: <code>sp = 4 + Occ(B,0) = 4</code>، <code>ep = 4 + Occ(B,7) = 5</code> ← <code>[4,5)</code>. حرف N: <code>sp = 5 + Occ(N,4) = 7</code>، <code>ep = 5 + Occ(N,5) = 7</code> ← <code>[7,7)</code> که خالی است. پس NB در BANANA نیست، که درست است: بعد از B همیشه A می‌آید.</p></div>
+</details>
+
+<h2 id="aligners">مقایسهٔ هم‌ترازکننده‌ها</h2>
+
+<p>اسلاید ۳۸ نتیجهٔ مقاله HISAT را نشان می‌دهد که چند برنامه را روی یک داده مقایسه کرده. درصد خوانش‌هایی که درست و یکتا نگاشت شدند (و در پرانتز، با احتساب درست‌های چندنگاشتی)، زمان اجرا و حافظه:</p>
+
+<table>
+  <thead><tr><th>برنامه</th><th>% درست و یکتا (+چندنگاشتی)</th><th>زمان (دقیقه)</th><th>حافظه (GB)</th></tr></thead>
+  <tbody>
+    <tr><td>HISATx1</td><td>92.1 (93.5)</td><td>22.7</td><td>4.3</td></tr>
+    <tr><td>HISATx2</td><td>97.6 (99.3)</td><td>47.7</td><td>4.3</td></tr>
+    <tr><td>HISAT</td><td>97.6 (99.2)</td><td>26.7</td><td>4.3</td></tr>
+    <tr><td>STAR</td><td>88.9 (90.5)</td><td>25</td><td>28</td></tr>
+    <tr><td>STARx2</td><td>96.7 (99)</td><td>50.5</td><td>28</td></tr>
+    <tr><td>GSNAP</td><td>92.3 (93.8)</td><td>291.9</td><td>20.2</td></tr>
+    <tr><td>OLego</td><td>91.6 (91.6)</td><td>989.5</td><td>3.7</td></tr>
+    <tr><td>TopHat2</td><td>94.4 (97.4)</td><td>1,170</td><td>4.3</td></tr>
+  </tbody>
+</table>
+
+<p>چطور بخوانیمش؟ سه محور داریم: دقت، سرعت، حافظه، و معمولاً نمی‌شود هر سه را با هم به بهترین حالت رساند.</p>
+<ul>
+  <li><b>HISAT</b>: دقت بالا (۹۷٫۶٪)، زمان حدود ۲۷ دقیقه و حافظهٔ فقط ۴٫۳ GB؛ از این نظر متعادل‌ترین است.</li>
+  <li><b>STAR</b>: سریع (۲۵ دقیقه) ولی حافظهٔ ۲۸ GB؛ حدود ۶٫۵ برابر HISAT (۲۸ ÷ ۴٫۳ ≈ ۶٫۵). STAR از آرایهٔ پسوندی فشرده‌نشده استفاده می‌کند؛ این توضیح معمول حافظهٔ زیادش است.</li>
+  <li><b>OLego و TopHat2</b>: حافظهٔ کم ولی بسیار کند (۹۸۹٫۵ و ۱۱۷۰ دقیقه؛ TopHat2 حدود ۴۴ برابر HISAT: ۱۱۷۰ ÷ ۲۶٫۷ ≈ ۴۴).</li>
+  <li>نسخه‌های <b>x2</b> زمان را تقریباً دو برابر می‌کنند (۲۲٫۷ ← ۴۷٫۷ و ۲۵ ← ۵۰٫۵) و دقت را بالا می‌برند (مثلاً STAR از ۸۸٫۹ به ۹۶٫۷)؛ یعنی دقت بیشتر با هزینهٔ زمان.</li>
+</ul>
+
+<aside class="callout exam">
+  <p>این جدول معمولاً به شکل «کدام برنامه از نظر حافظه یا زمان بهتر است؟» یا «نسبت دو عدد را حساب کن» می‌آید. ستون درست را بخوان و حواست باشد که زمان «دقیقه» است و حافظه «گیگابایت».</p>
+</aside>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li><b>seed and extend:</b> مرحلهٔ ۱ با هش یا فهرست چند کاندید می‌دهد؛ مرحلهٔ ۲ آن‌ها را با هم‌ترازی دقیق بررسی می‌کند.</li>
+    <li>هش رشته را به عدد تبدیل می‌کند؛ هش کل خوانش با یک خطا شکست می‌خورد، پس قطعه‌های کوچک (k-mer) را هش می‌کنیم.</li>
+    <li>تعداد k-merهای یک خوانش به طول L: <code>L − k + 1</code> (مثال <code>100 − 20 + 1 = 81</code>).</li>
+    <li>لانهٔ کبوتر: برای m ناجور، <code>m + 1</code> بلوک ← دست‌کم یک بلوک سالم (۱۰۰ باز، ۵ بلوک ۲۰ بازی، تا ۴ جانشینی).</li>
+    <li>محدودیت‌ها: تکرارها، درج و حذف، و انتخاب k؛ k-mer کاندید می‌دهد نه جواب نهایی.</li>
+    <li>Trie برای پیشوند خوب است ولی برای همهٔ زیررشته‌های ژنوم حافظهٔ زیادی می‌خواهد.</li>
+    <li>BWT: افزودن $، همهٔ چرخش‌ها، مرتب‌سازی، ستون آخر. <code>BWT(BANANA) = ANNB$AA</code> و <code>BWT(babaabdad) = dbbada$aab</code>.</li>
+    <li>FM-index = ستون L + جدول <code>C</code> + تابع <code>Occ</code> (+ <code>SA</code> برای موقعیت‌ها).</li>
+    <li>جستجوی عقب‌گرد: <code>sp′ = C[c] + Occ(c, sp)</code> و <code>ep′ = C[c] + Occ(c, ep)</code>؛ تعداد مراحل برابر طول الگو و مستقل از طول متن است.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>سؤال‌ها را اول بدون نگاه به متن جواب بده؛ مسئله‌های BWT و جستجوی عقب‌گرد را حتماً روی کاغذ حل کن.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

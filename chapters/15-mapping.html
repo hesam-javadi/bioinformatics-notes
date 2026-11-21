@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مسئلهٔ نگاشت خوانش‌ها · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="مونتاژ و نگاشت، خوانش جفت‌سر، تفاوت ژنوم فرد با مرجع، روش ساده و هزینهٔ آن و مرور روش‌های سریع.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch15">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۲ (هم‌ترازی)، اسلایدهای ۱ تا ۸" data-motif="ACGTACGTACGATACGGTACCATGA">
+  <h1>مسئلهٔ نگاشت خوانش‌ها</h1>
+  <p class="lead">دستگاه توالی‌یابی ۶۲۰ میلیون تکهٔ کوتاه DNA به تو داده است. هر تکه باید سر جای خودش روی ژنوم برگردد، با همهٔ خطاها و تفاوت‌های یک فرد با مرجع. اگر ساده‌ترین راه را بروی، این کار حدود ۹٫۵ سال طول می‌کشد. چرا؟ و راه سریع چیست؟</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>فرق <b>مونتاژ</b> و <b>نگاشت</b> را <b>توضیح بدهی</b> و بگویی کدام‌یک به مرجع نیاز دارد.</li>
+    <li>خوانش جفت‌سر (paired-end) را <b>شرح بدهی</b> و بگویی چه بخشی از قطعه ناشناخته می‌ماند.</li>
+    <li>مسئلهٔ نگاشت را در یک جمله <b>تعریف کنی</b>.</li>
+    <li>تعداد جایگاه‌ها و هزینهٔ روش ساده را <b>حساب کنی</b>.</li>
+    <li>سه خانوادهٔ روش‌های سریع (هش، تراي، BWT) را <b>نام ببری</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch15:pre1">
+  <p class="q">ژنوم انسان حدود ۳ میلیارد باز دارد و ژنوم مرجع را داریم. اگر دو ژنوم دو انسان را مقایسه کنیم، تقریباً چند درصدشان یکسان است؟</p>
+  <ol class="opts">
+    <li>حدود ۵۰٪</li>
+    <li>حدود ۹۰٪</li>
+    <li data-correct>حدود ۹۹٫۹۹٪</li>
+    <li>۱۰۰٪ دقیق</li>
+  </ol>
+  <div class="explain">ژنوم یک فرد با مرجع حدود ۹۹٫۹۹٪ یکسان است، یعنی حدود ۳ میلیون موقعیت (از ۳ میلیارد) فرق دارد. این شباهت زیاد دقیقاً چیزی است که نگاشت را ممکن می‌کند، ولی همان تفاوت‌های کم کار را دشوار می‌کند.</div>
+</div>
+
+<h2 id="recap">از مولکول تا فایل: چه داریم؟</h2>
+
+<p>اسلاید اول این بخش از دوره، فصل‌های قبل را در چند جمله جمع می‌کند:</p>
+
+<ul>
+  <li>کروموزوم را یک‌جا نمی‌توان خواند؛ مثل <b>روزنامه خرد می‌کنیم</b> و تکه‌ها را می‌خوانیم.</li>
+  <li><b>PCR</b> با منطق همانندسازی، DNA را میلیاردها برابر تکثیر می‌کند.</li>
+  <li><b>ریزآرایه</b> بیان ژن‌های شناخته‌شده را با رنگ می‌سنجد ولی توالی نمی‌خواند.</li>
+  <li><b>سنگر</b> با پایان زنجیره ژنوم انسان را ممکن کرد. <b>ایلومینا</b> با موازی‌سازی میلیاردی هزینه را میلیون‌ها برابر کم کرد. <b>نسل سوم</b> با خوانش بلند از روی تکرارها عبور می‌کند.</li>
+  <li>خروجی در قالب <b>FASTQ</b> است و پوشش را از روی آن حساب می‌کنیم (فصل ۱۴).</li>
+</ul>
+
+<p>حالا ۶۲۰ میلیون خوانش (۶۲۰٬۰۰۰٬۰۰۰) داریم. هر کدام یک نوار کاغذ کوچک از روزنامه است. <b>هر نوار کجا می‌رود؟</b> دو راه وجود دارد:</p>
+
+<div class="compare">
+  <div><h4><span class="term" data-en="Assembly">مونتاژ</span> (بدون مرجع)</h4><p>روزنامه را از صفر بساز. از روی همپوشانی نوارها خودشان را به هم می‌چسبانی، مثل حل کردن پازل بدون عکس روی جعبه.</p></div>
+  <div><h4><span class="term" data-en="Mapping">نگاشت یا هم‌ترازسازی</span> (با مرجع)</h4><p>ژنوم کامل (مرجع) در دست است. هر نوار را سر جایش روی مرجع پیدا کن، مثل پازل با عکس روی جعبه.</p></div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 720 250" width="720" role="img" aria-labelledby="mp-t1">
+  <title id="mp-t1">مقایسهٔ مونتاژ بدون مرجع و نگاشت با مرجع</title>
+  <defs><marker id="mp-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <text x="180" y="22" font-size="14" font-weight="700" text-anchor="middle" class="t-accent" style="direction:rtl">مونتاژ: بدون مرجع</text>
+  <text x="540" y="22" font-size="14" font-weight="700" text-anchor="middle" class="t-hl" style="direction:rtl">نگاشت: با مرجع</text>
+  <line x1="360" y1="34" x2="360" y2="236" class="s-line" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <g class="f-accent-soft s-accent" stroke-width="1.5">
+    <rect x="30" y="50" width="90" height="16" rx="4"/><rect x="90" y="74" width="90" height="16" rx="4"/><rect x="150" y="98" width="90" height="16" rx="4"/><rect x="60" y="122" width="90" height="16" rx="4"/>
+  </g>
+  <line x1="180" y1="148" x2="180" y2="170" class="s-muted" stroke-width="1.6" marker-end="url(#mp-ah)"/>
+  <rect x="40" y="176" width="280" height="22" rx="5" class="f-accent-soft s-accent" stroke-width="1.5"/>
+  <text x="180" y="217" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">همپوشانی‌ها را پیدا کن و بچسبان</text>
+  <rect x="390" y="50" width="300" height="20" rx="4" class="f-surface-2 s-ink-2" stroke-width="1.5"/>
+  <text x="540" y="44" font-size="11" text-anchor="middle" class="t-muted" style="direction:rtl">ژنوم مرجع (از قبل داریم)</text>
+  <g class="f-hl-soft s-hl" stroke-width="1.5">
+    <rect x="400" y="96" width="90" height="16" rx="4"/><rect x="450" y="120" width="90" height="16" rx="4"/><rect x="540" y="96" width="90" height="16" rx="4"/><rect x="600" y="120" width="80" height="16" rx="4"/>
+  </g>
+  <g class="s-muted" stroke-width="1.2" stroke-dasharray="3 3"><line x1="445" y1="96" x2="445" y2="72"/><line x1="495" y1="120" x2="495" y2="72"/><line x1="585" y1="96" x2="585" y2="72"/><line x1="640" y1="120" x2="640" y2="72"/></g>
+  <text x="540" y="217" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">برای هر خوانش جایگاهش را روی مرجع پیدا کن</text>
+</svg>
+<figcaption><b>شکل ۱۵.۱</b> — مونتاژ توالی را از روی خود خوانش‌ها می‌سازد. نگاشت خوانش‌ها را روی توالی آماده می‌گذارد. این فصل و دو فصل بعد دربارهٔ نگاشت است.</figcaption>
+</figure>
+
+<aside class="callout analogy">
+  <p>مونتاژ شبیه ساختن یک فایل از چند تکهٔ پراکنده بدون نسخهٔ اصلی است. نگاشت شبیه <code>diff</code> یا جست‌وجو در یک فایل مرجع است: می‌دانی متن اصلی کجاست و فقط باید بفهمی هر تکه از کدام قسمت آمده.</p>
+</aside>
+
+<h2 id="short-reads">خوانش‌های کوتاه و جفت‌سر</h2>
+
+<p>خروجی توالی‌یابی مجموعه‌ای از خوانش‌های کوتاه است (اسلاید ۲). DNA را هر بار از جاهای تصادفی می‌شکنند (مثلاً با شکست مکانیکی)، پس قطعه‌ها همپوشان‌اند و روی هم کل ژنوم را می‌پوشانند. اگر شکستن همیشه از یک جا بود، بعضی نواحی هرگز خوانده نمی‌شدند.</p>
+
+<p>در روش <span class="term" data-en="Paired-end">جفت‌سر</span> هر قطعهٔ DNA از <b>دو سرش</b> خوانده می‌شود. در شکل اسلاید هر سر ۳۵ باز است و وسط قطعه، ۳۳۰ تا ۴۳۰ باز، <b>ناشناخته می‌ماند</b>. ولی یک اطلاعات مفید داریم: می‌دانیم دو سر حدوداً به اندازهٔ طول قطعه از هم فاصله دارند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 180" width="720" role="img" aria-labelledby="mp-t2">
+  <title id="mp-t2">قطعهٔ جفت‌سر: دو سر ۳۵ بازی خوانده می‌شوند و وسط ۳۳۰ تا ۴۳۰ باز ناشناخته است</title>
+  <defs><marker id="mp-ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <text x="360" y="22" font-size="13" font-weight="700" text-anchor="middle" style="direction:rtl">یک قطعهٔ DNA (حدود ۴۰۰ تا ۵۰۰ باز)</text>
+  <rect x="40" y="48" width="640" height="26" rx="4" class="f-surface-2 s-ink-2" stroke-width="1.5"/>
+  <rect x="40" y="48" width="80" height="26" rx="4" class="f-accent s-accent" stroke-width="1.5"/>
+  <rect x="600" y="48" width="80" height="26" rx="4" class="f-accent s-accent" stroke-width="1.5"/>
+  <text x="80" y="66" font-size="12" font-weight="700" text-anchor="middle" class="t-white mono">35 bp</text>
+  <text x="640" y="66" font-size="12" font-weight="700" text-anchor="middle" class="t-white mono">35 bp</text>
+  <text x="360" y="66" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">ناشناخته: ۳۳۰ تا ۴۳۰ باز</text>
+  <line x1="40" y1="96" x2="110" y2="96" class="s-ink-2" stroke-width="1.8" marker-end="url(#mp-ah2)"/>
+  <line x1="680" y1="96" x2="610" y2="96" class="s-ink-2" stroke-width="1.8" marker-end="url(#mp-ah2)"/>
+  <text x="75" y="118" font-size="12" text-anchor="middle" class="t-ink-2" style="direction:rtl">خوانش ۱</text>
+  <text x="645" y="118" font-size="12" text-anchor="middle" class="t-ink-2" style="direction:rtl">خوانش ۲</text>
+  <path d="M120 140 h480" class="s-muted" stroke-width="1.5" marker-start="url(#mp-ah2)" marker-end="url(#mp-ah2)"/>
+  <text x="360" y="164" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">فاصلهٔ تقریباً معلوم بین دو خوانش کمک می‌کند جای قطعه را درست پیدا کنیم</text>
+</svg>
+<figcaption><b>شکل ۱۵.۲</b> — خوانش جفت‌سر. فقط دو سر خوانده می‌شود و وسط ناشناخته می‌ماند. دو سر در جهت مخالف هم (از دو رشته) خوانده می‌شوند.</figcaption>
+</figure>
+
+<details class="think">
+  <summary>چرا خوانش جفت‌سر برای نگاشت مفید است، با اینکه وسط قطعه را نمی‌خوانیم؟</summary>
+  <div><p>چون دو سر قطعه باید روی مرجع در فاصله‌ای تقریباً برابر طول قطعه قرار بگیرند. اگر یک سر در ناحیهٔ تکراری باشد و چند جای ممکن داشته باشد، سر دیگر مشخص می‌کند کدام جای ممکن درست است. فاصلهٔ دو سر یک «قید» اضافه است.</p></div>
+</details>
+
+<h2 id="mapping">نگاشت: هر خوانش سر جای خودش</h2>
+
+<p>در <span class="term" data-en="Alignment / Mapping">نگاشت</span> برای هر خوانش، موقعیتش روی ژنوم مرجع را پیدا می‌کنیم (اسلاید ۳). خروجی چیزی شبیه این است: «خوانش ۱ از موقعیت ۱۰۰، خوانش ۲ از موقعیت ۱۱۴، خوانش ۳ از موقعیت ۱۲۳». این کار باید حتی وقتی چند باز فرق دارند انجام شود.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 670 200" width="670" role="img" aria-labelledby="mp-t3">
+  <title id="mp-t3">چهار خوانش هشت‌بازی روی مرجع بیست‌بازی؛ جایگاه‌های ناهمخوان قرمز است</title>
+  <rect x="50" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="65.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <text x="65.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">1</text>
+  <rect x="80" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="95.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="95.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">2</text>
+  <rect x="110" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="125.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="125.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">3</text>
+  <rect x="140" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="155.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="155.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">4</text>
+  <rect x="170" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="185.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="185.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">5</text>
+  <rect x="200" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="215.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <text x="215.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">6</text>
+  <rect x="230" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="245.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="245.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">7</text>
+  <rect x="260" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="275.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="275.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">8</text>
+  <rect x="290" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="305.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="305.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">9</text>
+  <rect x="320" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="335.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <text x="335.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">10</text>
+  <rect x="350" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="365.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="365.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">11</text>
+  <rect x="380" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="395.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="395.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">12</text>
+  <rect x="410" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="425.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="425.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">13</text>
+  <rect x="440" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="455.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="455.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">14</text>
+  <rect x="470" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="485.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <text x="485.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">15</text>
+  <rect x="500" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="515.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="515.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">16</text>
+  <rect x="530" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="545.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="545.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">17</text>
+  <rect x="560" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="575.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <text x="575.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">18</text>
+  <rect x="590" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="605.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="605.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">19</text>
+  <rect x="620" y="30" width="30" height="26" class="f-surface-2 s-line" stroke-width="1.2"/>
+  <text x="635.0" y="48" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="635.0" y="22" font-size="10.5" text-anchor="middle" class="t-muted mono">20</text>
+  <text x="42" y="48" font-size="12" text-anchor="end" style="direction:rtl">مرجع</text>
+  <text x="42" y="95" font-size="12" text-anchor="end" style="direction:rtl">خوانش 1</text>
+  <rect x="50" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="65.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="80" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="95.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="110" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="125.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="140" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="155.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="170" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="185.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="200" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="215.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="230" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="245.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="260" y="78" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="275.0" y="94" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="42" y="123" font-size="12" text-anchor="end" style="direction:rtl">خوانش 2</text>
+  <rect x="170" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="185.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="200" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="215.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="230" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="245.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="260" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="275.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="290" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="305.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="320" y="106" width="30" height="22" class="f-bad" stroke-width="1.2"/>
+  <text x="335.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+  <rect x="350" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="365.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="380" y="106" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="395.0" y="122" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <text x="42" y="151" font-size="12" text-anchor="end" style="direction:rtl">خوانش 3</text>
+  <rect x="290" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="305.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="320" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="335.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="350" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="365.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="380" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="395.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="410" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="425.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="440" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="455.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="470" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="485.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="500" y="134" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="515.0" y="150" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <text x="42" y="179" font-size="12" text-anchor="end" style="direction:rtl">خوانش 4</text>
+  <rect x="410" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="425.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="440" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="455.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <rect x="470" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="485.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="500" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="515.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">T</text>
+  <rect x="530" y="162" width="30" height="22" class="f-bad" stroke-width="1.2"/>
+  <text x="545.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+  <rect x="560" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="575.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">A</text>
+  <rect x="590" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="605.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">C</text>
+  <rect x="620" y="162" width="30" height="22" class="f-accent-soft s-accent" stroke-width="1.2"/>
+  <text x="635.0" y="178" font-size="14" font-weight="700" text-anchor="middle" class="mono">G</text>
+  <text x="335.0" y="192" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">موقعیت شروع خوانش‌ها روی مرجع: ۱، ۵، ۹ و ۱۳</text>
+</svg>
+<figcaption><b>شکل ۱۵.۳</b> — چهار خوانش ۸ بازی روی یک مرجع ۲۰ بازی. جایگاه‌هایی که خوانش با مرجع فرق دارد (mismatch) قرمز شده‌اند. دو خوانش دقیقاً مطابق مرجع‌اند و دو خوانش هر کدام یک اختلاف دارند، ولی هر چهار تا باید روی همان جای درست نگاشت شوند.</figcaption>
+</figure>
+
+<h3>چرا اختلاف داریم؟</h3>
+
+<p>ژنوم یک فرد با مرجع حدود <b>۹۹٫۹۹٪</b> یکسان است (اسلاید ۵). یعنی حدود ۰٫۰۱٪ ژنوم فرق دارد که تقریباً ۳٬۰۰۰٬۰۰۰ موقعیت از حدود ۳ میلیارد است. نمونه‌اش یک <span class="term" data-en="SNP">SNP</span> است: در یک موقعیت مرجع A دارد و فرد T.</p>
+
+<table class="center">
+  <tr><th></th><th>توالی</th></tr>
+  <tr><td>مرجع</td><td><code class="seq">ATGCCTAGGAACCTGAATCG</code></td></tr>
+  <tr><td>فرد</td><td><code class="seq">ATGCCTAGGTACCTGAATCG</code></td></tr>
+</table>
+
+<p>در این دو توالی ۲۰ بازی فقط موقعیت دهم فرق دارد (A در مرجع، T در فرد). خطای دستگاه هم باعث اختلاف می‌شود. پس نگاشت باید <b>نزدیک‌ترین</b> جا را پیدا کند، نه فقط جای کاملاً یکسان.</p>
+
+<div class="worked" data-title="چند موقعیت فرق دارد؟">
+  <p class="problem">اگر ژنوم یک فرد ۹۹٫۹۹٪ با مرجع ۳ میلیارد بازی یکسان باشد، چند موقعیت فرق دارد؟</p>
+  <ol class="steps">
+    <li>سهم متفاوت: ۱۰۰٪ − ۹۹٫۹۹٪ = ۰٫۰۱٪ = ۰٫۰۰۰۱.</li>
+    <li>۳×۱۰<sup>9</sup> × ۱۰<sup>−4</sup> = ۳×۱۰<sup>5</sup> = ۳۰۰٬۰۰۰.</li>
+  </ol>
+  <p class="after-steps"><b>توجه:</b> حساب دقیق ۳۰۰ هزار موقعیت می‌دهد، ولی اسلاید ۵ کنار ۹۹٫۹۹٪ عدد «حدود ۳ میلیون» را نوشته (۳ میلیون از ۳ میلیارد در واقع ۰٫۱٪ است). اعداد اسلاید با هم کاملاً سازگار نیستند. در امتحان همان عددهای اسلاید را بنویس، ولی بدان نکتهٔ اصلی این است که تفاوت‌ها بسیار کم‌اند نسبت به کل ژنوم.</p>
+</div>
+
+<h3>صورت مسئله</h3>
+
+<aside class="callout key">
+  <p><b>مسئلهٔ نگاشت (اسلاید ۶):</b> محل محتمل یک خوانش (مثلاً <code class="seq">ACCTG</code>) را روی ژنوم مرجع پیدا کن، با وجود تفاوت‌های واقعی و خطای توالی‌یابی، و آن‌قدر سریع که برای میلیون‌ها خوانش و میلیاردها باز عملی باشد.</p>
+</aside>
+
+<h2 id="naive">روش ساده: امتحان کردن همهٔ جایگاه‌ها</h2>
+
+<p>ساده‌ترین راه مقایسهٔ مستقیم است (اسلاید ۷): خوانش را روی هر جایگاه مرجع بگذار و حرف‌به‌حرف مقایسه کن. اگر طول مرجع N و طول خوانش L باشد:</p>
+
+<ul>
+  <li>تعداد جایگاه‌های ممکن (پنجره‌ها): <code>N − L + 1</code>.</li>
+  <li>در هر جایگاه حداکثر L مقایسه انجام می‌شود.</li>
+  <li>هزینه برای <b>یک</b> خوانش: <code>O(N · L)</code>.</li>
+</ul>
+
+<div class="worked" data-title="مثال اسلاید ۷">
+  <p class="problem">مرجع <code class="seq">ACGTACGTACGA</code> (N = 12) و خوانش <code class="seq">TACG</code> (L = 4). همهٔ جایگاه‌ها را بررسی کن.</p>
+  <ol class="steps">
+    <li>تعداد جایگاه‌ها: 12 − 4 + 1 = 9 (شماره‌گذاری از ۱).</li>
+    <li>جایگاه ۱: <code class="seq">ACGT</code> ✗. جایگاه ۲: <code class="seq">CGTA</code> ✗. جایگاه ۳: <code class="seq">GTAC</code> ✗.</li>
+    <li>جایگاه ۴: <code class="seq">TACG</code> ✓ (تطبیق).</li>
+    <li>جایگاه‌های ۵ (<code class="seq">ACGT</code>)، ۶ (<code class="seq">CGTA</code>) و ۷ (<code class="seq">GTAC</code>) ✗.</li>
+    <li>جایگاه ۸: <code class="seq">TACG</code> ✓ (تطبیق دوم). جایگاه ۹: <code class="seq">ACGA</code> ✗.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> ۹ پنجره بررسی شد و خوانش در دو جایگاه ۴ و ۸ تطبیق دارد. یک خوانش ممکن است چند جای درست داشته باشد (تکرار).</p>
+</div>
+
+<div data-widget="naive-search" data-ref="ACGTACGTACGA" data-read="TACG"></div>
+
+<p>برای یک خوانش و یک ژنوم کوچک این روش قابل‌قبول است. برای میلیاردها باز و میلیون‌ها خوانش بسیار پرهزینه می‌شود.</p>
+
+<h3>سؤال اسلاید ۸: چقدر طول می‌کشد؟</h3>
+
+<div class="worked" data-title="هزینهٔ روش ساده">
+  <p class="problem">ژنوم حدود 10<sup>9</sup> باز، خوانش‌های ۳۰۰ بازی و N = 10<sup>6</sup> خوانش. اگر همهٔ خوانش‌ها را یکی‌یکی با روش ساده نگاشت کنیم و کامپیوتر 10<sup>9</sup> عملیات در ثانیه انجام دهد، چقدر طول می‌کشد؟</p>
+  <ol class="steps">
+    <li>تعداد عملیات: 300 × 10<sup>6</sup> × 10<sup>9</sup> = 3 × 10<sup>17</sup>.</li>
+    <li>زمان به ثانیه: 3 × 10<sup>17</sup> / 10<sup>9</sup> = 3 × 10<sup>8</sup> ثانیه.</li>
+    <li>به روز: 3 × 10<sup>8</sup> / 86٬400 ≈ 3٬472 روز.</li>
+    <li>به سال: 3٬472 / 365 ≈ 9٫5 سال.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> حدود <b>۳٬۴۷۲ روز ≈ ۹٫۵ سال</b>. با یک کامپیوتر این روش عملی نیست؛ باید راهی پیدا کنیم که هر خوانش را بدون نگاه کردن به همهٔ جایگاه‌ها پیدا کند.</p>
+</div>
+
+<div class="quiz" data-id="ch15:q1">
+  <p class="q">مرجعی ۱٬۰۰۰ بازی و خوانشی ۵۰ بازی داریم. چند جایگاه (پنجره) باید بررسی شود؟</p>
+  <ol class="opts"><li>۵۰</li><li>۹۵۰</li><li data-correct>۹۵۱</li><li>۱٬۰۰۰</li></ol>
+  <div class="explain">N − L + 1 = 1000 − 50 + 1 = 951. «+۱» را فراموش نکن: پنجرهٔ اول از جایگاه ۱ و آخر از جایگاه N − L + 1 شروع می‌شود.</div>
+</div>
+
+<aside class="callout pitfall">
+  <p>هزینه O(N · L) <b>برای یک خوانش</b> است. برای M خوانش باید در M ضرب کنی؛ مثال اسلاید ۸ همین‌طور 300 × 10<sup>6</sup> × 10<sup>9</sup> شد.</p>
+</aside>
+
+<h2 id="approaches">روش‌های سریع‌تر و دقیق یا تقریبی</h2>
+
+<p>اسلاید ۴ سه خانوادهٔ روش را نام می‌برد. جزئیاتشان در فصل ۱۷ است و فعلاً فقط ایده را بدان:</p>
+
+<ol class="steps">
+  <li><b>هشینگ (Hashing):</b> رشته‌های کوتاه را با یک تابع هش به عدد تبدیل می‌کنیم و در جدول جست‌وجو می‌کنیم.</li>
+  <li><b>تراي با بازگشت (Trie, backtracking):</b> درخت پیشوندها؛ روی شاخه‌ها پیمایش و برگشت.</li>
+  <li><b>تبدیل بارروز–ویلر (BWT / FM-index):</b> یک شاخص فشرده؛ پایهٔ ابزارهایی مثل BWA، Bowtie و HISAT.</li>
+</ol>
+
+<aside class="callout analogy">
+  <p>مثل فرق جست‌وجوی خطی در آرایه (روش ساده) با جست‌وجو در جدول هش یا درخت است. همان‌طور که یک بار <code>dict</code> می‌سازی و بعد هر جست‌وجو تقریباً ثابت است، اینجا هم یک بار ژنوم را <b>شاخص‌گذاری</b> می‌کنیم و خوانش‌های بعدی سریع پیدا می‌شوند.</p>
+</aside>
+
+<h3>تطبیق دقیق یا تقریبی؟</h3>
+
+<p>اگر خوانش‌ها دقیقاً مثل مرجع بودند، فقط به <b>تطبیق دقیق</b> (exact matching) نیاز داشتیم. ولی به دلیل SNPها و خطای دستگاه، نیاز به <b>تطبیق تقریبی</b> (approximate matching) داریم که چند اختلاف را می‌پذیرد. معمول‌ترین راه: اول با یک شاخص سریع نواحی محتمل را پیدا می‌کنیم و بعد با هم‌ترازی دقیق (برنامه‌نویسی پویا، فصل ۱۶) بررسی می‌کنیم.</p>
+
+<details class="think">
+  <summary>چرا فقط تطبیق دقیق برای خوانش‌های واقعی کافی نیست؟</summary>
+  <div><p>چون دو منبع اختلاف داریم: تفاوت واقعی فرد با مرجع (حدود ۳ میلیون موقعیت) و خطای توالی‌یابی. اگر فقط جای کاملاً یکسان را قبول کنیم، خوانش‌هایی که حتی یک باز فرق دارند «پیدا نمی‌شوند»؛ و این‌ها دقیقاً همان خوانش‌هایی‌اند که جهش‌ها را نشان می‌دهند.</p></div>
+</details>
+
+<div class="fill" data-answer="مرجع|ژنوم مرجع|reference" data-id="ch15:f1">
+  <p class="q">مونتاژ بدون ____ انجام می‌شود، ولی نگاشت به آن نیاز دارد. <input class="blank" type="text"></p>
+  <div class="explain">در نگاشت ژنوم مرجع از قبل داریم و خوانش‌ها را روی آن می‌گذاریم.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>بعد از توالی‌یابی میلیون‌ها خوانش داریم (مثلاً ۶۲۰ میلیون). بدون مرجع ← <b>مونتاژ</b>، با مرجع ← <b>نگاشت</b>.</li>
+    <li>DNA تصادفی شکسته می‌شود و خوانش‌های همپوشان ژنوم را می‌پوشانند؛ در <b>جفت‌سر</b> دو سر قطعه (هر کدام ۳۵ باز در شکل اسلاید) خوانده می‌شود و وسط (۳۳۰ تا ۴۳۰ باز) ناشناخته می‌ماند.</li>
+    <li>نگاشت یعنی یافتن موقعیت هر خوانش روی مرجع، حتی با چند باز اختلاف.</li>
+    <li>ژنوم یک فرد حدود ۹۹٫۹۹٪ با مرجع یکسان است (حدود ۳ میلیون موقعیت متفاوت از ۳ میلیارد، مثل SNP).</li>
+    <li>مسئله: پیدا کردن محل محتمل خوانش با وجود تفاوت و خطا، سریع برای میلیون‌ها خوانش.</li>
+    <li>روش ساده: N − L + 1 جایگاه، هر کدام تا L مقایسه، یعنی O(N·L) برای یک خوانش.</li>
+    <li>مثال اسلاید ۸: 300 × 10<sup>6</sup> × 10<sup>9</sup> = 3×10<sup>17</sup> عملیات؛ در 10<sup>9</sup> عملیات بر ثانیه برابر 3×10<sup>8</sup> ثانیه ≈ ۳٬۴۷۲ روز ≈ ۹٫۵ سال.</li>
+    <li>راه‌حل‌ها: هشینگ، تراي با بازگشت، BWT/FM-index (BWA، Bowtie، HISAT)؛ در فصل‌های ۱۶ و ۱۷.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی، محاسباتی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

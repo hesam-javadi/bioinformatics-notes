@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تقسیم سلول و همانندسازی DNA · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="چرخهٔ سلولی، نقاط وارسی، شمارش مولکول‌های DNA در G1 و G2، همانندسازی نیمه‌حفاظتی، آنزیم‌های ماشین همانندسازی و ویرایش خطا.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch05">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۱ (advance_bio_part1)، اسلایدهای ۸۸ تا ۹۵" data-motif="ATGCGTACGTTAGCATGCGTACGTTAGC">
+  <h1>تقسیم سلول و همانندسازی DNA</h1>
+  <p class="lead">یک سلول انسانی ۴۶ مولکول DNA دارد و قبل از تقسیم باید از همهٔ آن‌ها یک کپی دقیق بسازد، بدون اینکه حتی یک حرف از سه میلیارد حرف را به‌اشتباه بنویسد. این کپی چطور ساخته می‌شود و چرا هر نسخه نصفش قدیمی است؟</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>مراحل چرخهٔ سلولی (G1، S، G2، M) و نقاط وارسی را <b>نام ببری</b> و کار هر کدام را <b>شرح بدهی</b>.</li>
+    <li>تعداد مولکول‌های DNA و کروماتیدها را در G1، G2 و بعد از تقسیم <b>حساب کنی</b>.</li>
+    <li>توضیح بدهی چرا مبدأ همانندسازی غنی از A–T است و حباب همانندسازی چطور ساخته می‌شود.</li>
+    <li>نقش هر آنزیم ماشین همانندسازی (هلیکاز، SSB، توپوایزومراز، پرایماز، پلیمراز، لیگاز) را <b>مقایسه کنی</b>.</li>
+    <li>رشتهٔ پیشرو و رشتهٔ تأخیری را با جهت‌شان <b>رسم کنی</b> و دلیل قطعات اوکازاکی را بگویی.</li>
+    <li>همانندسازی نیمه‌حفاظتی و ویرایش خطا را <b>توضیح بدهی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch05:pre1">
+  <p class="q">وقتی یک مولکول DNA دورشته‌ای کپی می‌شود، هر مولکول جدید چه ترکیبی دارد؟</p>
+  <ol class="opts">
+    <li>هر دو رشته‌اش کاملاً جدید است</li>
+    <li data-correct>یک رشتهٔ قدیمی و یک رشتهٔ جدید</li>
+    <li>هر دو رشته‌اش از مولکول اصلی است</li>
+    <li>نصف طولش قدیمی و نصف دیگرش جدید است</li>
+  </ol>
+  <div class="explain">همانندسازی <b>نیمه‌حفاظتی</b> است: هر رشتهٔ قدیمی الگو می‌شود و یک رشتهٔ جدید روبه‌رویش ساخته می‌شود. پس هر مولکول دختر یک رشتهٔ قدیمی و یک رشتهٔ جدید دارد. دلیل و شواهدش را در بخش ۵.۵ می‌بینی.</div>
+</div>
+
+<h2 id="cell-division">تقسیم سلول: نقشهٔ کلی</h2>
+
+<p>بدن تو از یک سلول (تخم) شروع شد و با تقسیم‌های پیاپی به چند ده تریلیون سلول رسید. هر سلول که تقسیم می‌شود باید به دو سلول دختر <b>یک نسخهٔ کامل</b> از DNA بدهد. پس قبل از تقسیم، DNA باید کپی شود. این کپی کردن را <span class="term" data-en="DNA replication">همانندسازی DNA</span> می‌گویند.</p>
+
+<p>اسلاید ۸۸ چرخهٔ زندگی یک سلول را به دو بخش بزرگ تقسیم می‌کند:</p>
+<ul>
+  <li><span class="term" data-en="Interphase">اینترفاز</span> (میان‌فاز): سلول بزرگ می‌شود، <b>ژن‌هایش بیان می‌شوند</b> (RNA و پروتئین می‌سازد) و <b>کروموزوم‌هایش همانندسازی می‌شوند</b>. هسته سالم و پوشش هسته‌ای دست‌نخورده است.</li>
+  <li><span class="term" data-en="M phase">فاز M</span>: اول <span class="term" data-en="Mitosis">میتوز</span> (تقسیم هسته): پوشش هسته از بین می‌رود، کروموزوم‌ها فشرده می‌شوند و رشته‌های دوک تقسیم آن‌ها را به دو سمت می‌کشند. بعد <span class="term" data-en="Cytokinesis">سیتوکینز</span> (تقسیم سیتوپلاسم) سلول را به دو سلول دختر جدا می‌کند.</li>
+</ul>
+
+<p>اسلاید ۸۸ یک جمله دارد: «نقاط وارسی زیاد است؛ آیا همه‌چیز سر جای درست است؟» یعنی سلول در مسیر چند بار می‌ایستد و کنترل می‌کند که کار قبلی درست انجام شده باشد، و فقط بعد از تأیید ادامه می‌دهد.</p>
+
+<aside class="callout analogy">
+  <p>نقاط وارسی مثل <b>assert</b> یا <b>CI pipeline</b> هستند. قبل از رفتن به مرحلهٔ بعد، شرط‌ها چک می‌شوند (DNA سالم است؟ همه کپی شده؟ کروموزوم‌ها درست به دوک وصل‌اند؟). اگر شرطی برقرار نباشد، چرخه متوقف می‌شود یا سلول خودکشی می‌کند.</p>
+</aside>
+
+<h2 id="cell-cycle">چرخهٔ سلولی و نقاط وارسی</h2>
+
+<p><span class="term" data-en="Cell cycle">چرخهٔ سلولی</span> یعنی ترتیب کامل رویدادهای بین یک تقسیم تا تقسیم بعدی. اینترفاز خودش سه بخش دارد، پس چهار مرحله داریم:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 700 330" width="700" role="img" aria-labelledby="cc-t">
+  <title id="cc-t">چرخهٔ سلولی: G1، S، G2 و M با نقاط وارسی G1/S، G2/M و دوک و مسیر خروج G0</title>
+  <defs><marker id="cc-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g class="f-none" stroke-width="30">
+    <path d="M200 50 A100 100 0 0 1 250 236.6" class="s-info"/>
+    <path d="M250 236.6 A100 100 0 0 1 101 167.4" class="s-ok"/>
+    <path d="M101 167.4 A100 100 0 0 1 150 63.4" class="s-warn"/>
+    <path d="M150 63.4 A100 100 0 0 1 200 50" class="s-hl"/>
+  </g>
+  <text x="200" y="146" font-size="13" font-weight="700" text-anchor="middle">اینترفاز</text>
+  <text x="200" y="166" font-size="12" text-anchor="middle" class="t-muted mono">G1 + S + G2</text>
+  <text x="298" y="130" font-size="15" font-weight="800" class="t-ink-2 mono">G1</text>
+  <text x="200" y="278" font-size="15" font-weight="800" class="t-ink-2 mono" text-anchor="middle">S</text>
+  <text x="62" y="118" font-size="15" font-weight="800" class="t-ink-2 mono">G2</text>
+  <text x="206" y="26" font-size="15" font-weight="800" class="t-hl mono">M</text>
+  <g class="f-bad" stroke-width="2">
+    <rect x="243" y="229" width="14" height="14" class="s-surface"/>
+    <rect x="143" y="56" width="14" height="14" class="s-surface"/>
+    <rect x="167" y="46" width="14" height="14" class="s-surface"/>
+  </g>
+  <path d="M286 100 L330 62" class="s-muted f-none" stroke-width="2" marker-end="url(#cc-ah)"/>
+  <text x="338" y="52" font-size="12" class="t-ink-2" style="direction:rtl">G0: خروج از چرخه (مثلاً نورون‌ها)</text>
+  <text x="285" y="262" font-size="12" class="t-bad" style="direction:rtl">نقطهٔ وارسی G1/S</text>
+  <text x="60" y="44" font-size="12" class="t-bad" style="direction:rtl">وارسی G2/M</text>
+  <text x="248" y="12" font-size="12" class="t-bad" style="direction:rtl">وارسی دوک (در M)</text>
+  <g font-size="12" class="t-ink-2" style="direction:rtl">
+    <text x="470" y="110" font-weight="700" class="t-ink-2">G1: رشد، تصمیم به تقسیم</text>
+    <text x="470" y="150" font-weight="700">S: همانندسازی DNA</text>
+    <text x="470" y="190" font-weight="700">G2: آماده‌سازی، وارسی کپی</text>
+    <text x="470" y="230" font-weight="700">M: میتوز و سیتوکینز</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۵.۱</b> — چرخهٔ سلولی. مربع‌های قرمز نقاط وارسی‌اند. نورون‌های بالغ از G1 به حالت G0 می‌روند و دیگر تقسیم نمی‌شوند.</figcaption>
+</figure>
+
+<ol class="steps">
+  <li><b><span class="term" data-en="G1 phase">G1</span> (Gap 1):</b> سلول رشد می‌کند، پروتئین و اندامک می‌سازد و محیط را می‌سنجد (مواد غذایی، سیگنال‌های رشد، سلامت DNA). در پایان G1 تصمیم نهایی گرفته می‌شود که وارد S شود یا نه.</li>
+  <li><b><span class="term" data-en="S phase">S</span> (Synthesis):</b> DNA همانندسازی می‌شود. در پایان S هر کروموزوم دو نسخه دارد.</li>
+  <li><b><span class="term" data-en="G2 phase">G2</span> (Gap 2):</b> سلول به رشد ادامه می‌دهد، برای تقسیم آماده می‌شود و کپی DNA را وارسی می‌کند.</li>
+  <li><b>M:</b> میتوز و سیتوکینز؛ سلول به دو سلول دختر تقسیم می‌شود. هر دختر وارد G1 می‌شود.</li>
+</ol>
+
+<h3>سه نقطهٔ وارسی</h3>
+<table>
+  <thead><tr><th>نقطهٔ وارسی</th><th>کجاست؟</th><th>چه چیزی را کنترل می‌کند؟</th></tr></thead>
+  <tbody>
+    <tr><td><b>G1/S</b></td><td>پایان G1، قبل از شروع همانندسازی</td><td>آیا سلول به اندازهٔ کافی بزرگ است؟ محیط مناسب است؟ DNA سالم است؟ اگر نه، همانندسازی شروع نمی‌شود.</td></tr>
+    <tr><td><b>G2/M</b></td><td>پایان G2، قبل از ورود به میتوز</td><td>آیا همانندسازی کامل شده و DNA آسیب ندیده؟ اگر نه، سلول وارد M نمی‌شود.</td></tr>
+    <tr><td><b>وارسی دوک</b> (spindle)</td><td>درون M، قبل از جدا شدن کروماتیدها</td><td>آیا همهٔ کروموزوم‌ها درست به رشته‌های دوک وصل‌اند؟ اگر نه، جدا شدن کروماتیدها عقب می‌افتد.</td></tr>
+  </tbody>
+</table>
+
+<p>همهٔ سلول‌ها مدام تقسیم نمی‌شوند. سلولی که از چرخه بیرون برود و تقسیم را متوقف کند، در حالت <span class="term" data-en="G0 phase">G0</span> است. مثال اسلاید: <b>نورون‌ها</b> از G1 خارج می‌شوند و عملاً دیگر تقسیم نمی‌شوند.</p>
+
+<aside class="callout pitfall">
+  <p>G1 و G2 «فاز استراحت» نیستند. سلول در آن‌ها فعال است و رشد می‌کند؛ فقط DNA کپی نمی‌شود. همانندسازی <b>فقط در S</b> رخ می‌دهد.</p>
+</aside>
+
+<div class="quiz" data-id="ch05:s2">
+  <p class="q">همانندسازی DNA در کدام مرحلهٔ چرخهٔ سلولی انجام می‌شود؟</p>
+  <ol class="opts"><li>G1</li><li data-correct>S</li><li>G2</li><li>M</li></ol>
+  <div class="explain">S از Synthesis می‌آید: سنتز DNA. در G1 و G2 فقط رشد و آماده‌سازی داریم و در M تقسیم.</div>
+</div>
+
+<div data-widget="cell-cycle"></div>
+
+<h2 id="counting">سؤال اسلاید ۸۹: چند مولکول DNA؟</h2>
+
+<p>اسلاید ۸۹ می‌پرسد: «یک سلول انسانی در G1 چند مولکول DNA دورشته‌ای در هسته دارد؟ در G2 چطور؟» برای جواب باید دو چیز را بدانی.</p>
+
+<ul>
+  <li>هر <b>کروموزوم</b> یک مولکول DNA دورشته‌ای بلند است (با پروتئین‌هایش).</li>
+  <li>بعد از همانندسازی، هر کروموزوم به دو نسخهٔ یکسان تبدیل می‌شود که به هم چسبیده‌اند. هر نسخه را <span class="term" data-en="Sister chromatid">کروماتید خواهری</span> می‌گویند. این دو کروماتید در ناحیه‌ای به نام سانترومر به هم متصل‌اند و <b>هنوز یک کروموزوم</b> حساب می‌شوند.</li>
+</ul>
+
+<figure class="fig compact">
+<svg viewBox="0 0 560 190" width="560" role="img" aria-labelledby="ch-t">
+  <title id="ch-t">یک کروموزوم در G1 با یک مولکول DNA و در G2 با دو کروماتید خواهری</title>
+  <defs><marker id="ch-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <rect x="82" y="30" width="16" height="110" rx="8" class="f-info"/>
+  <text x="90" y="162" font-size="13" text-anchor="middle" font-weight="700">G1</text>
+  <text x="90" y="180" font-size="12" text-anchor="middle" class="t-muted">۱ کروموزوم = ۱ مولکول DNA</text>
+  <line x1="150" y1="85" x2="290" y2="85" class="s-muted anim-flow" stroke-width="2" marker-end="url(#ch-ah)"/>
+  <text x="220" y="72" font-size="12" text-anchor="middle" class="t-muted">فاز S: همانندسازی</text>
+  <rect x="368" y="30" width="16" height="110" rx="8" class="f-info"/>
+  <rect x="392" y="30" width="16" height="110" rx="8" class="f-warn"/>
+  <rect x="362" y="76" width="52" height="12" rx="6" class="f-ink-2"/>
+  <text x="388" y="162" font-size="13" text-anchor="middle" font-weight="700">G2</text>
+  <text x="388" y="180" font-size="12" text-anchor="middle" class="t-muted">۱ کروموزوم = ۲ کروماتید = ۲ مولکول DNA</text>
+  <text x="470" y="60" font-size="12" class="t-ink-2" style="direction:rtl">کروماتید خواهری</text>
+  <text x="470" y="82" font-size="12" class="t-ink-2" style="direction:rtl">سانترومر (نوار تیره)</text>
+</svg>
+<figcaption><b>شکل ۵.۲</b> — در G2 هنوز یک کروموزوم هست، ولی از دو مولکول DNA یکسان ساخته شده.</figcaption>
+</figure>
+
+<div class="worked" data-title="شمارش DNA در طول چرخه (سلول انسانی)">
+  <p class="problem">یک سلول انسانی در G1 دارد. تعداد کروموزوم، کروماتید و مولکول DNA را در G1، G2، میتوز (بعد از جدا شدن کروماتیدها) و یک سلول دختر بنویس.</p>
+  <ol class="steps">
+    <li><b>G1:</b> ۴۶ کروموزوم. هر کدام یک مولکول DNA دورشته‌ای است، پس <b>۴۶ مولکول DNA</b>.</li>
+    <li><b>S:</b> هر مولکول کپی می‌شود. تعداد مولکول‌ها بین ۴۶ و ۹۲ است و بالا می‌رود.</li>
+    <li><b>G2:</b> همانندسازی تمام شده. هر کروموزوم دو کروماتید خواهری دارد. تعداد کروموزوم‌ها هنوز ۴۶ است، ولی تعداد مولکول‌های DNA دورشته‌ای ۴۶ × ۲ = <b>۹۲</b> است.</li>
+    <li><b>آنافاز میتوز:</b> کروماتیدها از هم جدا می‌شوند. حالا هر کروماتید خودش یک کروموزوم مستقل است: ۹۲ کروموزوم (۴۶ در هر قطب)، با همان ۹۲ مولکول DNA.</li>
+    <li><b>بعد از سیتوکینز:</b> هر سلول دختر ۴۶ کروموزوم و <b>۴۶ مولکول DNA</b> دارد، یعنی دوباره حالت G1.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ اسلاید ۸۹:</b> در G1 تعداد ۴۶ و در G2 تعداد ۹۲ مولکول DNA دورشته‌ای در هسته داریم.</p>
+</div>
+
+<table>
+  <thead><tr><th>مرحله</th><th>کروموزوم</th><th>کروماتید در هر کروموزوم</th><th>مولکول DNA دورشته‌ای</th></tr></thead>
+  <tbody>
+    <tr><td>G1</td><td>۴۶</td><td>۱</td><td>۴۶</td></tr>
+    <tr><td>G2 / ابتدای میتوز</td><td>۴۶</td><td>۲</td><td>۹۲</td></tr>
+    <tr><td>آنافاز (کل سلول)</td><td>۹۲</td><td>۱</td><td>۹۲</td></tr>
+    <tr><td>هر سلول دختر</td><td>۴۶</td><td>۱</td><td>۴۶</td></tr>
+  </tbody>
+</table>
+
+<aside class="callout pitfall">
+  <p>خطای معمول: «در G2 تعداد کروموزوم‌ها ۹۲ است.» نه، ۴۶ است. دو کروماتید خواهری هنوز یک کروموزوم‌اند. سؤال اسلاید «مولکول DNA» را می‌پرسد، نه کروموزوم، برای همین جواب ۹۲ می‌شود.</p>
+</aside>
+
+<div class="fill" data-answer="92|۹۲" data-id="ch05:f-g2">
+  <p class="q">یک سلول انسانی در G2 چند مولکول DNA دورشته‌ای دارد؟ <input class="blank" type="text"></p>
+  <div class="explain">۴۶ کروموزوم هرکدام با دو کروماتید خواهری: ۴۶ × ۲ = ۹۲.</div>
+</div>
+
+<div class="quiz" data-id="ch05:s3">
+  <p class="q">اگر سلولی در G2 دقیقاً ۶ کروموزوم داشته باشد، هر سلول دخترش بعد از میتوز چند مولکول DNA دارد؟</p>
+  <ol class="opts"><li>۱۲</li><li data-correct>۶</li><li>۳</li><li>۲۴</li></ol>
+  <div class="explain">در G2 تعداد مولکول‌ها ۱۲ است (۶ × ۲). میتوز کروماتیدها را بین دو سلول تقسیم می‌کند، پس هر دختر ۶ مولکول می‌گیرد.</div>
+</div>
+
+<h2 id="origin">شروع همانندسازی: مبدأ و حباب</h2>
+
+<p>DNA انسان حدود ۳ میلیارد جفت‌باز دارد. اگر همانندسازی فقط از یک نقطه شروع می‌شد، سال‌ها طول می‌کشید. پس سلول در هزاران نقطه هم‌زمان شروع می‌کند. هر نقطهٔ شروع یک <span class="term" data-en="Replication origin">مبدأ همانندسازی</span> است.</p>
+
+<p>اسلاید ۹۰ می‌گوید مبدأ همانندسازی <b>غنی از A–T</b> است. دلیل: جفت A–T فقط <b>دو</b> پیوند هیدروژنی دارد و G–C سه تا (فصل ۴). پس ناحیه‌ای که بیشتر A–T دارد، دو رشته‌اش با انرژی کمتر از هم باز می‌شود. سلول باز کردن DNA را از آسان‌ترین جا شروع می‌کند.</p>
+
+<ol class="steps">
+  <li><b>پروتئین‌های آغازگر</b> (<span class="term" data-en="Initiator proteins">initiator</span>) به مبدأ می‌چسبند.</li>
+  <li>آن‌ها پیوندهای هیدروژنی را می‌شکنند و مارپیچ را در آن ناحیه باز می‌کنند. دو رشتهٔ تنها آمادهٔ استفاده به‌عنوان الگو می‌شوند.</li>
+  <li>ناحیهٔ باز شده شکل یک <span class="term" data-en="Replication bubble">حباب همانندسازی</span> دارد. دو سر حباب، دو <span class="term" data-en="Replication fork">چنگال همانندسازی</span> هستند.</li>
+  <li>دو چنگال در <b>دو جهت مخالف</b> حرکت می‌کنند و حباب را بزرگ می‌کنند، تا با حباب‌های همسایه به هم برسند.</li>
+</ol>
+
+<figure class="fig">
+<svg viewBox="0 0 720 230" width="720" role="img" aria-labelledby="bb-t">
+  <title id="bb-t">حباب همانندسازی: دو چنگال از مبدأ در دو جهت مخالف حرکت می‌کنند</title>
+  <defs><marker id="bb-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker></defs>
+  <path d="M40 80 H220 C260 80 270 45 360 45 C450 45 460 80 500 80 H680" class="f-none s-info" stroke-width="5"/>
+  <path d="M40 110 H220 C260 110 270 145 360 145 C450 145 460 110 500 110 H680" class="f-none s-info" stroke-width="5"/>
+  <g class="s-muted" stroke-width="2" stroke-dasharray="3 3"><line x1="60" y1="84" x2="60" y2="106"/><line x1="90" y1="84" x2="90" y2="106"/><line x1="120" y1="84" x2="120" y2="106"/><line x1="150" y1="84" x2="150" y2="106"/><line x1="580" y1="84" x2="580" y2="106"/><line x1="610" y1="84" x2="610" y2="106"/><line x1="640" y1="84" x2="640" y2="106"/></g>
+  <rect x="340" y="86" width="40" height="18" rx="8" class="f-hl"/>
+  <text x="360" y="99" font-size="11" text-anchor="middle" class="t-white">مبدأ</text>
+  <line x1="340" y1="195" x2="230" y2="195" class="s-accent anim-flow" stroke-width="3" marker-end="url(#bb-ah)"/>
+  <line x1="380" y1="195" x2="490" y2="195" class="s-accent anim-flow" stroke-width="3" marker-end="url(#bb-ah)"/>
+  <text x="360" y="200" font-size="12" text-anchor="middle" class="t-accent">دو چنگال</text>
+  <text x="130" y="30" font-size="12" text-anchor="middle" class="t-muted">DNA هنوز بسته</text>
+  <text x="360" y="22" font-size="12" text-anchor="middle" class="t-ink-2">حباب: دو رشتهٔ باز شده (الگو)</text>
+  <text x="620" y="30" font-size="12" text-anchor="middle" class="t-muted">DNA هنوز بسته</text>
+</svg>
+<figcaption><b>شکل ۵.۳</b> — حباب همانندسازی. مبدأ (غنی از A–T) ابتدا باز می‌شود و دو چنگال به سمت چپ و راست پیش می‌روند.</figcaption>
+</figure>
+
+<details class="think">
+  <summary>چرا مبدأ همانندسازی غنی از A–T است؟</summary>
+  <div><p>چون A–T فقط دو پیوند هیدروژنی دارد و G–C سه پیوند. برای جدا کردن رشته‌ها در ناحیهٔ پرA–T انرژی و زمان کمتری لازم است، پس باز کردن اولیهٔ مارپیچ ساده‌تر است. ناحیهٔ پرGC دیرتر باز می‌شود، مثل اینکه شروع باز کردن یک زیپ را از قسمت سست‌تر آن بزنی.</p></div>
+</details>
+
+<details class="think">
+  <summary>چرا بیش از یک مبدأ لازم است؟</summary>
+  <div><p>کروموزوم‌های یوکاریوتی بسیار بلندند و آنزیم‌ها با سرعت محدودی کار می‌کنند. اگر فقط یک مبدأ بود، کپی کردن یک کروموزوم خیلی طول می‌کشید. با هزاران مبدأ و حباب هم‌زمان، کل ژنوم در چند ساعت کپی می‌شود. (باکتری با DNA حلقوی کوچک معمولاً یک مبدأ دارد.)</p></div>
+</details>
+
+<h2 id="template">DNA به‌عنوان الگو: همانندسازی نیمه‌حفاظتی</h2>
+
+<p>در فصل ۴ دیدی که اگر یک رشته را بدانی، رشتهٔ مقابل معلوم است (A با T، G با C). همین قاعده امکان کپی را می‌دهد: هر رشتهٔ باز شده یک <b>الگو</b> (<span class="term" data-en="Template">template</span>) برای ساختن رشتهٔ مکمل است.</p>
+
+<p>نتیجه این است که هر دو مولکول DNA دختر شامل <b>یک رشتهٔ قدیمی و یک رشتهٔ جدید</b> هستند. به این شیوه <span class="term" data-en="Semi-conservative replication">همانندسازی نیمه‌حفاظتی</span> می‌گویند: نیمی از مولکول (یک رشته) حفظ می‌شود.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 290" width="760" role="img" aria-labelledby="sc-t">
+  <title id="sc-t">همانندسازی نیمه‌حفاظتی در دو نسل: رشته‌های قدیمی آبی، نسل اول نارنجی، نسل دوم سبز</title>
+  <g stroke-width="6" stroke-linecap="round" class="f-none">
+    <line x1="290" y1="40" x2="470" y2="40" class="s-info"/><line x1="290" y1="54" x2="470" y2="54" class="s-info"/>
+    <line x1="170" y1="130" x2="350" y2="130" class="s-info"/><line x1="170" y1="144" x2="350" y2="144" class="s-warn"/>
+    <line x1="410" y1="130" x2="590" y2="130" class="s-info"/><line x1="410" y1="144" x2="590" y2="144" class="s-warn"/>
+    <line x1="60" y1="220" x2="180" y2="220" class="s-info"/><line x1="60" y1="234" x2="180" y2="234" class="s-ok"/>
+    <line x1="200" y1="220" x2="320" y2="220" class="s-warn"/><line x1="200" y1="234" x2="320" y2="234" class="s-ok"/>
+    <line x1="440" y1="220" x2="560" y2="220" class="s-info"/><line x1="440" y1="234" x2="560" y2="234" class="s-ok"/>
+    <line x1="580" y1="220" x2="700" y2="220" class="s-warn"/><line x1="580" y1="234" x2="700" y2="234" class="s-ok"/>
+  </g>
+  <g class="s-muted" stroke-width="1.6" stroke-dasharray="4 4"><line x1="340" y1="66" x2="260" y2="116"/><line x1="420" y1="66" x2="500" y2="116"/><line x1="230" y1="156" x2="120" y2="206"/><line x1="290" y1="156" x2="260" y2="206"/><line x1="470" y1="156" x2="500" y2="206"/><line x1="530" y1="156" x2="640" y2="206"/></g>
+  <text x="380" y="22" font-size="13" font-weight="700" text-anchor="middle">نسل ۰: مولکول اصلی</text>
+  <text x="260" y="108" font-size="12" text-anchor="middle" class="t-muted">نسل ۱: ۲ مولکول، هرکدام یک رشتهٔ قدیمی</text>
+  <text x="380" y="266" font-size="13" font-weight="700" text-anchor="middle">نسل ۲: ۴ مولکول؛ فقط ۲ تا هنوز رشتهٔ اصلی دارند</text>
+  <text x="380" y="284" font-size="11.5" text-anchor="middle" class="t-muted">آبی: رشتهٔ اصلی · نارنجی: ساخته‌شده در نسل ۱ · سبز: ساخته‌شده در نسل ۲</text>
+</svg>
+<figcaption><b>شکل ۵.۴</b> — هر رشتهٔ قدیمی الگوی یک رشتهٔ جدید می‌شود. رشتهٔ اصلی هیچ‌وقت از بین نمی‌رود، فقط در هر نسل به یک مولکول دیگر می‌رسد.</figcaption>
+</figure>
+
+<div class="quiz" data-id="ch05:s4">
+  <p class="q">بعد از دو دور همانندسازی نیمه‌حفاظتی یک DNA دورشته‌ای، چند مولکول داریم و در چند تای آن‌ها رشتهٔ اصلی (اولیه) وجود دارد؟</p>
+  <ol class="opts"><li>۲ مولکول، هر دو با رشتهٔ اصلی</li><li data-correct>۴ مولکول، دو تا با رشتهٔ اصلی</li><li>۴ مولکول، هر چهار با رشتهٔ اصلی</li><li>۴ مولکول، هیچ‌کدام با رشتهٔ اصلی</li></ol>
+  <div class="explain">دو رشتهٔ اصلی مجزا هستند و هرکدام فقط در یک مولکول می‌ماند. مولکول‌ها در نسل n برابر ۲ⁿ هستند: ۴ مولکول. دو تا رشتهٔ اصلی دارند و دو تا کاملاً جدیدند.</div>
+</div>
+
+<h2 id="machine">ماشین همانندسازی</h2>
+
+<p>اسلاید ۹۲ «ماشین سنتز DNA» را نشان می‌دهد. دو قانون پایه را اول بدان، چون همهٔ پیچیدگی‌ها از آن‌ها می‌آید:</p>
+<aside class="callout key">
+  <p><b>DNA پلیمراز فقط به انتهای ۳′ یک رشتهٔ موجود نوکلئوتید اضافه می‌کند</b>، پس همیشه در جهت <b>۵′ به ۳′</b> می‌سازد. و <b>نمی‌تواند از صفر شروع کند</b>: به یک آغازگر (primer) نیاز دارد که انتهای ۳′ آماده داشته باشد.</p>
+</aside>
+
+<figure class="fig">
+<svg viewBox="0 0 760 370" width="760" role="img" aria-labelledby="fk-t">
+  <title id="fk-t">چنگال همانندسازی با آنزیم‌ها: هلیکاز، SSB، توپوایزومراز، پرایماز، DNA پلیمراز، لیگاز، رشتهٔ پیشرو و رشتهٔ تأخیری با قطعات اوکازاکی</title>
+  <defs>
+    <marker id="fk-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker>
+    <marker id="fk-bh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-warn"/></marker>
+  </defs>
+  <path d="M720 160 H540 C500 160 490 90 440 90 H40" class="f-none s-info" stroke-width="4"/>
+  <path d="M720 200 H540 C500 200 490 270 440 270 H40" class="f-none s-info" stroke-width="4"/>
+  <text x="26" y="94" font-size="12" font-weight="700" class="mono" text-anchor="end">3′</text>
+  <text x="26" y="274" font-size="12" font-weight="700" class="mono" text-anchor="end">5′</text>
+  <text x="734" y="164" font-size="12" font-weight="700" class="mono">5′</text>
+  <text x="734" y="204" font-size="12" font-weight="700" class="mono">3′</text>
+  <text x="372" y="80" font-size="11.5" class="t-muted" text-anchor="middle">رشتهٔ الگو (۳′ ← ۵′ در جهت حرکت چنگال)</text>
+  <text x="372" y="290" font-size="11.5" class="t-muted" text-anchor="middle">رشتهٔ الگو (۵′ ← ۳′ در جهت حرکت چنگال)</text>
+  <line x1="60" y1="112" x2="430" y2="112" class="s-accent" stroke-width="4" marker-end="url(#fk-ah)"/>
+  <text x="46" y="116" font-size="12" font-weight="700" class="mono t-accent" text-anchor="end">5′</text>
+  <circle cx="438" cy="112" r="14" class="f-accent"/>
+  <text x="438" y="116" font-size="10" class="t-white" text-anchor="middle">Pol</text>
+  <text x="250" y="132" font-size="12" font-weight="700" class="t-accent" text-anchor="middle">رشتهٔ پیشرو: پیوسته، به سمت چنگال</text>
+  <g class="s-warn" stroke-width="4" stroke-linecap="butt">
+    <line x1="430" y1="248" x2="372" y2="248" marker-end="url(#fk-bh)"/>
+    <line x1="340" y1="248" x2="250" y2="248" marker-end="url(#fk-bh)"/>
+    <line x1="218" y1="248" x2="130" y2="248" marker-end="url(#fk-bh)"/>
+  </g>
+  <g class="f-bad"><rect x="425" y="244" width="12" height="8"/><rect x="335" y="244" width="12" height="8"/><rect x="213" y="244" width="12" height="8"/></g>
+  <text x="440" y="236" font-size="11" class="t-bad mono">primer</text>
+  <circle cx="394" cy="248" r="13" class="f-warn"/>
+  <text x="394" y="252" font-size="10" class="t-white" text-anchor="middle">Pol</text>
+  <rect x="228" y="236" width="14" height="24" rx="4" class="f-ok"/>
+  <text x="235" y="228" font-size="11" class="t-ok" text-anchor="middle">لیگاز</text>
+  <text x="270" y="210" font-size="12" font-weight="700" class="t-warn" text-anchor="middle" style="direction:rtl">رشتهٔ تأخیری: قطعات اوکازاکی، دور از چنگال</text>
+  <text x="108" y="266" font-size="11" class="mono t-warn">3′ ← 5′</text>
+  <circle cx="515" cy="180" r="22" class="f-hl"/>
+  <text x="515" y="177" font-size="11" class="t-white" text-anchor="middle">هلیکاز</text>
+  <text x="515" y="190" font-size="9.5" class="t-white" text-anchor="middle">باز می‌کند</text>
+  <g class="f-info"><circle cx="470" cy="112" r="6"/><circle cx="486" cy="124" r="6"/><circle cx="470" cy="264" r="6"/><circle cx="486" cy="252" r="6"/></g>
+  <text x="560" y="130" font-size="11.5" class="t-info" style="direction:rtl">SSB (تک‌رشته را نگه می‌دارد)</text>
+  <line x1="548" y1="126" x2="496" y2="120" class="s-info" stroke-width="1"/>
+  <rect x="620" y="170" width="46" height="20" rx="8" class="f-surface-2 s-ink-2" stroke-width="1.5"/>
+  <text x="643" y="184" font-size="10.5" text-anchor="middle">توپو</text>
+  <text x="643" y="214" font-size="11.5" class="t-ink-2" text-anchor="middle">توپوایزومراز: پیچش را باز می‌کند</text>
+  <text x="505" y="300" font-size="11.5" class="t-bad" text-anchor="start" style="direction:rtl">پرایماز: آغازگر RNA می‌سازد</text>
+  <line x1="500" y1="296" x2="440" y2="256" class="s-bad" stroke-width="1"/>
+  <line x1="440" y1="338" x2="580" y2="338" class="s-accent anim-flow" stroke-width="3" marker-end="url(#fk-ah)"/>
+  <text x="400" y="342" font-size="12" font-weight="700" class="t-accent" text-anchor="end">جهت حرکت چنگال</text>
+  <text x="60" y="340" font-size="11.5" class="t-muted">پیکان‌های رشته‌های جدید = جهت ۵′ ← ۳′ ساخت · مربع قرمز = آغازگر RNA</text>
+</svg>
+<figcaption><b>شکل ۵.۵</b> — چنگال همانندسازی (اسلاید ۹۲). چنگال به راست می‌رود. رشتهٔ پیشرو در همان جهت ساخته می‌شود و پیوسته است؛ رشتهٔ تأخیری در خلاف جهت و تکه‌تکه.</figcaption>
+</figure>
+
+<h3>بازیگران، یکی‌یکی</h3>
+<table>
+  <thead><tr><th>آنزیم/پروتئین</th><th>کار</th></tr></thead>
+  <tbody>
+    <tr><td><span class="term" data-en="Helicase">هلیکاز</span></td><td>جلوی چنگال حرکت می‌کند و دو رشته را از هم باز می‌کند (با مصرف انرژی)، مثل کشیدن زیپ.</td></tr>
+    <tr><td><span class="term" data-en="Single-strand binding proteins, SSB">پروتئین‌های متصل‌شونده به تک‌رشته (SSB)</span></td><td>به رشته‌های بازشده می‌چسبند تا دوباره به هم نچسبند یا خودشان تا نخورند.</td></tr>
+    <tr><td><span class="term" data-en="Topoisomerase">توپوایزومراز</span></td><td>باز شدن مارپیچ جلوی چنگال، DNA را بیش‌ازحد می‌پیچاند (مثل بازکردن سیم تلفن). توپوایزومراز موقتاً رشته را می‌برد، پیچش را رها می‌کند و دوباره می‌چسباند.</td></tr>
+    <tr><td><span class="term" data-en="Primase">پرایماز</span></td><td>یک قطعهٔ کوتاه <b>RNA</b> به نام <span class="term" data-en="Primer">پرایمر</span> (آغازگر) می‌سازد. پرایماز برخلاف پلیمراز می‌تواند بدون آغازگر شروع کند.</td></tr>
+    <tr><td><span class="term" data-en="DNA polymerase">DNA پلیمراز</span></td><td>از انتهای ۳′ پرایمر شروع می‌کند و نوکلئوتیدهای مکمل الگو را در جهت ۵′ به ۳′ اضافه می‌کند. خطایابی هم می‌کند.</td></tr>
+    <tr><td><span class="term" data-en="DNA ligase">DNA لیگاز</span></td><td>فاصلهٔ بین قطعات را «می‌دوزد»: پیوند کووالانسی می‌سازد.</td></tr>
+  </tbody>
+</table>
+
+<h3>چرا دو رشته با هم فرق دارند؟</h3>
+<p>دو رشتهٔ الگو ناهمسو هستند، ولی پلیمراز فقط در یک جهت (۵′ به ۳′) می‌سازد. نتیجه:</p>
+<div class="compare">
+  <div><h4><span class="term" data-en="Leading strand">رشتهٔ پیشرو</span></h4><p>رشتهٔ جدیدی که جهت ساختنش (۵′ به ۳′) با جهت حرکت چنگال یکی است. پلیمراز بدون توقف پشت چنگال می‌رود. فقط <b>یک پرایمر</b> لازم است.</p></div>
+  <div><h4><span class="term" data-en="Lagging strand">رشتهٔ تأخیری</span></h4><p>جهت ساختنش (۵′ به ۳′) خلاف جهت حرکت چنگال است. باید صبر کند تا مقداری DNA باز شود، بعد یک تکه را به سمت عقب بسازد. این تکه‌ها <span class="term" data-en="Okazaki fragments">قطعات اوکازاکی</span> هستند و هر کدام پرایمر خودش را دارد.</p></div>
+</div>
+
+<ol class="steps">
+  <li>هلیکاز مارپیچ را باز می‌کند و SSB رشته‌ها را نگه می‌دارد؛ توپوایزومراز فشار پیچش را کم می‌کند.</li>
+  <li>پرایماز روی هر رشتهٔ الگو پرایمر RNA می‌گذارد.</li>
+  <li>DNA پلیمراز از ۳′ پرایمر ادامه می‌دهد: روی رشتهٔ پیشرو پیوسته، روی تأخیری قطعه‌قطعه.</li>
+  <li>پرایمرهای RNA برداشته و با DNA عوض می‌شوند.</li>
+  <li>DNA لیگاز فاصله‌ها را می‌بندد و رشتهٔ تأخیری یکپارچه می‌شود.</li>
+</ol>
+
+<aside class="callout analogy">
+  <p>پلیمراز مثل کسی است که فقط می‌تواند از چپ به راست بنویسد. اگر متنِ الگو به‌سمت چپ باز می‌شود، او باید هر چند کلمه یک بار عقب برگردد و تکه‌ای را بنویسد. در پایان، تکه‌ها را به هم می‌دوزند (لیگاز). مثل merge کردن چند chunk به یک فایل.</p>
+</aside>
+
+<aside class="callout exam">
+  <p>سه جمله برای امتحان: (۱) پلیمراز فقط به انتهای <b>۳′</b> اضافه می‌کند و در جهت ۵′→۳′ می‌سازد. (۲) نمی‌تواند بدون <b>پرایمر</b> شروع کند. (۳) رشتهٔ تأخیری قطعه‌قطعه (اوکازاکی) ساخته می‌شود و لیگاز آن‌ها را می‌چسباند.</p>
+</aside>
+
+<details class="think">
+  <summary>چرا پرایمر از جنس RNA است و بعد برداشته می‌شود؟</summary>
+  <div><p>پرایماز می‌تواند بدون آغازگر شروع کند، پس سنتز را راه می‌اندازد. پلیمراز DNA این کار را نمی‌تواند و فقط از ۳′ ادامه می‌دهد. قطعهٔ RNA یک «بخش موقت» است؛ بعداً با DNA جایگزین می‌شود و لیگاز آن را می‌دوزد تا رشتهٔ نهایی همه DNA باشد. (پرایماز ویرایش‌گر نیست و دقتش کمتر است؛ چون قطعهٔ RNA از جنس متفاوتی است، سلول آن را به‌راحتی تشخیص می‌دهد و بخش کم‌دقت را حذف می‌کند.)</p></div>
+</details>
+
+<div class="quiz" data-id="ch05:s5">
+  <p class="q">کدام آنزیم قطعات اوکازاکی را به هم می‌چسباند؟</p>
+  <ol class="opts"><li>هلیکاز</li><li>پرایماز</li><li data-correct>DNA لیگاز</li><li>توپوایزومراز</li></ol>
+  <div class="explain">لیگاز بین انتهای ۳′ یک قطعه و ۵′ قطعهٔ بعدی پیوند کووالانسی می‌سازد. هلیکاز باز می‌کند، پرایماز آغازگر می‌سازد و توپوایزومراز پیچش را رفع می‌کند.</div>
+</div>
+
+<div class="quiz" data-id="ch05:s5b">
+  <p class="q">چرا رشتهٔ تأخیری قطعه‌قطعه ساخته می‌شود؟</p>
+  <ol class="opts"><li>چون DNA پلیمراز روی آن کند است</li><li data-correct>چون پلیمراز فقط ۵′←۳′ می‌سازد و جهت الگو خلاف حرکت چنگال است</li><li>چون پرایماز فقط یک بار کار می‌کند</li><li>چون هلیکاز فقط یک رشته را باز می‌کند</li></ol>
+  <div class="explain">دو رشتهٔ الگو ناهمسو هستند. روی یکی، ساخت ۵′←۳′ هم‌جهت با چنگال است (پیشرو)، روی دیگری خلاف جهت چنگال (تأخیری) و ناچار با قطعات کوتاه.</div>
+</div>
+
+<h2 id="proofreading">ویرایش و تصحیح خطا</h2>
+
+<p>اسلاید ۹۳ <span class="term" data-en="Proofreading">ویرایش</span> (proofreading) را نشان می‌دهد. DNA پلیمراز علاوه بر ساختن، هر نوکلئوتیدی را که اضافه کرده بررسی می‌کند. اگر باز اشتباه (جفت نامتناسب) وارد شده باشد، پلیمراز آن را تشخیص می‌دهد، <b>یک قدم برمی‌گردد و باز اشتباه را برمی‌دارد</b> و بعد درست را می‌گذارد و ادامه می‌دهد.</p>
+
+<ul>
+  <li>پلیمراز به‌تنهایی حدود <b>۱ خطا در ۱۰⁵ تا ۱۰⁶ نوکلئوتید</b> دارد، چون جفت درست را بر پایهٔ شکل بازها انتخاب می‌کند.</li>
+  <li>با ویرایش، خطا به حدود <b>۱ در ۱۰⁷</b> می‌رسد.</li>
+  <li>سیستم‌های ترمیم ناجورجفتی (mismatch repair) بعد از همانندسازی خطاهای باقی‌مانده را درست می‌کنند و خطای نهایی حدود <b>۱ در ۱۰⁹</b> می‌شود.</li>
+</ul>
+<p>(این اعداد تقریبی و از کتاب‌های مرجع‌اند؛ مفهوم مهم‌تر از رقم دقیق است.)</p>
+
+<aside class="callout analogy">
+  <p>پلیمراز مثل برنامه‌نویسی است که هنگام تایپ، هر حرف را تا حد ممکن بررسی می‌کند (حالت پایین)، و بعد خودش پیش از commit یک بار lint می‌زند. ترمیم ناجورجفتی مثل code review بعد از آن است.</p>
+</aside>
+
+<div class="fill" data-answer="3|۳|سه|3′|۳′|3prime" data-id="ch05:f-3">
+  <p class="q">DNA پلیمراز نوکلئوتید جدید را فقط به انتهای ____ رشته اضافه می‌کند (عدد را بنویس). <input class="blank" type="text"></p>
+  <div class="explain">انتهای ۳′ (گروه هیدروکسیل ۳′). به همین دلیل ساخت همیشه ۵′←۳′ است و پرایمر لازم است.</div>
+</div>
+
+<h2 id="video">ببین و مرور کن</h2>
+<p>اسلاید ۹۵ یک ویدیو برای دیدن کل ماجرا پیشنهاد می‌کند. بعد از خواندن این فصل، با تماشای آن همهٔ اجزای شکل ۵.۵ را در حرکت می‌بینی:</p>
+<p><a href="https://www.youtube.com/watch?v=TNKWgcFPHqw" target="_blank" rel="noopener">تماشا کن: انیمیشن همانندسازی DNA (YouTube)</a></p>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>چرخهٔ سلولی: <b>G1 ← S ← G2 ← M</b>. اینترفاز = G1+S+G2؛ DNA فقط در S کپی می‌شود.</li>
+    <li>نقاط وارسی: <b>G1/S</b>، <b>G2/M</b> و <b>دوک</b> (در M). سلول‌های خارج‌شده از چرخه (مثل نورون‌ها) در <b>G0</b> هستند.</li>
+    <li>سلول انسانی: در G1 تعداد ۴۶ مولکول DNA، در G2 تعداد ۹۲ مولکول (هنوز ۴۶ کروموزوم، هرکدام دو کروماتید خواهری).</li>
+    <li>مبدأ همانندسازی غنی از <b>A–T</b> است (دو پیوند هیدروژنی، باز شدن آسان). پروتئین‌های آغازگر حباب را می‌سازند و دو چنگال در دو جهت مخالف می‌روند.</li>
+    <li>همانندسازی <b>نیمه‌حفاظتی</b> است: هر DNA دختر یک رشتهٔ قدیمی و یک رشتهٔ جدید دارد.</li>
+    <li>هلیکاز باز می‌کند، SSB نگه می‌دارد، توپوایزومراز پیچش را رفع می‌کند، پرایماز پرایمر RNA می‌سازد، پلیمراز ۵′←۳′ می‌سازد، لیگاز می‌چسباند.</li>
+    <li>پلیمراز فقط به <b>۳′</b> اضافه می‌کند و بدون پرایمر شروع نمی‌کند. رشتهٔ پیشرو پیوسته و رشتهٔ تأخیری قطعه‌قطعه (اوکازاکی) است.</li>
+    <li>پلیمراز خطایابی می‌کند: خطا از حدود ۱ در ۱۰⁷ (ویرایش) تا ۱ در ۱۰⁹ (با ترمیم ناجورجفتی) تقریبی.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

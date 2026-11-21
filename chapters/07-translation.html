@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ترجمه و کد ژنتیکی · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="ترجمهٔ mRNA به پروتئین، کد ژنتیکی و کدون‌ها، چارچوب‌های خواندن، ریبوزوم و tRNA، مراحل آغاز، طویل‌شدن و پایان، و جمع‌بندی دگمای مرکزی در یوکاریوت و پروکاریوت.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch07">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۱ (advance_bio_part1)، اسلایدهای ۱۲۲ تا ۱۳۳" data-motif="AUGAAACGCUAGAUGGCUUUCAAAUGA">
+  <h1>ترجمه و کد ژنتیکی</h1>
+  <p class="lead">RNA با چهار حرف نوشته شده ولی پروتئین از بیست نوع آمینواسید ساخته می‌شود. سلول این چهار حرف را چطور به بیست حرف تبدیل می‌کند؟ چند حرف باید با هم خوانده شوند؟ و اگر خواندن را یک حرف جلو یا عقب شروع کنی چه می‌شود؟</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>توضیح بدهی چرا کدون سه‌حرفی است و کد ژنتیکی چطور ۶۴ حالت را به ۲۰ آمینواسید و علامت پایان می‌نگارد.</li>
+    <li>یک mRNA را در سه چارچوب خواندن <b>ترجمه کنی</b> و ORF را <b>پیدا کنی</b>.</li>
+    <li>اثر جهش در کدون آغاز، کدون پایان و جهش‌های مختلف را <b>پیش‌بینی کنی</b>.</li>
+    <li>ساختار ریبوزوم (جایگاه‌های E، P، A) و نقش tRNA را <b>شرح بدهی</b>.</li>
+    <li>سه مرحلهٔ آغاز، طویل‌شدن و پایان را به‌ترتیب <b>توضیح بدهی</b>.</li>
+    <li>دگمای مرکزی را در یوکاریوت و پروکاریوت <b>مقایسه کنی</b> و مکان هر مرحله را روی شکل <b>علامت بزنی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch07:pre1">
+  <p class="q">اگر حروف چهارگانهٔ A، U، G، C را سه‌تا سه‌تا بخوانیم، چند ترکیب متفاوت به دست می‌آید؟</p>
+  <ol class="opts"><li>۱۲</li><li>۱۶</li><li data-correct>۶۴</li><li>۲۵۶</li></ol>
+  <div class="explain">سه جایگاه، هرکدام ۴ انتخاب: ۴ × ۴ × ۴ = ۴³ = ۶۴. همین عدد پایهٔ کد ژنتیکی است. دو حرفی ۱۶ می‌شود که برای ۲۰ آمینواسید کم است. بخش ۷.۲ را ببین.</div>
+</div>
+
+<h2 id="intro">ترجمه: از RNA تا پروتئین</h2>
+
+<p>اسلاید ۱۲۲ مرور می‌کند: در فصل‌های قبل یاد گرفتیم قسمتی از DNA که می‌تواند پروتئین بسازد، رونویسی می‌شود و یک رشتهٔ mRNA از آن به وجود می‌آید؛ این رشته وارد مرحلهٔ بعد می‌شود. این مرحله <span class="term" data-en="Translation">ترجمه</span> است: ساختن پروتئین از روی mRNA. پروتئین زنجیره‌ای از <span class="term" data-en="Amino acid">آمینواسید</span>هاست (۲۰ نوع) و mRNA زنجیره‌ای از نوکلئوتیدها (۴ نوع)؛ پس سلول باید یک زبان را به زبان دیگر ترجمه کند. اسمش هم از همین است.</p>
+
+<h3>یوکاریوت و پروکاریوت (اسلاید ۱۲۳)</h3>
+
+<figure class="fig">
+<svg viewBox="0 0 740 330" width="740" role="img" aria-labelledby="fl-t">
+  <title id="fl-t">جریان اطلاعات: در یوکاریوت رونویسی و پردازش در هسته و ترجمه در سیتوپلاسم؛ در پروکاریوت رونویسی و ترجمه هم‌زمان در سیتوپلاسم</title>
+  <defs><marker id="fl-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <text x="370" y="18" font-size="14" font-weight="800" text-anchor="middle">یوکاریوت</text>
+  <rect x="10" y="28" width="720" height="130" rx="16" class="f-surface-2 s-line" stroke-width="2"/>
+  <rect x="22" y="40" width="330" height="106" rx="40" class="f-info-soft s-info" stroke-width="2"/>
+  <text x="187" y="60" font-size="12" font-weight="700" class="t-info" text-anchor="middle">هسته</text>
+  <rect x="34" y="80" width="62" height="28" rx="6" class="f-accent"/><text x="65" y="99" font-size="13" font-weight="800" class="t-white mono" text-anchor="middle">DNA</text>
+  <line x1="98" y1="94" x2="150" y2="94" class="s-ink-2" stroke-width="2" marker-end="url(#fl-ah)"/>
+  <text x="124" y="84" font-size="10.5" text-anchor="middle">رونویسی</text>
+  <rect x="152" y="80" width="64" height="28" rx="6" class="f-warn"/><text x="184" y="99" font-size="11.5" font-weight="700" text-anchor="middle">پیش‌mRNA</text>
+  <line x1="218" y1="94" x2="262" y2="94" class="s-ink-2" stroke-width="2" marker-end="url(#fl-ah)"/>
+  <text x="240" y="130" font-size="10" text-anchor="middle" class="t-muted">کلاهک، پیرایش، پلی‌A</text>
+  <rect x="264" y="80" width="64" height="28" rx="6" class="f-ok"/><text x="296" y="99" font-size="11.5" font-weight="700" class="t-white" text-anchor="middle">mRNA</text>
+  <line x1="330" y1="94" x2="480" y2="94" class="s-ink-2" stroke-width="2" marker-end="url(#fl-ah)"/>
+  <text x="405" y="84" font-size="10.5" text-anchor="middle">خروج</text>
+  <ellipse cx="520" cy="94" rx="30" ry="18" class="f-hl-soft s-hl" stroke-width="2"/><text x="520" y="98" font-size="11.5" font-weight="700" text-anchor="middle">ریبوزوم</text>
+  <line x1="552" y1="94" x2="600" y2="94" class="s-ink-2" stroke-width="2" marker-end="url(#fl-ah)"/>
+  <text x="576" y="84" font-size="10.5" text-anchor="middle">ترجمه</text>
+  <rect x="604" y="80" width="100" height="28" rx="6" class="f-hl"/><text x="654" y="99" font-size="12" font-weight="700" class="t-white" text-anchor="middle">پروتئین</text>
+  <text x="560" y="145" font-size="11.5" font-weight="700" class="t-ink-2" text-anchor="middle">سیتوپلاسم: ترجمه</text>
+  <text x="370" y="188" font-size="14" font-weight="800" text-anchor="middle">پروکاریوت</text>
+  <rect x="10" y="198" width="720" height="124" rx="40" class="f-surface-2 s-line" stroke-width="2"/>
+  <text x="640" y="220" font-size="11.5" class="t-muted" style="direction:rtl">بدون هسته: همه در سیتوپلاسم</text>
+  <line x1="40" y1="250" x2="330" y2="250" class="s-accent" stroke-width="5"/>
+  <text x="34" y="254" font-size="12" font-weight="800" class="t-accent mono" text-anchor="end">DNA</text>
+  <g class="f-none s-ok" stroke-width="2.5"><path d="M110 250 C140 270 190 285 230 292"/><path d="M180 250 C210 268 260 282 300 290"/><path d="M250 250 C275 262 320 272 360 278"/></g>
+  <g class="f-hl-soft s-hl" stroke-width="1.6"><ellipse cx="170" cy="278" rx="10" ry="7"/><ellipse cx="205" cy="287" rx="10" ry="7"/><ellipse cx="240" cy="291" rx="10" ry="7"/><ellipse cx="262" cy="278" rx="10" ry="7"/><ellipse cx="300" cy="287" rx="10" ry="7"/><ellipse cx="318" cy="273" rx="10" ry="7"/></g>
+  <text x="400" y="285" font-size="12" class="t-ink-2" style="direction:rtl">مولکول‌های mRNA که هنوز ساخته می‌شوند، ریبوزوم‌ها را به خود گرفته‌اند</text>
+  <text x="400" y="304" font-size="11.5" class="t-hl" style="direction:rtl">رونویسی و ترجمه جفت‌شده (coupled)</text>
+</svg>
+<figcaption><b>شکل ۷.۱</b> — در یوکاریوت‌ها هسته رونویسی و ترجمه را از هم جدا می‌کند و پردازش RNA فاصله می‌اندازد. در پروکاریوت‌ها ریبوزوم‌ها هنوز در حال ساخته‌شدن mRNA روی آن می‌نشینند.</figcaption>
+</figure>
+
+<ul>
+  <li><b>یوکاریوت:</b> رونویسی در هسته ← کلاهک ۵′، پیرایش و پلی‌آدنیلاسیون ۳′ (افزودن دم پلی‌A) ← خروج از هسته ← ترجمه در سیتوپلاسم.</li>
+  <li><b>پروکاریوت:</b> هسته‌ای نیست؛ رونویسی و ترجمه هر دو در سیتوپلاسم و <b>جفت‌شده</b> هستند: ریبوزوم‌ها شروع به ترجمه می‌کنند در حالی که mRNA هنوز در حال ساخته‌شدن است.</li>
+</ul>
+
+<aside class="callout analogy">
+  <p>یوکاریوت مثل <b>compile و بعد run</b> است: اول کد (رونوشت) پردازش و کامپایل می‌شود و بعد اجرا. پروکاریوت مثل <b>interpreter/streaming</b> است: هنوز خط‌های بعدی نوشته می‌شود که خط‌های قبلی در حال اجراست.</p>
+</aside>
+
+<h2 id="code">کد ژنتیکی: ۴ حرف، ۲۰ آمینواسید</h2>
+
+<details class="think">
+  <summary>سؤال اسلاید ۱۲۴: الفبای ۴حرفی باید به الفبای ۲۰حرفی تبدیل شود. چه سازوکاری پیشنهاد می‌کنی؟</summary>
+  <div><p>باید چند نوکلئوتید را با هم یک «کلمه» بگیریم تا تعداد کلمه‌ها حداقل ۲۰ شود:</p>
+  <ul>
+    <li>۱ حرف: ۴¹ = ۴ حالت. برای ۲۰ آمینواسید کم است.</li>
+    <li>۲ حرف: ۴² = ۱۶ حالت. هنوز کم است.</li>
+    <li>۳ حرف: ۴³ = ۶۴ حالت، یعنی بیشتر از ۲۰. کافی است.</li>
+  </ul>
+  <p>پس سه‌حرفی کمترین طول ممکن است. به هر سه‌تایی <span class="term" data-en="Codon">کدون</span> می‌گویند. چون ۶۴ بزرگ‌تر از ۲۰ است، چند کدون می‌توانند یک آمینواسید را بنویسند.</p></div>
+</details>
+
+<aside class="callout analogy">
+  <p>مثل این است که با رشتهٔ ۰ و ۱ (باینری) حروف را کد کنی: با ۱ بیت فقط ۲ حالت داری و با ۸ بیت ۲⁵⁶. اینجا «بیت» ۴حالتی است و طول کلمه ۳ است. کد ژنتیکی یک <b>lookup table</b> با ۶۴ کلید و ۲۱ مقدار است (۲۰ آمینواسید و stop).</p>
+</aside>
+
+<h3>جدول ۶۴ به ۲۰ (اسلاید ۱۲۵)</h3>
+<ul>
+  <li><b>۶۱ کدون معنادار</b> (sense) آمینواسید می‌نویسند.</li>
+  <li><b>سه کدون پایان</b> (stop): <code class="seq">UAA</code>، <code class="seq">UAG</code> و <code class="seq">UGA</code> که آمینواسید ندارند و ترجمه را متوقف می‌کنند.</li>
+  <li><code class="seq">AUG</code> هم کدون <b>آغاز</b> (start) است و هم آمینواسید <b>متیونین (Met)</b> را می‌نویسد. پس هر پروتئین (در ابتدا) با Met شروع می‌شود.</li>
+</ul>
+
+<div data-widget="codon-table"></div>
+
+<div class="quiz" data-id="ch07:s3">
+  <p class="q">کدام کدون هم کدون آغاز و هم آمینواسید متیونین را مشخص می‌کند؟</p>
+  <ol class="opts"><li>UAA</li><li>UGA</li><li data-correct>AUG</li><li>UGG</li></ol>
+  <div class="explain">AUG. دو کدون UAA و UGA کدون پایان‌اند و UGG تریپتوفان (Trp) را می‌نویسد.</div>
+</div>
+
+<h3>سؤال‌های اسلاید ۱۲۶</h3>
+
+<details class="think">
+  <summary>اگر کدون آغاز جهش پیدا کند چه می‌شود؟</summary>
+  <div><p>ریبوزوم ترجمه را از آنجا شروع نمی‌کند. دو نتیجه ممکن است: یا <b>پروتئینی ساخته نمی‌شود</b> یا ترجمه از <b>اولین AUG پایین‌دست</b> شروع می‌شود و پروتئین کوتاه‌تر (بدون ابتدا) به دست می‌آید که ممکن است عملکرد نداشته باشد.</p></div>
+</details>
+
+<details class="think">
+  <summary>اگر کدون پایان جهش پیدا کند، یا یک کدون پایان زودهنگام ایجاد شود؟</summary>
+  <div><p><b>جهش در کدون پایان</b> (مثلاً UAA به CAA): ریبوزوم نمی‌ایستد و از روی بخش‌های بعدی mRNA هم می‌خواند تا به کدون پایان بعدی برسد (<b>read-through</b>)؛ پروتئین <b>بلندتر</b> می‌شود. <b>پیدایش کدون پایان زودهنگام</b> (مثلاً UGG به UGA) در میانهٔ ژن: ترجمه زود قطع می‌شود و پروتئین <b>کوتاه‌شده (truncated)</b> و معمولاً ناکارآمد می‌شود.</p></div>
+</details>
+
+<details class="think">
+  <summary>چرا به بعضی آمینواسیدها کدون‌های زیاد و به بعضی کم رسیده است؟</summary>
+  <div><p>چون ۶۱ کدون و فقط ۲۰ آمینواسید داریم، کد <b>افزونه (degenerate)</b> است. لوسین، سرین و آرژینین ۶ کدون دارند؛ متیونین و تریپتوفان فقط ۱ کدون. بیشتر کدون‌های هم‌معنی فقط در <b>حرف سوم</b> فرق دارند (مثلاً GCU، GCC، GCA، GCG همه آلانین‌اند). این افزونگی کد را در برابر جهش مقاوم می‌کند: بسیاری از جهش‌های حرف سوم هیچ تغییری در پروتئین نمی‌دهند (جهش خاموش). خود تعداد کدون‌ها هم تقریباً به فراوانی آمینواسید در پروتئین‌ها ارتباط دارد، ولی دلیل اصلی افزونگی همان ۶۴ بزرگ‌تر از ۲۰ است.</p></div>
+</details>
+
+<details class="think">
+  <summary>پنجرهٔ سه‌حرفی روی رشته چطور باید حرکت کند؟</summary>
+  <div><p>پنجره هر بار <b>دقیقاً ۳ حرف</b> جلو می‌رود، <b>بدون هم‌پوشانی</b> و <b>بدون فاصله یا علامت جداکننده</b> بین کدون‌ها. اگر ریبوزوم یک یا دو حرف اشتباه جلو برود، همهٔ کدون‌های بعدی عوض می‌شوند (<span class="term" data-en="Frameshift">جهش جابه‌جایی چارچوب</span>).</p></div>
+</details>
+
+<figure class="fig">
+<svg viewBox="0 0 700 270" width="700" role="img" aria-labelledby="rw-t">
+  <title id="rw-t">پنجرهٔ سه‌حرفی روی mRNA آ‌ی‌او‌جی‌آ‌ی‌ای‌ای‌سی‌جی‌سی‌یو‌ای‌جی در چارچوب اول و دوم</title>
+  <defs><marker id="rw-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker></defs>
+  <text x="40" y="24" font-size="13" font-weight="800" class="mono">5′</text>
+  <text x="660" y="24" font-size="13" font-weight="800" class="mono">3′</text>
+  <g font-size="20" font-weight="800" class="mono" text-anchor="middle">
+    <text x="90" y="30">A</text><text x="130" y="30">U</text><text x="170" y="30">G</text><text x="210" y="30">A</text><text x="250" y="30">A</text><text x="290" y="30">A</text><text x="330" y="30">C</text><text x="370" y="30">G</text><text x="410" y="30">C</text><text x="450" y="30">U</text><text x="490" y="30">A</text><text x="530" y="30">G</text>
+  </g>
+  <text x="620" y="38" font-size="11" class="t-muted" text-anchor="middle">…</text>
+  <text x="20" y="80" font-size="12" font-weight="700" class="t-info">چارچوب ۱</text>
+  <rect x="68" y="50" width="120" height="40" rx="8" class="f-info-soft s-info" stroke-width="2"/>
+  <rect x="188" y="50" width="120" height="40" rx="8" class="f-ok-soft s-ok" stroke-width="2"/>
+  <rect x="308" y="50" width="120" height="40" rx="8" class="f-warn-soft s-warn" stroke-width="2"/>
+  <rect x="428" y="50" width="120" height="40" rx="8" class="f-bad-soft s-bad" stroke-width="2"/>
+  <g font-size="14" font-weight="700" text-anchor="middle"><text x="128" y="76">Met</text><text x="248" y="76">Lys</text><text x="368" y="76">Arg</text><text x="488" y="76">STOP</text></g>
+  <text x="20" y="150" font-size="12" font-weight="700" class="t-ok">چارچوب ۲</text>
+  <rect x="108" y="120" width="120" height="40" rx="8" class="f-bad-soft s-bad" stroke-width="2"/>
+  <rect x="228" y="120" width="120" height="40" rx="8" class="f-info-soft s-info" stroke-width="2"/>
+  <rect x="348" y="120" width="120" height="40" rx="8" class="f-ok-soft s-ok" stroke-width="2"/>
+  <g font-size="14" font-weight="700" text-anchor="middle"><text x="168" y="146">STOP (UGA)</text><text x="288" y="146">Asn</text><text x="408" y="146">Ala</text></g>
+  <text x="20" y="220" font-size="12" font-weight="700" class="t-warn">چارچوب ۳</text>
+  <rect x="148" y="190" width="120" height="40" rx="8" class="f-ok-soft s-ok" stroke-width="2"/>
+  <rect x="268" y="190" width="120" height="40" rx="8" class="f-warn-soft s-warn" stroke-width="2"/>
+  <rect x="388" y="190" width="120" height="40" rx="8" class="f-info-soft s-info" stroke-width="2"/>
+  <g font-size="14" font-weight="700" text-anchor="middle"><text x="208" y="216">Glu</text><text x="328" y="216">Thr</text><text x="448" y="216">Leu</text></g>
+  <line x1="68" y1="252" x2="190" y2="252" class="s-accent anim-flow" stroke-width="3" marker-end="url(#rw-ah)"/>
+  <text x="330" y="256" font-size="12" class="t-accent" style="direction:rtl">هر قدم دقیقاً ۳ حرف، بدون هم‌پوشانی</text>
+</svg>
+<figcaption><b>شکل ۷.۲</b> — ترجمهٔ <code class="seq">5′-AUGAAACGCUAG-3′</code> در سه چارچوب (اسلاید ۱۲۸). فقط چارچوب ۱ از AUG شروع می‌شود و چارچوب‌های دیگر پروتئین‌های بی‌ربط می‌دهند.</figcaption>
+</figure>
+
+<h2 id="frames">چارچوب‌های خواندن</h2>
+
+<p>چون کدون‌ها سه‌تایی هستند و علامت جداکننده ندارند، <b>جای شروع خواندن</b> همه‌چیز را تعیین می‌کند. روی یک رشتهٔ mRNA سه نقطهٔ شروع ممکن است (حرف اول، دوم یا سوم)؛ این‌ها سه <span class="term" data-en="Reading frame">چارچوب خواندن</span> هستند (اسلاید ۱۲۷). اگر DNA دورشته‌ای را در نظر بگیریم، رشتهٔ مقابل هم سه چارچوب دارد، پس در کل <b>۶ چارچوب</b>.</p>
+
+<div class="worked" data-title="مثال اسلاید ۱۲۸: سه چارچوب">
+  <p class="problem">رشتهٔ <code class="seq">5′-ATGAAACGCTAG-3′</code> را در سه چارچوب ترجمه کن.</p>
+  <ol class="steps">
+    <li><b>چارچوب ۱</b> (از حرف اول): ATG | AAA | CGC | TAG ← Met، Lys، Arg، <b>STOP</b>.</li>
+    <li><b>چارچوب ۲</b> (از حرف دوم): TGA | AAC | GCT | AG ← <b>STOP</b> (TGA)، Asn، Ala؛ حرف‌های آخر (AG) یک کدون کامل نمی‌شوند.</li>
+    <li><b>چارچوب ۳</b> (از حرف سوم): GAA | ACG | CTA | G ← Glu، Thr، Leu؛ حرف آخر تنها می‌ماند.</li>
+    <li>فقط چارچوب ۱ با ATG (متیونین) شروع می‌شود و تا کدون پایان درون‌چارچوب ادامه دارد: یک <span class="term" data-en="Open reading frame, ORF">چارچوب خواندن باز (ORF)</span>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> چارچوب ۱: Met-Lys-Arg-STOP؛ چارچوب ۲: STOP-Asn-Ala؛ چارچوب ۳: Glu-Thr-Leu. چون ORF از ATG تا یک stop هم‌چارچوب است، پروتئین واقعی همان Met-Lys-Arg است.</p>
+</div>
+
+<aside class="callout pitfall">
+  <p>«stop در چارچوب ۲» (TGA) پایان یک ژن نیست؛ ریبوزوم هرگز از آنجا شروع نمی‌کند. فقط stop هم‌چارچوب با AUG آغازین ترجمه را تمام می‌کند. حتماً هر چارچوب را از AUG شروع کن.</p>
+</aside>
+
+<div data-widget="reading-frames" data-seq="ATGAAACGCTAG"></div>
+
+<div class="quiz" data-id="ch07:s4">
+  <p class="q">یک رشتهٔ mRNA را فقط از یک جهت در نظر می‌گیریم. چند چارچوب خواندن دارد؟ و اگر DNA دورشته‌ای باشد چند تا؟</p>
+  <ol class="opts"><li>۱ و ۲</li><li>۲ و ۴</li><li data-correct>۳ و ۶</li><li>۶ و ۱۲</li></ol>
+  <div class="explain">سه نقطهٔ شروع ممکن روی هر رشته (حرف اول، دوم یا سوم) و دو رشته: ۳ × ۲ = ۶.</div>
+</div>
+
+<div class="quiz" data-id="ch07:s4b">
+  <p class="q">در <code class="seq">5′-ATGAAACGCTAG-3′</code> چارچوب سوم چه پپتیدی می‌دهد؟</p>
+  <ol class="opts"><li>Met-Lys-Arg</li><li>Asn-Ala</li><li data-correct>Glu-Thr-Leu</li><li>Leu-Thr-Glu</li></ol>
+  <div class="explain">از حرف سوم: GAA (Glu)، ACG (Thr)، CTA (Leu)، و حرف تنهای G.</div>
+</div>
+
+<div data-widget="transcribe-translate"></div>
+
+<h2 id="ribosome">ریبوزوم و tRNA</h2>
+
+<p><span class="term" data-en="Ribosome">ریبوزوم</span> ماشین ساخت پروتئین است. از rRNA و پروتئین ساخته شده و دو زیرواحد دارد: <b>زیرواحد کوچک</b> (mRNA را می‌خواند و کدون‌ها را بررسی می‌کند) و <b>زیرواحد بزرگ</b> (پیوند پپتیدی را می‌سازد). ریبوزوم‌ها هم آزاد در سیتوپلاسم‌اند و هم روی شبکهٔ آندوپلاسمی زبر (rough ER) می‌نشینند؛ اسلاید ۱۲۹ ریبوزوم‌های روی RER را در تصویر میکروسکوپ الکترونی نشان می‌دهد، که پروتئین‌های ترشحی و غشایی را می‌سازند.</p>
+
+<p>ریبوزوم سه جایگاه برای tRNA دارد:</p>
+<ul>
+  <li><b>A</b> (Aminoacyl): جایی که tRNA حامل آمینواسید جدید وارد می‌شود.</li>
+  <li><b>P</b> (Peptidyl): جایی که tRNA متصل به زنجیرهٔ پپتیدی در حال رشد است.</li>
+  <li><b>E</b> (Exit): جایی که tRNA خالی ریبوزوم را ترک می‌کند.</li>
+</ul>
+
+<p><span class="term" data-en="tRNA">tRNA</span> آداپتور است: یک سرش <b>آنتی‌کدون</b> (سه نوکلئوتید مکمل کدون mRNA) و سر دیگرش یک <b>آمینواسید ویژه</b> را حمل می‌کند. شکل دوبعدی آن شبیه برگ شبدر (cloverleaf) و شکل سه‌بعدی آن شبیه حرف L است. اسلاید ۱۳۱ tRNA حامل سرین (Ser) را نشان می‌دهد. آنزیم‌هایی (آمینواسیل tRNA سنتتاز) هر tRNA را با آمینواسید درست پر می‌کنند؛ این‌ها در واقع مترجم‌های واقعی‌اند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 700 330" width="700" role="img" aria-labelledby="rb-t">
+  <title id="rb-t">ریبوزوم با زیرواحد بزرگ و کوچک، جایگاه‌های E، P و A، سه tRNA و mRNA با کدون‌های AUG GCU UUC AAA UGA</title>
+  <defs><marker id="rb-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker></defs>
+  <ellipse cx="330" cy="125" rx="165" ry="62" class="f-hl-soft s-hl" stroke-width="2.5"/>
+  <text x="330" y="82" font-size="12" font-weight="700" class="t-hl" text-anchor="middle">زیرواحد بزرگ</text>
+  <ellipse cx="330" cy="265" rx="165" ry="22" class="f-info-soft s-info" stroke-width="2.5"/>
+  <text x="330" y="310" font-size="12" font-weight="700" class="t-info" text-anchor="middle">زیرواحد کوچک</text>
+  <g font-size="14" font-weight="800" class="mono" text-anchor="middle">
+    <rect x="30" y="215" width="80" height="30" rx="5" class="f-surface s-line"/><text x="70" y="236">AUG</text>
+    <rect x="120" y="215" width="80" height="30" rx="5" class="f-surface s-line"/><text x="160" y="236">GCU</text>
+    <rect x="210" y="215" width="80" height="30" rx="5" class="f-surface s-line"/><text x="250" y="236">UUC</text>
+    <rect x="300" y="215" width="80" height="30" rx="5" class="f-surface s-line"/><text x="340" y="236">AAA</text>
+    <rect x="390" y="215" width="80" height="30" rx="5" class="f-surface s-line"/><text x="430" y="236">UGA</text>
+  </g>
+  <text x="20" y="206" font-size="13" font-weight="800" class="mono">5′</text>
+  <text x="490" y="236" font-size="13" font-weight="800" class="mono">3′</text>
+  <g>
+    <rect x="135" y="140" width="50" height="70" rx="10" class="f-surface-2 s-ink-2" stroke-width="2"/>
+    <text x="160" y="200" font-size="11" class="mono t-muted" text-anchor="middle">CGA</text>
+    <rect x="225" y="140" width="50" height="70" rx="10" class="f-surface s-ink-2" stroke-width="2"/>
+    <text x="250" y="200" font-size="11" class="mono" text-anchor="middle">AAG</text>
+    <rect x="315" y="140" width="50" height="70" rx="10" class="f-surface s-ink-2" stroke-width="2"/>
+    <text x="340" y="200" font-size="11" class="mono" text-anchor="middle">UUU</text>
+  </g>
+  <circle cx="250" cy="146" r="12" class="f-warn"/>
+  <circle cx="340" cy="146" r="12" class="f-ok"/>
+  <circle cx="250" cy="116" r="9" class="f-info"/><circle cx="224" cy="104" r="9" class="f-accent"/>
+  <path d="M233 110 L242 112 M258 124 L252 135" class="s-ink-2" stroke-width="2.5"/>
+  <text x="195" y="94" font-size="10.5" class="t-ink-2" text-anchor="middle">Met-Ala</text>
+  <g font-size="15" font-weight="800" text-anchor="middle" class="t-hl"><text x="160" y="58">E</text><text x="250" y="58">P</text><text x="340" y="58">A</text></g>
+  <line x1="250" y1="62" x2="250" y2="138" class="s-hl" stroke-width="1" stroke-dasharray="3 3"/><line x1="340" y1="62" x2="340" y2="138" class="s-hl" stroke-width="1" stroke-dasharray="3 3"/><line x1="160" y1="62" x2="160" y2="138" class="s-hl" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="480" y1="150" x2="580" y2="150" class="s-accent anim-flow" stroke-width="3" marker-end="url(#rb-ah)"/>
+  <text x="530" y="140" font-size="11.5" class="t-accent" text-anchor="middle">ریبوزوم به سمت ۳′</text>
+  <text x="620" y="190" font-size="11.5" class="t-muted" style="direction:rtl;" text-anchor="middle">tRNA خالی در E</text>
+  <text x="620" y="208" font-size="11.5" class="t-ink-2" style="direction:rtl;" text-anchor="middle">tRNA با زنجیره (P)</text>
+  <text x="620" y="226" font-size="11.5" class="t-ok" style="direction:rtl;" text-anchor="middle">tRNA تازه با Lys (A)</text>
+</svg>
+<figcaption><b>شکل ۷.۳</b> — ریبوزوم و tRNA (اسلاید ۱۳۱). آنتی‌کدون (زیر هر tRNA، ۳′←۵′) با کدون روبه‌رو جفت می‌شود: AAG با UUC و UUU با AAA. ریبوزوم از ۵′ به ۳′ روی mRNA حرکت می‌کند.</figcaption>
+</figure>
+
+<h3>مراحل ساخت پروتئین (اسلاید ۱۳۰ و ۱۳۱)</h3>
+<ol class="steps">
+  <li><b>آغاز (initiation):</b> زیرواحد کوچک ریبوزوم همراه tRNA آغازگر حامل Met به mRNA می‌چسبد و روی آن حرکت می‌کند تا اولین <code class="seq">AUG</code> را پیدا کند (در یوکاریوت از کلاهک ۵′ شروع می‌کند). آنتی‌کدون tRNA با AUG جفت می‌شود و بعد زیرواحد بزرگ می‌پیوندد. tRNA آغازگر در جایگاه P است.</li>
+  <li><b>طویل‌شدن (elongation):</b> یک چرخهٔ سه‌قدمی تکرار می‌شود: (۱) tRNA حامل آمینواسید مناسب با کدون جایگاه A جفت می‌شود؛ (۲) ریبوزوم بین زنجیرهٔ پپتیدی روی tRNA جایگاه P و آمینواسید جدید در A <b>پیوند پپتیدی</b> می‌سازد (زنجیره به tRNA جایگاه A منتقل می‌شود)؛ (۳) ریبوزوم <b>یک کدون</b> (۳ نوکلئوتید) روی mRNA به سمت ۳′ حرکت می‌کند: tRNA خالی از جایگاه E خارج می‌شود، tRNA حامل زنجیره به P می‌رود و A برای tRNA بعدی خالی می‌شود.</li>
+  <li><b>پایان (termination):</b> وقتی کدون پایان (UAA، UAG یا UGA) به جایگاه A برسد، هیچ tRNA مکمل آن نیست. به جای آن <b>عامل آزادکننده (release factor)</b> وارد می‌شود، زنجیره از tRNA جدا می‌شود، پروتئین آزاد می‌گردد و ریبوزوم از هم جدا می‌شود.</li>
+</ol>
+
+<aside class="callout simple">
+  <p>پروتئین از انتهای آمینی (N) به انتهای کربوکسیل (C) ساخته می‌شود، همان‌طور که mRNA از ۵′ به ۳′ خوانده می‌شود. اولین آمینواسید همیشه Met است (در بسیاری از پروتئین‌ها بعداً حذف می‌شود).</p>
+</aside>
+
+<div class="quiz" data-id="ch07:s5">
+  <p class="q">در حین طویل‌شدن، tRNA خالی (بدون آمینواسید) از کدام جایگاه ریبوزوم خارج می‌شود؟</p>
+  <ol class="opts"><li>A</li><li>P</li><li data-correct>E</li><li>هیچ‌کدام؛ در ریبوزوم می‌ماند</li></ol>
+  <div class="explain">E از Exit. در A آمینواسیل‌tRNA وارد می‌شود و در P tRNA متصل به زنجیره قرار دارد.</div>
+</div>
+
+<div class="quiz" data-id="ch07:s5b">
+  <p class="q">کدام عامل پایان ترجمه را رقم می‌زند؟</p>
+  <ol class="opts"><li>tRNA با آنتی‌کدون UAA</li><li data-correct>عامل آزادکننده که به کدون پایان در جایگاه A پاسخ می‌دهد</li><li>پایان mRNA (دم پلی‌A)</li><li>زیرواحد کوچک که تمام می‌شود</li></ol>
+  <div class="explain">برای کدون‌های پایان tRNA وجود ندارد؛ پروتئین‌های عامل آزادکننده آن‌ها را می‌شناسند.</div>
+</div>
+
+<div class="fill" data-answer="3|۳|سه" data-id="ch07:f-codon">
+  <p class="q">ریبوزوم در هر قدم طویل‌شدن چند نوکلئوتید روی mRNA جلو می‌رود؟ <input class="blank" type="text"></p>
+  <div class="explain">یک کدون، یعنی ۳ نوکلئوتید.</div>
+</div>
+
+<h3>ببین و مرور کن (اسلاید ۱۳۲)</h3>
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=gG7uCskUOrA" target="_blank" rel="noopener" class="ltr">https://www.youtube.com/watch?v=gG7uCskUOrA</a></li>
+  <li>پیشنهاد ویژهٔ استاد: <a href="https://www.youtube.com/watch?v=wZozOrFluiw" target="_blank" rel="noopener" class="ltr">https://www.youtube.com/watch?v=wZozOrFluiw</a></li>
+  <li><a href="https://www.youtube.com/watch?v=LCIkd-WwC7o" target="_blank" rel="noopener" class="ltr">https://www.youtube.com/watch?v=LCIkd-WwC7o</a></li>
+</ul>
+
+<h2 id="recap">جمع‌بندی دگمای مرکزی: یوکاریوت در برابر پروکاریوت</h2>
+
+<table>
+  <thead><tr><th></th><th>یوکاریوت</th><th>پروکاریوت</th></tr></thead>
+  <tbody>
+    <tr><td>DNA</td><td>در هسته، چند کروموزوم خطی</td><td>در سیتوپلاسم (ناحیهٔ نوکلئویید)، معمولاً یک کروموزوم حلقوی</td></tr>
+    <tr><td>همانندسازی</td><td>در هسته، فاز S، چند مبدأ</td><td>در سیتوپلاسم، معمولاً یک مبدأ</td></tr>
+    <tr><td>رونویسی</td><td>در هسته</td><td>در سیتوپلاسم</td></tr>
+    <tr><td>پردازش RNA (کلاهک، پیرایش، پلی‌A)</td><td>دارد، در هسته</td><td>ندارد (ژن‌ها معمولاً اینترون ندارند)</td></tr>
+    <tr><td>خروج mRNA از هسته</td><td>از منفذ هسته، با کنترل کیفیت</td><td>لازم نیست (هسته‌ای نیست)</td></tr>
+    <tr><td>ترجمه</td><td>در سیتوپلاسم، بعد از رونویسی و پردازش</td><td>در سیتوپلاسم، هم‌زمان با رونویسی</td></tr>
+  </tbody>
+</table>
+
+<h3>سؤال شکل میان‌ترم</h3>
+<p>در امتحان میان‌ترم یک شکل از سلول یوکاریوتی و پروکاریوتی می‌دهند که در هر دو، میلهٔ نارنجی همان DNA دورشته‌ای است. باید مراحل دگمای مرکزی را در هر سلول علامت بزنی و بعد آن‌ها را شرح بدهی. ابزار زیر را با خودت تمرین کن:</p>
+
+<div data-widget="dogma-locations"></div>
+
+<div class="essay" data-id="ch07:e-fig">
+  <p class="q">در شکل، سلول یوکاریوتی و پروکاریوتی (میلهٔ نارنجی = DNA دورشته‌ای) رسم شده است. جایگاه هر مرحلهٔ دگمای مرکزی را مشخص کنید و آن‌ها را توضیح دهید.</p>
+  <div class="answer">
+    <p><b>سلول یوکاریوتی:</b></p>
+    <ul>
+      <li><b>همانندسازی:</b> روی DNA درون هسته (فاز S قبل از تقسیم).</li>
+      <li><b>رونویسی:</b> روی DNA درون هسته؛ RNA پلیمراز از رشتهٔ الگو، پیش‌mRNA می‌سازد.</li>
+      <li><b>پردازش RNA:</b> در هسته؛ کلاهک ۵′، پیرایش (حذف اینترون‌ها) و دم پلی‌A. سپس mRNA بالغ از منفذ هسته به سیتوپلاسم می‌رود.</li>
+      <li><b>ترجمه:</b> در سیتوپلاسم روی ریبوزوم‌ها (آزاد یا روی شبکهٔ آندوپلاسمی زبر).</li>
+    </ul>
+    <p><b>سلول پروکاریوتی:</b> هسته ندارد؛ DNA (نوکلئویید) در سیتوپلاسم است. همانندسازی و رونویسی روی همان DNA در سیتوپلاسم انجام می‌شود، پردازش RNA وجود ندارد و ترجمه روی ریبوزوم‌های سیتوپلاسمی هم‌زمان با رونویسی انجام می‌شود؛ ریبوزوم‌ها روی mRNA در حال ساخت می‌نشینند.</p>
+    <ul class="points">
+      <li>یوکاریوت: همانندسازی، رونویسی و پردازش RNA در هسته؛ ترجمه در سیتوپلاسم</li>
+      <li>پروکاریوت: همه‌چیز در سیتوپلاسم؛ بدون پردازش RNA</li>
+      <li>پروکاریوت: رونویسی و ترجمه هم‌زمان</li>
+      <li>توضیح: همانندسازی (نیمه‌حفاظتی)، رونویسی (از رشتهٔ الگو)، پردازش (کلاهک، پیرایش، پلی‌A)، ترجمه (کدون‌ها و ریبوزوم)</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>ترجمه یعنی ساختن پروتئین از mRNA؛ زبان ۴حرفی نوکلئوتید به زبان ۲۰حرفی آمینواسید برگردانده می‌شود.</li>
+    <li>کدون = ۳ نوکلئوتید (۴¹=۴ و ۴²=۱۶ کم‌اند، ۴³=۶۴ کافی است): ۶۱ کدون معنادار و ۳ کدون پایان (UAA، UAG، UGA).</li>
+    <li><code class="seq">AUG</code> هم کدون آغاز و هم Met است.</li>
+    <li>کد افزونه است (Leu، Ser، Arg شش کدون؛ Met و Trp یک کدون). افزونگی کد را در برابر جهش مقاوم می‌کند.</li>
+    <li>جهش آغاز: پروتئین ساخته نمی‌شود یا از AUG بعدی شروع می‌شود. جهش پایان: پروتئین بلندتر. پایان زودهنگام: پروتئین کوتاه.</li>
+    <li>سه چارچوب خواندن روی هر رشته و ۶ در کل؛ ORF از ATG تا stop هم‌چارچوب.</li>
+    <li>ریبوزوم: زیرواحد کوچک و بزرگ، جایگاه‌های E، P، A. tRNA با آنتی‌کدون و آمینواسید ویژه آداپتور است.</li>
+    <li>مراحل: آغاز، طویل‌شدن (ورود به A، پیوند پپتیدی، جابه‌جایی و خروج از E)، پایان (عامل آزادکننده).</li>
+    <li>یوکاریوت: همانندسازی، رونویسی و پردازش در هسته، ترجمه در سیتوپلاسم. پروکاریوت: همه در سیتوپلاسم و رونویسی و ترجمه هم‌زمان.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

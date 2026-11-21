@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RNA و رونویسی · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="دگمای مرکزی، چرا RNA واسطه است، ساختار و انواع RNA، رونویسی، پروموتر و ترمیناتور، کلاهک و دم پلی‌A، پیرایش (splicing) و پیرایش متناوب.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch06">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۱ (advance_bio_part1)، اسلایدهای ۹۶ تا ۱۲۱" data-motif="GGAUCCAAAGGAUCCAUGCCAUUGUAA">
+  <h1>RNA و رونویسی</h1>
+  <p class="lead">DNA مثل هارددیسک فقط اطلاعات نگه می‌دارد و خودش هیچ برنامه‌ای اجرا نمی‌کند. پس کی دستورها را اجرا می‌کند؟ و چرا سلول هیچ‌وقت خود DNA را به کارگرها نمی‌دهد و همیشه از روی آن یک کپی کاری می‌سازد؟ در این فصل می‌بینی RNA چطور ساخته و ویرایش می‌شود.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>سه دلیل استفاده از RNA به‌عنوان واسطه را <b>توضیح بدهی</b>.</li>
+    <li>مراحل دگمای مرکزی را همراه با مکان هرکدام در سلول <b>نام ببری</b> و رسم کنی.</li>
+    <li>RNA و DNA را از نظر قند، باز، تعداد رشته و پایداری <b>مقایسه کنی</b>.</li>
+    <li>برای یک رشتهٔ رمزگذار، mRNA و رشتهٔ الگو را <b>حساب کنی</b> و امکان سنجاق‌سر را <b>بررسی کنی</b>.</li>
+    <li>رونویسی را (پلیمراز، الگو، جهت، پروموتر و ترمیناتور) <b>شرح بدهی</b>.</li>
+    <li>پردازش mRNA یوکاریوتی شامل کلاهک، دم پلی‌A و پیرایش را <b>توضیح بدهی</b> و تعداد mRNAهای ممکن در پیرایش متناوب را <b>حساب کنی</b>.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch06:pre1">
+  <p class="q">اگر رشتهٔ رمزگذار یک ژن <code class="seq">5′-ATGCCA-3′</code> باشد، mRNA ساخته‌شده از آن چه توالی‌ای دارد؟</p>
+  <ol class="opts">
+    <li>5′-UACGGU-3′</li>
+    <li data-correct>5′-AUGCCA-3′</li>
+    <li>5′-ACCGUA-3′</li>
+    <li>5′-ATGCCA-3′</li>
+  </ol>
+  <div class="explain">mRNA همان توالی رشتهٔ رمزگذار است، فقط با U به‌جای T. (گزینهٔ الف مکمل بدون برعکس‌کردن و گزینهٔ ج مکمل معکوس است که برای الگو به کار می‌رود، نه برای mRNA.) دلیلش را در بخش ۶.۵ می‌بینی.</div>
+</div>
+
+<h2 id="why-rna">DNA فقط هارددیسک است؛ چرا RNA؟</h2>
+
+<p>اسلاید ۹۶ DNA را به <b>هارددیسک سلول</b> تشبیه می‌کند. اطلاعات ژنتیکی را دقیق و پایدار نگه می‌دارد، در هسته و در محیط محافظت‌شده، و هنگام تقسیم با دقت زیاد کپی می‌شود. ولی یک هارددیسک خودش کاری نمی‌کند. DNA نقشه و دستورالعمل است؛ برای اجرای آن سلول به «کارگرها و ابزارها» نیاز دارد، یعنی <b>پروتئین‌ها</b>. پس سؤال این است: چه چیزی دستورها را اجرا می‌کند و چرا سلول مستقیم از روی DNA اصلی کار نمی‌کند؟ (اسلاید ۹۶)</p>
+
+<p>اسلاید ۹۷ سه دلیل می‌دهد که سلول از <span class="term" data-en="RNA">RNA</span> به‌عنوان واسطه استفاده می‌کند:</p>
+<div class="compare">
+  <div><h4>۱. امنیت</h4><p>نسخهٔ اصلی DNA در هسته می‌ماند و مستقیماً درگیر اجرای دستورها نمی‌شود، پس آسیب نمی‌بیند.</p></div>
+  <div><h4>۲. تقویت (amplification)</h4><p>از یک ژن صدها RNA ساخته می‌شود و از هر RNA ده‌ها پروتئین. یک نسخهٔ اصلی، هزاران خروجی.</p></div>
+  <div><h4>۳. کنترل</h4><p>سلول تعیین می‌کند کدام ژن فعال شود و چه مقدار RNA از آن ساخته شود.</p></div>
+</div>
+
+<aside class="callout analogy">
+  <p>DNA مثل <b>مخزن اصلی کد (main repository)</b> است که کسی مستقیم روی آن اجرا نمی‌گیرد. RNA مثل یک <b>build</b> یا یک <b>کپی کش‌شده</b> است: هر چقدر لازم است از آن کپی می‌گیری، اگر خراب شد دور می‌اندازی و مخزن سالم می‌ماند. و تعداد کپی‌ها همان «میزان بیان» ژن است.</p>
+</aside>
+
+<h2 id="dogma">دگمای مرکزی</h2>
+
+<p><span class="term" data-en="Central dogma">دگمای مرکزی</span> مسیر عبور اطلاعات در سلول است: <b>DNA ← RNA ← پروتئین</b>. اسلاید ۹۸ نقش هر مولکول را در یک جمله می‌گوید:</p>
+<ul>
+  <li><b>DNA: فقط اطلاعات.</b> خودش کاری انجام نمی‌دهد.</li>
+  <li><b>RNA: هم اطلاعات و هم عملکرد.</b> mRNA اطلاعات را حمل می‌کند؛ بعضی RNAها (مثل rRNA و tRNA) خودشان کار انجام می‌دهند.</li>
+  <li><b>پروتئین: فقط عملکرد.</b> آنزیم، ساختار، پیام‌رسان... ولی اطلاعات را نمی‌توان از آن به DNA برگرداند.</li>
+</ul>
+
+<figure class="fig">
+<svg viewBox="0 0 740 380" width="740" role="img" aria-labelledby="dg-t">
+  <title id="dg-t">دگمای مرکزی در یوکاریوت و پروکاریوت با مکان هر مرحله: همانندسازی، رونویسی و پردازش در هسته، ترجمه در سیتوپلاسم</title>
+  <defs><marker id="dg-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <text x="370" y="18" font-size="14" font-weight="800" text-anchor="middle">یوکاریوت (مثل سلول انسان)</text>
+  <rect x="10" y="30" width="720" height="190" rx="18" class="f-surface-2 s-line" stroke-width="2"/>
+  <rect x="24" y="44" width="450" height="130" rx="50" class="f-info-soft s-info" stroke-width="2"/>
+  <text x="250" y="68" font-size="12" font-weight="700" class="t-info" text-anchor="middle">هسته</text>
+  <rect x="40" y="94" width="70" height="30" rx="8" class="f-accent"/><text x="75" y="114" font-size="14" font-weight="800" class="t-white mono" text-anchor="middle">DNA</text>
+  <path d="M60 94 C40 70 110 70 90 92" class="f-none s-hl" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="75" y="156" font-size="11" class="t-hl" text-anchor="middle">همانندسازی</text>
+  <line x1="112" y1="109" x2="175" y2="109" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="143" y="100" font-size="11" text-anchor="middle">رونویسی</text>
+  <rect x="178" y="94" width="80" height="30" rx="8" class="f-warn"/><text x="218" y="114" font-size="12" font-weight="700" class="t-ink-2" text-anchor="middle">پیش‌mRNA</text>
+  <line x1="260" y1="109" x2="320" y2="109" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="290" y="100" font-size="10.5" text-anchor="middle">کلاهک، پیرایش،</text><text x="290" y="145" font-size="10.5" text-anchor="middle">دم پلی‌A</text>
+  <rect x="322" y="94" width="80" height="30" rx="8" class="f-ok"/><text x="362" y="114" font-size="12" font-weight="700" class="t-white" text-anchor="middle">mRNA بالغ</text>
+  <line x1="404" y1="109" x2="520" y2="109" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="462" y="100" font-size="10.5" text-anchor="middle" class="t-muted">خروج از منفذ هسته</text>
+  <line x1="530" y1="109" x2="600" y2="109" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="565" y="100" font-size="11" text-anchor="middle">ترجمه</text>
+  <rect x="604" y="94" width="104" height="30" rx="8" class="f-hl"/><text x="656" y="114" font-size="13" font-weight="700" class="t-white" text-anchor="middle">پروتئین</text>
+  <text x="560" y="196" font-size="12" font-weight="700" class="t-ink-2" text-anchor="middle">سیتوپلاسم: ترجمه (ریبوزوم)</text>
+  <text x="250" y="196" font-size="12" font-weight="700" class="t-info" text-anchor="middle">هسته: همانندسازی، رونویسی، پردازش RNA</text>
+  <text x="370" y="248" font-size="14" font-weight="800" text-anchor="middle">پروکاریوت (باکتری)</text>
+  <rect x="10" y="260" width="720" height="104" rx="40" class="f-surface-2 s-line" stroke-width="2"/>
+  <text x="620" y="283" font-size="11.5" class="t-muted" style="direction:rtl">همه‌چیز در سیتوپلاسم؛ بدون هسته</text>
+  <rect x="40" y="300" width="70" height="30" rx="8" class="f-accent"/><text x="75" y="320" font-size="14" font-weight="800" class="t-white mono" text-anchor="middle">DNA</text>
+  <path d="M60 300 C40 280 110 280 90 298" class="f-none s-hl" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="75" y="350" font-size="11" class="t-hl" text-anchor="middle">همانندسازی</text>
+  <line x1="112" y1="315" x2="230" y2="315" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="172" y="306" font-size="11" text-anchor="middle">رونویسی</text>
+  <rect x="232" y="300" width="70" height="30" rx="8" class="f-ok"/><text x="267" y="320" font-size="13" font-weight="700" class="t-white" text-anchor="middle">mRNA</text>
+  <line x1="304" y1="315" x2="460" y2="315" class="s-ink-2" stroke-width="2" marker-end="url(#dg-ah)"/>
+  <text x="382" y="306" font-size="11" text-anchor="middle">ترجمه (هم‌زمان با رونویسی)</text>
+  <rect x="462" y="300" width="104" height="30" rx="8" class="f-hl"/><text x="514" y="320" font-size="13" font-weight="700" class="t-white" text-anchor="middle">پروتئین</text>
+</svg>
+<figcaption><b>شکل ۶.۱</b> — در یوکاریوت‌ها رونویسی و پردازش در هسته و ترجمه در سیتوپلاسم انجام می‌شود. در پروکاریوت‌ها هسته‌ای نیست و رونویسی و ترجمه هر دو در سیتوپلاسم و هم‌زمان رخ می‌دهند.</figcaption>
+</figure>
+
+<h3>سؤال‌های اسلاید ۹۹</h3>
+
+<details class="think">
+  <summary>سلول عصبی و سلول پوست چه تفاوتی دارند؟</summary>
+  <div><p>DNA هر دو <b>یکسان</b> است، چون هر دو از یک تخم با تقسیم ساخته شده‌اند. تفاوت در این است که <b>کدام ژن‌ها روشن (بیان) هستند</b>. سلول عصبی ژن‌هایی برای ساختن کانال‌های یونی و گیرنده‌های پیام عصبی را بیان می‌کند و سلول پوست ژن‌هایی مثل کراتین را. بنابراین RNAها و پروتئین‌های متفاوتی دارند و شکل و کارشان فرق می‌کند. این همان «کنترل» (دلیل ۳) است.</p></div>
+</details>
+
+<details class="think">
+  <summary>چرا رونویسی؟ چرا ترجمه؟</summary>
+  <div><p><b>رونویسی</b> لازم است چون پروتئین‌ها در سیتوپلاسم ساخته می‌شوند و DNA در هسته می‌ماند؛ یک نسخهٔ RNA از ژن، پیام را بیرون می‌برد (امنیت، تقویت، کنترل). <b>ترجمه</b> لازم است چون RNA با چهار حرف نوشته شده ولی پروتئین از ۲۰ نوع آمینواسید ساخته می‌شود؛ باید «زبان نوکلئوتیدی» به «زبان آمینواسیدی» برگردانده شود. اسمش ترجمه است چون زبان عوض می‌شود، ولی رونویسی هنوز همان زبان (حروف نوکلئیک) است.</p></div>
+</details>
+
+<aside class="callout exam">
+  <p>در میان‌ترم سؤال انشایی دارد: «مراحل دگمای مرکزی را که در شکل علامت زدید توضیح دهید.» پاسخ کاملش در بخش «پاسخ نمونهٔ امتحانی» همین فصل و بخش آخر فصل ۷ آمده است.</p>
+</aside>
+
+<h2 id="genes">ژن‌ها و مرورگر ژنوم</h2>
+
+<p>اسلاید ۱۰۰: <span class="term" data-en="Gene">ژن</span> ناحیه‌ای از ژنوم است که در فرایند رونویسی به RNA تبدیل می‌شود و آن RNA (اگر mRNA باشد) در ترجمه به پروتئین. نکته‌ای که اسلاید نشان می‌دهد: ژن‌ها می‌توانند روی <b>هر یک از دو رشتهٔ DNA</b> و در <b>هر جهت</b> قرار بگیرند. یعنی در یک قطعه، بعضی ژن‌ها از چپ به راست رونویسی می‌شوند (روی یک رشته) و بعضی از راست به چپ (روی رشتهٔ دیگر). در هر ژن، یک رشته الگوست.</p>
+
+<p>برای دیدن ژن‌ها روی ژنوم انسان می‌توانی از مرورگر ژنوم UCSC استفاده کنی: <a href="https://genome-euro.ucsc.edu/" target="_blank" rel="noopener" class="ltr">https://genome-euro.ucsc.edu/</a> (اسلاید ۱۰۱). هر ژن آنجا به‌صورت یک نوار با اگزون‌ها (جعبه‌ها) و اینترون‌ها (خط‌ها) و پیکان جهت رونویسی دیده می‌شود.</p>
+
+<aside class="callout pitfall">
+  <p>«ژن = پروتئین» تعریف دقیق نیست. بعضی ژن‌ها فقط به RNA (مثل tRNA و rRNA) رونویسی می‌شوند و هرگز به پروتئین ترجمه نمی‌شوند.</p>
+</aside>
+
+<h2 id="rna-chem">ساختار شیمیایی RNA و تاخوردن آن</h2>
+
+<p>اسلاید ۱۰۲ تا ۱۰۴: RNA «پیام‌رسان» است. شبیه DNA یک زنجیره از نوکلئوتیدهاست، ولی سه تفاوت دارد:</p>
+<table>
+  <thead><tr><th></th><th>DNA</th><th>RNA</th></tr></thead>
+  <tbody>
+    <tr><td>قند</td><td>دئوکسی‌ریبوز (در ۲′ فقط H)</td><td>ریبوز (در ۲′ گروه <b>OH</b>)</td></tr>
+    <tr><td>بازها</td><td>A، T، G، C</td><td>A، <b>U</b>، G، C (اوراسیل به‌جای تیمین)</td></tr>
+    <tr><td>تعداد رشته</td><td>معمولاً دورشته‌ای</td><td>معمولاً <b>تک‌رشته‌ای</b></td></tr>
+    <tr><td>پایداری</td><td>پایدار</td><td>کم‌پایدار و زودتخریب‌شونده</td></tr>
+  </tbody>
+</table>
+<p>گروه OH اضافهٔ ریبوز RNA را از نظر شیمیایی واکنش‌پذیرتر و ناپایدارتر می‌کند. اوراسیل هم مثل تیمین با A جفت می‌شود (A–U با دو پیوند هیدروژنی).</p>
+
+<p>چون RNA تک‌رشته‌ای است، بخش‌های مختلف یک مولکول می‌توانند با هم جفت‌باز بسازند و آن را تا کنند. اگر دو ناحیهٔ نزدیک مکمل معکوس هم باشند، به هم می‌چسبند و یک <span class="term" data-en="Hairpin">سنجاق‌سر</span> (ساقه و حلقه، stem-loop) می‌سازند. <b>ساقه</b> بخش جفت‌شده و <b>حلقه</b> بخش جفت‌نشده‌ای است که بین دو سر ساقه می‌ماند. این تاخوردگی‌ها به RNA شکل سه‌بعدی و گاهی عملکرد (مثل tRNA و rRNA) می‌دهند.</p>
+
+<h3>سؤال‌های اسلاید ۱۰۵</h3>
+
+<details class="think">
+  <summary>اگر مهندس شرکت داروسازی باشی و بخواهی mRNA را به‌عنوان واکسن تزریق کنی، ناپایداری RNA چه مشکلی می‌سازد؟</summary>
+  <div><p>RNA زود تخریب می‌شود (آنزیم‌های RNase همه‌جا هستند و ساختار شیمیایی‌اش هم ناپایدار است). اگر mRNA قبل از رسیدن به سلول یا قبل از ترجمه تخریب شود، واکسن اثر نمی‌کند. راه‌حل‌ها: <b>نگهداری سرد</b> (انجماد) تا کند تخریب نشود، قرار دادن mRNA در <b>نانوذره‌های چربی</b> (lipid nanoparticle) که محافظش‌اند و به سلول می‌رسانندش، و استفاده از <b>نوکلئوتیدهای اصلاح‌شدهٔ شیمیایی</b> که پایدارتر هستند و کمتر سیستم ایمنی را فعال می‌کنند. (از طرف دیگر ناپایداری یک مزیت هم است: mRNA بعد از چند روز از بدن پاک می‌شود و در ژنوم نمی‌ماند.)</p></div>
+</details>
+
+<div class="worked" data-title="اسلاید ۱۰۵: آیا در 5′-GGAUCCAAAGGAUCC-3′ سنجاق‌سر ممکن است؟">
+  <p class="problem">توالی <code class="seq">5′-GGAUCCAAAGGAUCC-3′</code> را بررسی کن: آیا سنجاق‌سر ممکن است؟ ساقه و حلقه کجاست؟</p>
+  <ol class="steps">
+    <li>توالی را شماره‌گذاری کن: G1 G2 A3 U4 C5 C6 A7 A8 A9 G10 G11 A12 U13 C14 C15 (۱۵ حرف).</li>
+    <li>دنبال دو تکه بگرد که مکمل معکوس هم باشند. تکهٔ <code class="seq">GGAUCC</code> (جایگاه ۱ تا ۶) را بردار: مکملش <code class="seq">CCUAGG</code> است و برعکس آن <code class="seq">GGAUCC</code>. یعنی این تکه مکمل معکوسِ خودش است (پالیندروم).</li>
+    <li>همین تکه دوباره در جایگاه ۱۰ تا ۱۵ آمده است. پس جایگاه‌های ۱ تا ۶ می‌توانند با ۱۰ تا ۱۵ جفت شوند.</li>
+    <li>جفت‌شدن (اولی با آخری و ...): G1–C15، G2–C14، A3–U13، U4–A12، C5–G11، C6–G10. هر شش جفت معتبر است (G–C و A–U).</li>
+    <li>سه حرف وسط <code class="seq">AAA</code> (جایگاه ۷ تا ۹) جفت نمی‌شوند و <b>حلقه</b> را می‌سازند.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> بله. ساقه ۶ جفت‌باز (GGAUCC با GGAUCC) و حلقه <code class="seq">AAA</code> است. حلقهٔ سه‌تایی بسیار کوتاه است، ولی ساقهٔ بلند و پرGC آن را پایدار می‌کند.</p>
+</div>
+
+<figure class="fig compact">
+<svg viewBox="0 0 520 210" width="520" role="img" aria-labelledby="hp-t">
+  <title id="hp-t">سنجاق‌سر RNA: ساقهٔ شش جفت‌بازی GGAUCC با GGAUCC و حلقهٔ AAA</title>
+  <g class="s-ink-2 f-none" stroke-width="2.5">
+    <line x1="100" y1="70" x2="300" y2="70"/><line x1="100" y1="140" x2="300" y2="140"/>
+    <path d="M300 70 L345 70 C385 70 385 100 385 100 C385 100 385 140 345 140 L300 140"/>
+  </g>
+  <g class="s-muted" stroke-width="1.8" stroke-dasharray="3 3">
+    <line x1="100" y1="84" x2="100" y2="126"/><line x1="140" y1="84" x2="140" y2="126"/><line x1="180" y1="84" x2="180" y2="126"/><line x1="220" y1="84" x2="220" y2="126"/><line x1="260" y1="84" x2="260" y2="126"/><line x1="300" y1="84" x2="300" y2="126"/>
+  </g>
+  <g font-size="13" font-weight="800" class="mono t-white" text-anchor="middle">
+    <circle cx="100" cy="70" r="14" class="f-g"/><text x="100" y="75">G</text>
+    <circle cx="140" cy="70" r="14" class="f-g"/><text x="140" y="75">G</text>
+    <circle cx="180" cy="70" r="14" class="f-a"/><text x="180" y="75">A</text>
+    <circle cx="220" cy="70" r="14" class="f-u"/><text x="220" y="75">U</text>
+    <circle cx="260" cy="70" r="14" class="f-c"/><text x="260" y="75">C</text>
+    <circle cx="300" cy="70" r="14" class="f-c"/><text x="300" y="75">C</text>
+    <circle cx="345" cy="70" r="14" class="f-a"/><text x="345" y="75">A</text>
+    <circle cx="385" cy="105" r="14" class="f-a"/><text x="385" y="110">A</text>
+    <circle cx="345" cy="140" r="14" class="f-a"/><text x="345" y="145">A</text>
+    <circle cx="300" cy="140" r="14" class="f-g"/><text x="300" y="145">G</text>
+    <circle cx="260" cy="140" r="14" class="f-g"/><text x="260" y="145">G</text>
+    <circle cx="220" cy="140" r="14" class="f-a"/><text x="220" y="145">A</text>
+    <circle cx="180" cy="140" r="14" class="f-u"/><text x="180" y="145">U</text>
+    <circle cx="140" cy="140" r="14" class="f-c"/><text x="140" y="145">C</text>
+    <circle cx="100" cy="140" r="14" class="f-c"/><text x="100" y="145">C</text>
+  </g>
+  <text x="70" y="75" font-size="13" font-weight="800" class="mono" text-anchor="end">5′</text>
+  <text x="70" y="145" font-size="13" font-weight="800" class="mono" text-anchor="end">3′</text>
+  <text x="200" y="35" font-size="12.5" class="t-ink-2" text-anchor="middle">ساقه: ۶ جفت‌باز (G1–C15 ... C6–G10)</text>
+  <text x="440" y="108" font-size="12.5" class="t-ink-2" text-anchor="start">حلقه: AAA</text>
+  <text x="200" y="185" font-size="11.5" class="t-muted" text-anchor="middle">خط‌چین‌ها جفت‌شدن بازها هستند</text>
+</svg>
+<figcaption><b>شکل ۶.۲</b> — سنجاق‌سر توالی اسلاید ۱۰۵. ردیف بالا جایگاه‌های ۱ تا ۶ و ردیف پایین جایگاه‌های ۱۵ تا ۱۰ است.</figcaption>
+</figure>
+
+<h3>انواع RNA</h3>
+<p>اسلاید ۱۰۶ چند نوع RNA را معرفی می‌کند:</p>
+<table>
+  <thead><tr><th>نوع</th><th>کار</th></tr></thead>
+  <tbody>
+    <tr><td><b>mRNA</b> (پیام‌رسان)</td><td>کد ساخت پروتئین را حمل می‌کند.</td></tr>
+    <tr><td><b>rRNA</b> (ریبوزومی)</td><td>هستهٔ ریبوزوم است و خودش ساخت پروتئین را کاتالیز می‌کند.</td></tr>
+    <tr><td><b>miRNA</b> (میکرو RNA)</td><td>بیان ژن را تنظیم می‌کند.</td></tr>
+    <tr><td><b>tRNA</b> (ناقل)</td><td>آداپتوری بین mRNA و آمینواسیدها؛ هر tRNA یک آمینواسید حمل می‌کند.</td></tr>
+    <tr><td>سایر RNAهای کوچک</td><td>مثلاً در پیرایش (splicing) و نگهداری تلومر نقش دارند.</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-id="ch06:s4">
+  <p class="q">کدام نوع RNA به‌عنوان آداپتور بین کدون mRNA و آمینواسید عمل می‌کند؟</p>
+  <ol class="opts"><li>mRNA</li><li>rRNA</li><li>miRNA</li><li data-correct>tRNA</li></ol>
+  <div class="explain">tRNA با آنتی‌کدونش به کدون mRNA جفت می‌شود و آمینواسید مربوط را می‌آورد. rRNA بخشی از ریبوزوم است و miRNA بیان ژن را تنظیم می‌کند.</div>
+</div>
+
+<h2 id="transcription">رونویسی: ساختن RNA از روی DNA</h2>
+
+<p>اسلاید ۱۰۷ تا ۱۰۹: <span class="term" data-en="Transcription">رونویسی</span> یعنی ساختن RNA از روی یک ژن. آنزیم مسئول <span class="term" data-en="RNA polymerase">RNA پلیمراز</span> است.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 270" width="760" role="img" aria-labelledby="tx-t">
+  <title id="tx-t">حباب رونویسی: RNA پلیمراز DNA را باز می‌کند، از رشتهٔ الگو یک RNA در جهت ۵′ به ۳′ می‌سازد و رشتهٔ رمزگذار هم‌توالی RNA است</title>
+  <defs><marker id="tx-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker></defs>
+  <path d="M60 80 H215 C245 80 250 52 285 52 H355 C390 52 395 80 425 80 H700" class="f-none s-info" stroke-width="5"/>
+  <path d="M60 120 H215 C245 120 250 148 285 148 H355 C390 148 395 120 425 120 H700" class="f-none s-warn" stroke-width="5"/>
+  <text x="46" y="84" font-size="12" font-weight="800" class="mono" text-anchor="end">5′</text>
+  <text x="714" y="84" font-size="12" font-weight="800" class="mono">3′</text>
+  <text x="46" y="124" font-size="12" font-weight="800" class="mono" text-anchor="end">3′</text>
+  <text x="714" y="124" font-size="12" font-weight="800" class="mono">5′</text>
+  <text x="140" y="68" font-size="12" class="t-info" text-anchor="middle" font-weight="700">رشتهٔ رمزگذار (coding)</text>
+  <text x="140" y="146" font-size="12" class="t-warn" text-anchor="middle" font-weight="700">رشتهٔ الگو (template)</text>
+  <ellipse cx="320" cy="100" rx="82" ry="62" class="f-accent-soft s-accent" stroke-width="2.5" opacity=".7"/>
+  <text x="320" y="105" font-size="13" font-weight="800" class="t-accent" text-anchor="middle">RNA پلیمراز</text>
+  <path d="M345 134 C300 190 230 205 70 205" class="f-none s-ok" stroke-width="5"/>
+  <text x="56" y="210" font-size="12" font-weight="800" class="mono" text-anchor="end">5′</text>
+  <text x="352" y="146" font-size="11" font-weight="800" class="mono t-ok">3′</text>
+  <text x="200" y="232" font-size="12" font-weight="700" class="t-ok" text-anchor="middle">RNA در حال ساخت (۵′ ← ۳′)</text>
+  <line x1="470" y1="40" x2="560" y2="40" class="s-accent anim-flow" stroke-width="3" marker-end="url(#tx-ah)"/>
+  <text x="515" y="30" font-size="12" font-weight="700" class="t-accent" text-anchor="middle">جهت حرکت پلیمراز</text>
+  <line x1="520" y1="200" x2="400" y2="152" class="s-muted" stroke-width="1.6" marker-end="url(#tx-ah)"/>
+  <text x="640" y="196" font-size="12" class="t-ink-2" text-anchor="middle">ATP، UTP، GTP، CTP</text>
+  <text x="640" y="214" font-size="11" class="t-muted" text-anchor="middle">(ریبونوکلئوزید تری‌فسفات)</text>
+</svg>
+<figcaption><b>شکل ۶.۳</b> — حباب رونویسی. RNA مکمل رشتهٔ الگوست، پس توالی‌اش همان رشتهٔ رمزگذار است (با U به‌جای T). پلیمراز به راست می‌رود و RNA از انتهای ۵′ به بیرون رها می‌شود.</figcaption>
+</figure>
+
+<ol class="steps">
+  <li>RNA پلیمراز به یک ژن می‌چسبد و مارپیچ DNA را در یک ناحیهٔ کوچک باز می‌کند (حباب رونویسی).</li>
+  <li>فقط <b>یکی از دو رشته</b>، رشتهٔ الگو، خوانده می‌شود.</li>
+  <li>پلیمراز ریبونوکلئوتیدهای آزاد (از جنس <b>ریبونوکلئوزید تری‌فسفات</b>: ATP، UTP، GTP، CTP) را مکمل الگو می‌چیند و به انتهای ۳′ رشتهٔ RNA اضافه می‌کند، پس RNA در جهت <b>۵′ به ۳′</b> ساخته می‌شود.</li>
+  <li>برخلاف DNA پلیمراز، RNA پلیمراز <b>نیاز به پرایمر ندارد</b>؛ خودش می‌تواند رشته را از صفر شروع کند.</li>
+  <li>RNA از DNA جدا می‌شود و DNA پشت سر پلیمراز دوباره بسته می‌شود. DNA دست‌نخورده می‌ماند.</li>
+</ol>
+
+<h3>رشتهٔ الگو و رشتهٔ رمزگذار</h3>
+<p>از دو رشتهٔ DNA، رشتهٔ <b>الگو</b> به پلیمراز خوانده می‌شود و RNA مکمل آن است. رشتهٔ دیگر که توالی‌اش با RNA یکی است (به‌جز T که در RNA U می‌شود) <span class="term" data-en="Coding strand">رشتهٔ رمزگذار</span> نام دارد؛ چون توالی کدون‌ها را از روی آن می‌خوانیم.</p>
+
+<div class="worked" data-title="تمرین اسلاید ۱۱۹ (الف): mRNA و رشتهٔ الگو">
+  <p class="problem">اگر رشتهٔ رمزگذار <code class="seq">5′-ATGCCA-3′</code> باشد، mRNA چیست؟ رشتهٔ الگو چیست؟</p>
+  <ol class="steps">
+    <li>mRNA همان رشتهٔ رمزگذار با T→U است: <code class="seq">5′-AUGCCA-3′</code>.</li>
+    <li>رشتهٔ الگو مکمل معکوس رشتهٔ رمزگذار است. مکمل: <code class="seq">TACGGT</code>؛ این رشته ناهمسوست پس به‌صورت <code class="seq">3′-TACGGT-5′</code> می‌نویسیم.</li>
+    <li>اگر آن را از ۵′ به ۳′ بنویسی، برعکسش می‌کنی: <code class="seq">5′-TGGCAT-3′</code>.</li>
+    <li>چک: mRNA باید مکمل الگو باشد. الگوی <code class="seq">3′-TACGGT-5′</code> زیر <code class="seq">5′-AUGCCA-3′</code> درست جفت می‌شود: T–A، A–U، C–G، G–C، G–C، T–A.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> mRNA = <code class="seq">5′-AUGCCA-3′</code> و رشتهٔ الگو = <code class="seq">3′-TACGGT-5′</code> (یعنی <code class="seq">5′-TGGCAT-3′</code>).</p>
+</div>
+
+<aside class="callout pitfall">
+  <p>خطا: «mRNA از رشتهٔ رمزگذار ساخته می‌شود.» نه؛ از روی رشتهٔ <b>الگو</b> ساخته می‌شود. ولی چون الگو مکمل رمزگذار است، نتیجه توالی رمزگذار را تکرار می‌کند. به همین دلیل در بانک‌های ژنی توالی ژن را همان رشتهٔ رمزگذار می‌نویسند.</p>
+</aside>
+
+<div class="fill" data-answer="UUGACA|5UUGACA3" data-id="ch06:f-rna2">
+  <p class="q">رشتهٔ رمزگذار یک ژن <code class="seq">5′-TTGACA-3′</code> است. mRNA ساخته‌شده از آن (از ۵′ به ۳′) چیست؟ <input class="blank" type="text"></p>
+  <div class="explain">mRNA همان رشتهٔ رمزگذار با U به‌جای T است: <code class="seq">5′-UUGACA-3′</code>. رشتهٔ الگو <code class="seq">3′-AACUGT-5′</code> نیست؛ الگو DNA است و <code class="seq">3′-AACTGT-5′</code> می‌شود.</div>
+</div>
+
+<h3>پروموتر و ترمیناتور</h3>
+<p>پلیمراز از کجا بداند رونویسی را از کجا شروع و کجا تمام کند؟ اسلاید ۱۱۰ «موتیف‌های DNA» را نشان می‌دهد: توالی‌های کوتاه و مشخصی که مثل علامت راهنما عمل می‌کنند.</p>
+<ul>
+  <li><span class="term" data-en="Promoter">پروموتر</span>: سیگنال <b>شروع</b>. پلیمراز (در باکتری با کمک عامل سیگما) آن را می‌شناسد و می‌چسبد.</li>
+  <li><span class="term" data-en="Terminator">ترمیناتور</span>: سیگنال <b>پایان</b>. وقتی پلیمراز به آن برسد رونویسی را متوقف می‌کند و RNA رها می‌شود.</li>
+</ul>
+
+<figure class="fig">
+<svg viewBox="0 0 740 190" width="740" role="img" aria-labelledby="pm-t">
+  <title id="pm-t">ژن باکتریایی: پروموتر با جعبه‌های TTGACA در ناحیهٔ منفی ۳۵ و TATAAT در منفی ۱۰، سپس ناحیهٔ رمزگذار و ترمیناتور</title>
+  <defs><marker id="pm-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-accent"/></marker></defs>
+  <line x1="30" y1="100" x2="710" y2="100" class="s-ink-2" stroke-width="3"/>
+  <rect x="70" y="82" width="90" height="36" rx="6" class="f-hl"/><text x="115" y="105" font-size="14" font-weight="800" class="t-white mono" text-anchor="middle">TTGACA</text>
+  <rect x="210" y="82" width="90" height="36" rx="6" class="f-hl"/><text x="255" y="105" font-size="14" font-weight="800" class="t-white mono" text-anchor="middle">TATAAT</text>
+  <text x="115" y="140" font-size="12" class="mono t-hl" text-anchor="middle">−35</text>
+  <text x="255" y="140" font-size="12" class="mono t-hl" text-anchor="middle">−10</text>
+  <text x="185" y="165" font-size="13" font-weight="700" class="t-hl" text-anchor="middle">پروموتر (شروع)</text>
+  <line x1="330" y1="82" x2="330" y2="50" class="s-accent" stroke-width="2"/>
+  <line x1="330" y1="50" x2="400" y2="50" class="s-accent" stroke-width="2" marker-end="url(#pm-ah)"/>
+  <text x="330" y="40" font-size="11.5" class="t-accent mono" text-anchor="middle">+1 (شروع RNA)</text>
+  <rect x="350" y="86" width="230" height="28" rx="6" class="f-info-soft s-info" stroke-width="1.5"/>
+  <text x="465" y="105" font-size="12.5" class="t-info" text-anchor="middle" font-weight="700">ناحیهٔ رمزگذار (ژن)</text>
+  <rect x="610" y="82" width="70" height="36" rx="6" class="f-bad"/><text x="645" y="105" font-size="12.5" font-weight="800" class="t-white" text-anchor="middle">ترمیناتور</text>
+  <text x="645" y="140" font-size="13" font-weight="700" class="t-bad" text-anchor="middle">پایان</text>
+</svg>
+<figcaption><b>شکل ۶.۴</b> — پروموتر باکتریایی (اسلاید ۱۱۰). دو جعبهٔ کلیدی TTGACA در جایگاه −۳۵ و TATAAT در −۱۰ نسبت به نقطهٔ شروع رونویسی (+۱) قرار دارند. رونویسی در پایان از ترمیناتور می‌گذرد.</figcaption>
+</figure>
+
+<aside class="callout analogy">
+  <p>پروموتر مثل <b>نقطهٔ ورود <code>main()</code></b> و ترمیناتور مثل <b>return</b> است. پلیمراز بدون این علامت‌ها نمی‌داند از کجا شروع کند و کجا بایستد.</p>
+</aside>
+
+<p><b>از یکی، بسیار (اسلاید ۱۱۱):</b> یک ژن را هم‌زمان چندین RNA پلیمراز رونویسی می‌کنند، پشت سر هم مثل ماشین‌ها در یک جاده. هر پلیمراز یک RNA می‌سازد و RNAهای اولی بلندتر شده‌اند. این همان «تقویت» (دلیل ۲) است.</p>
+
+<h2 id="processing">پردازش RNA در یوکاریوت‌ها</h2>
+
+<p>در باکتری‌ها mRNA بلافاصله قابل استفاده است. در یوکاریوت‌ها، رونوشت اولیه (<span class="term" data-en="Pre-mRNA">پیش‌mRNA</span>) باید در هسته سه تغییر بگیرد تا mRNA بالغ شود (اسلاید ۱۱۲ تا ۱۱۴):</p>
+<ol class="steps">
+  <li><span class="term" data-en="5′ cap">کلاهک ۵′</span>: یک G متیله (اصلاح‌شده) به انتهای ۵′ اضافه می‌شود. از mRNA در برابر تخریب محافظت می‌کند و در شناسایی توسط ریبوزوم و خروج از هسته نقش دارد.</li>
+  <li><span class="term" data-en="Splicing">پیرایش (splicing)</span>: اینترون‌ها حذف و اگزون‌ها به هم وصل می‌شوند (توضیح در زیر).</li>
+  <li><span class="term" data-en="Poly-A tail">دم پلی‌A</span>: در انتهای ۳′، زنجیره‌ای از صدها A (حدود ۲۰۰) اضافه می‌شود. این هم mRNA را پایدار می‌کند و علامت شناسایی برای خروج و ترجمه است.</li>
+</ol>
+
+<h3>ژن یوکاریوتی در برابر ژن باکتریایی (اسلاید ۱۱۳)</h3>
+<div class="compare">
+  <div><h4>باکتری</h4><p>ناحیهٔ رمزگذار <b>پیوسته</b> است؛ همهٔ توالی ژن در mRNA هم دیده می‌شود. RNA بدون پیرایش مستقیم ترجمه می‌شود.</p></div>
+  <div><h4>یوکاریوت</h4><p>ژن از <span class="term" data-en="Exon">اگزون</span>‌ها (بخش‌هایی که در mRNA نهایی می‌مانند) و <span class="term" data-en="Intron">اینترون</span>‌ها (بخش‌های میانی که حذف می‌شوند) ساخته شده است. اینترون‌ها معمولاً بلندتر از اگزون‌ها هستند.</p></div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 740 330" width="740" role="img" aria-labelledby="sp-t">
+  <title id="sp-t">پیش‌mRNA یوکاریوتی با کلاهک، اگزون‌ها و اینترون‌ها با GU در ابتدا و AG در انتها و دم پلی‌A، و mRNA بالغ پس از حذف اینترون‌ها</title>
+  <text x="20" y="22" font-size="13" font-weight="800">۱. پیش‌mRNA (رونوشت اولیه)</text>
+  <circle cx="40" cy="70" r="11" class="f-hl"/><text x="40" y="74" font-size="10" class="t-white" text-anchor="middle" font-weight="800">G</text>
+  <text x="40" y="100" font-size="10.5" class="t-hl" text-anchor="middle">کلاهک ۵′</text>
+  <rect x="55" y="55" width="100" height="30" rx="5" class="f-info"/><text x="105" y="75" font-size="13" font-weight="800" class="t-white" text-anchor="middle">اگزون ۱</text>
+  <line x1="155" y1="70" x2="285" y2="70" class="s-muted" stroke-width="3"/>
+  <text x="170" y="52" font-size="12" font-weight="800" class="mono t-bad">GU</text>
+  <text x="258" y="52" font-size="12" font-weight="800" class="mono t-bad">AG</text>
+  <text x="220" y="100" font-size="11.5" class="t-muted" text-anchor="middle">اینترون ۱</text>
+  <rect x="285" y="55" width="100" height="30" rx="5" class="f-ok"/><text x="335" y="75" font-size="13" font-weight="800" class="t-white" text-anchor="middle">اگزون ۲</text>
+  <line x1="385" y1="70" x2="515" y2="70" class="s-muted" stroke-width="3"/>
+  <text x="400" y="52" font-size="12" font-weight="800" class="mono t-bad">GU</text>
+  <text x="488" y="52" font-size="12" font-weight="800" class="mono t-bad">AG</text>
+  <text x="450" y="100" font-size="11.5" class="t-muted" text-anchor="middle">اینترون ۲</text>
+  <rect x="515" y="55" width="100" height="30" rx="5" class="f-warn"/><text x="565" y="75" font-size="13" font-weight="800" class="t-ink-2" text-anchor="middle">اگزون ۳</text>
+  <text x="640" y="75" font-size="13" font-weight="800" class="mono t-accent">AAAAAA</text>
+  <text x="660" y="100" font-size="10.5" class="t-accent" text-anchor="middle">دم پلی‌A ۳′</text>
+  <text x="20" y="150" font-size="13" font-weight="800">۲. اسپلایسوزوم اینترون‌ها را به‌صورت حلقه (لاریات) بیرون می‌اندازد</text>
+  <path d="M220 130 C190 108 250 108 220 128" class="f-none s-bad anim-pulse" stroke-width="2.5"/>
+  <path d="M450 130 C420 108 480 108 450 128" class="f-none s-bad anim-pulse" stroke-width="2.5"/>
+  <text x="20" y="215" font-size="13" font-weight="800">۳. mRNA بالغ (آمادهٔ خروج از هسته)</text>
+  <circle cx="40" cy="260" r="11" class="f-hl"/><text x="40" y="264" font-size="10" class="t-white" text-anchor="middle" font-weight="800">G</text>
+  <rect x="55" y="245" width="100" height="30" rx="5" class="f-info"/><text x="105" y="265" font-size="13" font-weight="800" class="t-white" text-anchor="middle">اگزون ۱</text>
+  <rect x="155" y="245" width="100" height="30" rx="5" class="f-ok"/><text x="205" y="265" font-size="13" font-weight="800" class="t-white" text-anchor="middle">اگزون ۲</text>
+  <rect x="255" y="245" width="100" height="30" rx="5" class="f-warn"/><text x="305" y="265" font-size="13" font-weight="800" class="t-ink-2" text-anchor="middle">اگزون ۳</text>
+  <text x="370" y="265" font-size="13" font-weight="800" class="mono t-accent">AAAAAA</text>
+  <text x="470" y="262" font-size="12" class="t-ink-2" style="direction:rtl">اگزون‌ها پشت سر هم، بدون اینترون</text>
+  <text x="470" y="290" font-size="12" class="t-muted" style="direction:rtl">آمادهٔ عبور از منفذ هسته</text>
+  <text x="20" y="318" font-size="11.5" class="t-muted">اینترون با GU شروع و با AG تمام می‌شود (اسلاید ۱۱۴)</text>
+</svg>
+<figcaption><b>شکل ۶.۵</b> — از پیش‌mRNA تا mRNA بالغ. کلاهک و دم پلی‌A اضافه می‌شوند و اینترون‌ها حذف و اگزون‌ها به هم وصل می‌شوند.</figcaption>
+</figure>
+
+<h2 id="splicing">پیرایش RNA: کی و چطور؟</h2>
+
+<aside class="callout exam">
+  <p>این بخش سؤال انشایی میان‌ترم است: «RNA splicing کی و چطور اتفاق می‌افتد؟» پاسخ کامل را در قالب «کی، چطور، نتیجه» حفظ کن.</p>
+</aside>
+
+<div class="essay" data-id="ch06:e-splice">
+  <p class="q">پیرایش RNA (RNA splicing) چه وقت و چگونه اتفاق می‌افتد؟</p>
+  <div class="answer">
+    <p><b>کی و کجا:</b> فقط در یوکاریوت‌ها، در <b>هسته</b>، هم‌زمان با رونویسی یا بلافاصله بعد از آن و <b>پیش از خروج</b> mRNA به سیتوپلاسم. باکتری‌ها اینترون ندارند و پیرایش ندارند.</p>
+    <p><b>چطور:</b> پیش‌mRNA از اگزون‌ها و اینترون‌ها ساخته شده است. هر اینترون با توالی <code class="seq">GU</code> در انتهای ۵′ خودش شروع و با <code class="seq">AG</code> در انتهای ۳′ خودش تمام می‌شود. یک ماشین بزرگ RNA–پروتئینی به نام <span class="term" data-en="Spliceosome">اسپلایسوزوم</span> این توالی‌ها را (و یک جایگاه شاخهٔ A داخل اینترون) تشخیص می‌دهد، اینترون را می‌برد و به‌صورت یک حلقه (لاریات) بیرون می‌اندازد، و اگزون‌های دو طرف را به هم می‌چسباند.</p>
+    <p><b>نتیجه:</b> mRNA بالغ و پیوسته که فقط اگزون دارد. این mRNA با کلاهک ۵′ و دم پلی‌A از منفذ هسته خارج و در سیتوپلاسم ترجمه می‌شود. با <b>پیرایش متناوب</b> از یک ژن می‌توان چند mRNA و چند پروتئین ساخت.</p>
+    <ul class="points">
+      <li>فقط یوکاریوت، در هسته، قبل از خروج mRNA</li>
+      <li>اینترون با GU شروع و با AG تمام می‌شود</li>
+      <li>اسپلایسوزوم اینترون را حذف (لاریات) و اگزون‌ها را وصل می‌کند</li>
+      <li>نتیجه: mRNA بالغ فقط با اگزون‌ها</li>
+      <li>پیرایش متناوب: یک ژن، چند mRNA و چند پروتئین</li>
+    </ul>
+  </div>
+</div>
+
+<div data-widget="splicing"></div>
+
+<details class="think">
+  <summary>چرا سلول سیستمی پیچیده مثل اینترون و پیرایش نگه داشته است؟</summary>
+  <div><p>یک دلیل مهم، <b>پیرایش متناوب</b> است: با ترکیب‌های مختلف اگزون‌ها از یک ژن چند پروتئین ساخته می‌شود. پس تعداد پروتئین‌های ممکن خیلی بیشتر از تعداد ژن‌هاست و ژنوم «کوچک» می‌ماند. (دلایل دیگر مثل تسهیل بازآرایی بخش‌های ژن در تکامل هم ذکر می‌شود.)</p></div>
+</details>
+
+<h3>ژن فاکتور هشت (اسلاید ۱۱۶)</h3>
+<p>ژن <b>فاکتور VIII</b> که پروتئین انعقاد خون می‌سازد، حدود <b>۲۶ اگزون</b> دارد که روی بیش از <b>۲۰۰٬۰۰۰ جفت نوکلئوتید</b> پخش شده‌اند. بیشتر این طول اینترون است. جهش در این ژن (مثلاً از بین رفتن یا خراب شدن یک اگزون یا جایگاه پیرایش) باعث بیماری <b>هموفیلی A</b> می‌شود، چون خون درست لخته نمی‌شود. این مثال نشان می‌دهد ژن‌های یوکاریوتی ساختاری قطعه‌قطعه و بلند دارند.</p>
+
+<h3>پیرایش متناوب (اسلاید ۱۱۵ و ۱۱۷)</h3>
+<p>همهٔ اگزون‌ها همیشه در mRNA نمی‌مانند. در <span class="term" data-en="Alternative splicing">پیرایش متناوب</span> سلول بعضی اگزون‌ها را هم‌راه اینترون‌ها حذف می‌کند و هر بار یک ترکیب متفاوت می‌سازد. نتیجه: <b>یک ژن، چند mRNA، چند پروتئین</b>.</p>
+<p>مثال اسلاید: ژن <b>α-تروپومیوزین</b> در ماهیچهٔ مخطط، ماهیچهٔ صاف، فیبروبلاست، مغز و ... mRNAهای متفاوت می‌سازد، چون هر بافت اگزون‌های متفاوتی نگه می‌دارد. پس یک ژن در بافت‌های مختلف پروتئین‌های هم‌خانواده ولی متفاوت می‌سازد.</p>
+
+<div class="worked" data-title="تمرین اسلاید ۱۱۹ (ب): شمارش mRNAها در پیرایش متناوب">
+  <p class="problem">یک ژن ۴ اگزون دارد. اگزون اول و آخر همیشه می‌مانند و اگزون‌های ۲ و ۳ هر کدام ممکن است حذف شوند. حداکثر چند mRNA متفاوت ممکن است؟</p>
+  <ol class="steps">
+    <li>اگزون‌های ۱ و ۴ ثابت‌اند (فقط یک حالت).</li>
+    <li>اگزون ۲ دو حالت دارد (می‌ماند یا حذف می‌شود) و اگزون ۳ هم دو حالت.</li>
+    <li>حالت‌ها مستقل‌اند، پس ۲ × ۲ = ۲² = <b>۴</b>.</li>
+    <li>فهرست: ۱-۲-۳-۴، ۱-۲-۴، ۱-۳-۴ و ۱-۴.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> حداکثر ۴ mRNA متفاوت. (اگر ترتیب اگزون‌ها ثابت باشد و k اگزون اختیاری داشته باشیم، تعداد برابر ۲ᵏ است.)</p>
+</div>
+
+<div class="quiz" data-id="ch06:s6">
+  <p class="q">ژنی ۶ اگزون دارد؛ اگزون‌های اول و آخر ثابت‌اند و بقیه اختیاری. حداکثر چند mRNA متفاوت می‌تواند بسازد؟</p>
+  <ol class="opts"><li>۴</li><li>۸</li><li data-correct>۱۶</li><li>۳۲</li></ol>
+  <div class="explain">چهار اگزون اختیاری، هرکدام دو حالت: ۲⁴ = ۱۶. اگر پنج اگزون اختیاری بود ۳۲ می‌شد.</div>
+</div>
+
+<h2 id="export">کنترل گذرنامه: خروج mRNA از هسته</h2>
+
+<p>اسلاید ۱۱۸ این بخش را «Passport Control» می‌نامد. mRNA بالغ برای رفتن به سیتوپلاسم باید از <span class="term" data-en="Nuclear pore complex">کمپلکس منفذ هسته</span> بگذرد. سلول فقط mRNAهایی را بیرون می‌فرستد که درست پردازش شده‌اند. پروتئین‌هایی که به کلاهک ۵′ (پروتئین متصل‌شونده به کلاهک) و دم پلی‌A (پروتئین متصل‌شونده به پلی‌A) می‌چسبند مثل «مهر پاسپورت» هستند؛ RNAهایی که کلاهک یا دم یا پیرایش درست ندارند مجوز خروج نمی‌گیرند و در هسته تخریب می‌شوند (اسلاید ۱۲۱).</p>
+
+<aside class="callout analogy">
+  <p>مثل یک <b>validation قبل از deploy</b>: خروجی فقط وقتی به محیط production (سیتوپلاسم) می‌رود که همهٔ بررسی‌ها (کلاهک، پیرایش، دم) پاس شده باشد.</p>
+</aside>
+
+<h2 id="stages">مراحل دگمای مرکزی: پاسخ نمونهٔ امتحانی</h2>
+
+<div class="essay" data-id="ch06:e-dogma">
+  <p class="q">مراحل مختلف دگمای مرکزی را که در شکل (سلول یوکاریوتی و پروکاریوتی) علامت زدید توضیح دهید.</p>
+  <div class="answer">
+    <p><b>۱. همانندسازی (DNA ← DNA):</b> قبل از تقسیم سلول در فاز S. در یوکاریوت در هسته و در پروکاریوت در سیتوپلاسم (روی DNA حلقوی). هلیکاز DNA را باز می‌کند و پلیمراز از روی هر رشته رشتهٔ مکمل می‌سازد؛ نتیجه دو DNA نیمه‌حفاظتی است.</p>
+    <p><b>۲. رونویسی (DNA ← RNA):</b> RNA پلیمراز از روی رشتهٔ الگوی یک ژن، mRNA می‌سازد. در یوکاریوت در هسته و در پروکاریوت در سیتوپلاسم.</p>
+    <p><b>۳. پردازش RNA:</b> فقط در یوکاریوت و در هسته: کلاهک ۵′، دم پلی‌A و پیرایش. سپس mRNA بالغ از منفذ هسته خارج می‌شود. پروکاریوت‌ها پردازش ندارند.</p>
+    <p><b>۴. ترجمه (RNA ← پروتئین):</b> ریبوزوم روی mRNA کدون‌ها را می‌خواند و پروتئین می‌سازد. در یوکاریوت در سیتوپلاسم (ریبوزوم‌های آزاد یا روی شبکهٔ آندوپلاسمی زبر) و در پروکاریوت در سیتوپلاسم، هم‌زمان با رونویسی.</p>
+    <ul class="points">
+      <li>همانندسازی: هسته (یوکاریوت)، سیتوپلاسم (پروکاریوت)</li>
+      <li>رونویسی: هسته (یوکاریوت)، سیتوپلاسم (پروکاریوت)</li>
+      <li>پردازش (کلاهک، پیرایش، پلی‌A): فقط هسته یوکاریوت</li>
+      <li>ترجمه: سیتوپلاسم هر دو؛ در پروکاریوت هم‌زمان با رونویسی</li>
+    </ul>
+  </div>
+</div>
+
+<div data-widget="transcribe-translate" data-seq="ATGCCATTGTAA"></div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>DNA مثل هارددیسک فقط اطلاعات دارد. RNA واسطه است برای <b>امنیت، تقویت و کنترل</b>.</li>
+    <li>دگمای مرکزی: DNA (فقط اطلاعات) ← RNA (اطلاعات و عملکرد) ← پروتئین (فقط عملکرد).</li>
+    <li>سلول‌های مختلف DNA یکسان ولی ژن‌های بیان‌شدهٔ متفاوت دارند.</li>
+    <li>RNA: ریبوز (۲′-OH)، اوراسیل، معمولاً تک‌رشته‌ای، کم‌پایدار، سنجاق‌سر می‌سازد. انواع: mRNA، rRNA، tRNA، miRNA و RNAهای کوچک.</li>
+    <li>رونویسی: RNA پلیمراز بدون پرایمر، از رشتهٔ الگو، ۵′←۳′. mRNA هم‌توالی رشتهٔ رمزگذار است با U.</li>
+    <li>پروموتر شروع و ترمیناتور پایان را تعیین می‌کند (باکتری: TTGACA در −۳۵ و TATAAT در −۱۰).</li>
+    <li>پردازش یوکاریوتی: کلاهک ۵′، پیرایش (اینترون از GU تا AG)، دم پلی‌A.</li>
+    <li>پیرایش متناوب: یک ژن، چند mRNA. با k اگزون اختیاری تا ۲ᵏ.</li>
+    <li>فقط mRNA درست پردازش‌شده از منفذ هسته عبور می‌کند.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

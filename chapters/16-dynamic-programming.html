@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>هم‌ترازی با برنامه‌نویسی پویا · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="هم‌ترازی توالی، امتیازدهی، نیدلمن–ونش (سراسری)، اسمیت–واترمن (محلی)، تمرین‌های حل‌شده و هزینهٔ O(mn).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch16">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۲ (هم‌ترازی)، اسلایدهای ۹ تا ۲۱" data-motif="ATGCTAGCTATGCTAGCTAGCTATG">
+  <h1>هم‌ترازی با برنامه‌نویسی پویا</h1>
+  <p class="lead">دو رشتهٔ ATGCT و AGCT چقدر شبیه‌اند؟ چشمی می‌بینی که یک T وسط جا مانده است. ولی کامپیوتر چطور این را با اطمینان پیدا می‌کند، آن هم برای رشته‌هایی با میلیون‌ها حرف؟ جواب همان برنامه‌نویسی پویایی است که در درس الگوریتم یاد گرفته‌ای.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>هم‌ترازی را با امتیاز تطبیق، ناهمخوانی و شکاف <b>تعریف کنی</b> و امتیاز یک هم‌ترازی را <b>حساب کنی</b>.</li>
+    <li>ماتریس نیدلمن–ونش را با سه گام مقداردهی، پر کردن و بازگشت <b>بسازی</b>.</li>
+    <li>ماتریس اسمیت–واترمن را <b>بسازی</b> و بهترین هم‌ترازی محلی را از آن <b>استخراج کنی</b>.</li>
+    <li>هم‌ترازی سراسری و محلی را <b>مقایسه کنی</b> و بگویی کدام را کجا به کار ببریم.</li>
+    <li>هزینهٔ O(mn) را <b>توضیح بدهی</b> و بگویی چرا برای نگاشت خوانش به ژنوم کامل کافی نیست.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch16:pre1">
+  <p class="q">با امتیازهای تطبیق +۱، ناهمخوانی −۱ و شکاف −۲، امتیاز هم‌ترازی زیر چند است؟</p>
+  <p style="text-align:center"><code class="seq">ATGCT</code><br><code class="seq">A-GCT</code></p>
+  <ol class="opts">
+    <li>۵</li>
+    <li>۳</li>
+    <li data-correct>۲</li>
+    <li>۰</li>
+  </ol>
+  <div class="explain">ستون‌ها: A/A تطبیق (+۱)، T/- شکاف (−۲)، G/G (+۱)، C/C (+۱)، T/T (+۱). جمع: ۱ − ۲ + ۱ + ۱ + ۱ = ۲. اگر غلط حدس زدی مهم نیست؛ در این فصل همین مثال را از صفر می‌سازیم.</div>
+</div>
+
+<h2 id="what-is-alignment">هم‌ترازی و امتیازدهی</h2>
+
+<p><span class="term" data-en="Sequence alignment">هم‌ترازی توالی</span> یعنی دو توالی را کنار هم می‌گذاریم و حروفشان را روبه‌روی هم قرار می‌دهیم. در هر ستون یکی از سه اتفاق می‌افتد:</p>
+
+<ul>
+  <li><b>تطبیق (Match):</b> دو حرف یکسان‌اند.</li>
+  <li><b>ناهمخوانی (Mismatch):</b> دو حرف فرق دارند؛ مثل یک SNP یا خطای دستگاه.</li>
+  <li><b>شکاف (Gap):</b> یک حرف روبه‌روی خط تیره «-» است؛ یعنی یک حرف در یکی از توالی‌ها اضافه یا حذف شده.</li>
+</ul>
+
+<p>چون هر توالی ممکن است به چند صورت کنار هم قرار بگیرد، به یک معیار نیاز داریم تا بهترین را انتخاب کنیم. در اسلایدها این امتیازها استفاده شده‌اند:</p>
+
+<table class="center">
+  <tr><th>رویداد</th><th>امتیاز</th></tr>
+  <tr><td>تطبیق (Match)</td><td><code>+1</code></td></tr>
+  <tr><td>ناهمخوانی (Mismatch)</td><td><code>−1</code></td></tr>
+  <tr><td>شکاف (Gap)</td><td><code>−2</code></td></tr>
+</table>
+
+<p>امتیاز یک هم‌ترازی جمع امتیاز ستون‌های آن است و هم‌ترازی بهتر امتیاز بیشتری دارد. مشکل این است که تعداد هم‌ترازی‌های ممکن با طول توالی به‌صورت نمایی رشد می‌کند. بررسی همه‌شان شدنی نیست.</p>
+
+<h3>چرا برنامه‌نویسی پویا؟</h3>
+
+<p>اگر در درس الگوریتم <b>فاصلهٔ ویرایش (edit distance)</b> را دیده باشی، پیش‌تر همین مسئله را حل کرده‌ای: کمترین تعداد درج، حذف و جایگزینی برای تبدیل یک رشته به دیگری. هم‌ترازی نیدلمن–ونش همان ایده است، فقط به‌جای هزینهٔ کمینه، امتیاز بیشینه می‌گیریم و امتیاز هر عملیات قابل‌تنظیم است.</p>
+
+<aside class="callout analogy">
+  <p>برنامه‌نویسی پویا یعنی <b>ساختار زیرمسئلهٔ بهینه</b>. بهترین هم‌ترازی دو رشته از بهترین هم‌ترازی پیشوندهای کوتاه‌ترشان ساخته می‌شود، دقیقاً مثل جدول <code>dp[i][j]</code> در فاصلهٔ ویرایش یا ضرب زنجیرهٔ ماتریس‌ها. هر خانه یک بار حساب می‌شود و بعد دوباره استفاده می‌شود (memoization).</p>
+</aside>
+
+<h2 id="nw">هم‌ترازی سراسری: نیدلمن–ونش</h2>
+
+<p>ایده (اسلاید ۹): <b>دو توالی را از ابتدا تا انتها با هم هم‌تراز کن.</b> این الگوریتم <span class="term" data-en="Global alignment">هم‌ترازی سراسری</span> می‌دهد. سه گام دارد:</p>
+
+<ol class="steps">
+  <li><b>مقداردهی اولیه:</b> سطر و ستون اول را با جریمهٔ شکاف پر کن: ۰، −۲، −۴، −۶، …</li>
+  <li><b>پر کردن ماتریس:</b> هر خانه بیشینهٔ سه حرکت ممکن است.</li>
+  <li><b>بازگشت (Traceback):</b> از گوشهٔ پایین‌راست شروع کن و تا گوشهٔ بالاچپ برگرد.</li>
+</ol>
+
+<h3>گام ۰: اندازهٔ ماتریس</h3>
+
+<p>فرض کن Seq1 = <code class="seq">ATGCT</code> (طول M = 5، روی ستون‌ها) و Seq2 = <code class="seq">AGCT</code> (طول N = 4، روی سطرها). ماتریس <b>(N+1) × (M+1)</b> یعنی ۵ × ۶ است. یک سطر و ستون اضافه برای «پیشوند خالی» لازم است: هم‌ترازی هیچ حرفی با k حرف یعنی k شکاف.</p>
+
+<h3>گام ۱: مقداردهی</h3>
+
+<p>خانهٔ گوشه ۰ است. هر قدم به راست یا پایین در سطر و ستون اول یک شکاف است (−۲)، پس مقادیر <code>0, −2, −4, −6, −8, −10</code> در سطر اول و <code>0, −2, −4, −6, −8</code> در ستون اول می‌آیند (اسلاید ۱۱).</p>
+
+<h3>گام ۲: پر کردن</h3>
+
+<p>برای هر خانهٔ <code>F(i,j)</code> سه راه داریم و بیشترینشان را برمی‌داریم:</p>
+
+<p style="text-align:center"><code>F(i,j) = max( F(i−1,j−1) + s(a,b),&nbsp; F(i−1,j) − 2,&nbsp; F(i,j−1) − 2 )</code></p>
+
+<p>که <code>s(a,b)</code> برابر ۱+ برای حروف یکسان و ۱− برای حروف متفاوت است.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 270" width="720" role="img" aria-labelledby="dp-t1">
+  <title id="dp-t1">سه فلش به یک خانه: قطری برای تطبیق یا ناهمخوانی، بالا و چپ برای شکاف</title>
+  <defs><marker id="dp-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-hl"/></marker></defs>
+  <rect x="60" y="50" width="100" height="56" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <rect x="160" y="50" width="100" height="56" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <rect x="60" y="106" width="100" height="56" class="f-surface-2 s-line" stroke-width="1.5"/>
+  <rect x="160" y="106" width="100" height="56" class="f-hl-soft s-hl" stroke-width="2.5"/>
+  <text x="110" y="84" font-size="13" text-anchor="middle" class="mono">F(i-1,j-1)</text>
+  <text x="210" y="84" font-size="13" text-anchor="middle" class="mono">F(i-1,j)</text>
+  <text x="110" y="140" font-size="13" text-anchor="middle" class="mono">F(i,j-1)</text>
+  <text x="210" y="140" font-size="14" font-weight="800" text-anchor="middle" class="mono">F(i,j)</text>
+  <g class="s-hl" stroke-width="2.4" marker-end="url(#dp-ah)">
+    <line x1="180" y1="120" x2="160" y2="104" marker-end="url(#dp-ah)"/>
+    <line x1="238" y1="124" x2="238" y2="94" marker-end="url(#dp-ah)"/>
+    <line x1="186" y1="152" x2="140" y2="152" marker-end="url(#dp-ah)"/>
+  </g>
+  <g font-size="13" style="direction:rtl">
+    <text x="720" y="70" text-anchor="end"><tspan class="t-hl" font-weight="700">↖ قطری:</tspan> تطبیق یا ناهمخوانی؛ F(i-1,j-1) + s(a,b)</text>
+    <text x="720" y="110" text-anchor="end"><tspan class="t-hl" font-weight="700">↑ بالا:</tspan> شکاف؛ F(i-1,j) − 2 (حرف سطر با «-» روبه‌رو)</text>
+    <text x="720" y="150" text-anchor="end"><tspan class="t-hl" font-weight="700">← چپ:</tspan> شکاف؛ F(i,j-1) − 2 (حرف ستون با «-» روبه‌رو)</text>
+    <text x="720" y="200" text-anchor="end" class="t-muted">بیشینهٔ این سه عدد در خانه نوشته می‌شود</text>
+    <text x="720" y="222" text-anchor="end" class="t-muted">در بازگشت، فلشی را دنبال می‌کنیم که مقدار خانه از آن ساخته شده</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۶.۱</b> — سه راهی که یک خانه می‌تواند از آن ساخته شود. فلش‌ها در جهت بازگشت (traceback) کشیده شده‌اند.</figcaption>
+</figure>
+
+<div class="worked" data-title="دو خانه، قدم‌به‌قدم">
+  <p class="problem">با Seq1 = ATGCT روی ستون‌ها و Seq2 = AGCT روی سطرها، مقدار <code>F(1,2)</code> (سطر A، ستون T) و <code>F(2,2)</code> (سطر G، ستون T) را حساب کن. <code>F(1,1) = 1</code> است.</p>
+  <ol class="steps">
+    <li><b>F(1,2):</b> حروف A (سطر) و T (ستون) متفاوت‌اند، پس s = −1.</li>
+    <li>قطری: F(0,1) + (−1) = −2 − 1 = −3. بالا: F(0,2) − 2 = −4 − 2 = −6. چپ: F(1,1) − 2 = 1 − 2 = −1.</li>
+    <li>max(−3, −6, −1) = <b>−1</b> و از چپ (←) آمده.</li>
+    <li><b>F(2,2):</b> حروف G و T متفاوت‌اند، s = −1. قطری: F(1,1) − 1 = 1 − 1 = 0. بالا: F(1,2) − 2 = −1 − 2 = −3. چپ: F(2,1) − 2 = −1 − 2 = −3.</li>
+    <li>max(0, −3, −3) = <b>0</b> و از قطر (↖) آمده.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> F(1,2) = −1 (←) و F(2,2) = 0 (↖). این دو با ماتریس کامل پایین می‌خوانند.</p>
+</div>
+
+<p>اگر همین‌طور سطر به سطر ادامه بدهی، ماتریس کامل (اسلاید ۱۲) به دست می‌آید. خانه‌های سبز مسیر بازگشت‌اند که در گام بعد می‌سازیم:</p>
+
+<table class="center">
+  <tr><th></th><th></th><th>A</th><th>T</th><th>G</th><th>C</th><th>T</th></tr>
+  <tr><th></th><td style="background:var(--hl-soft)"><b>0</b></td><td>−2</td><td>−4</td><td>−6</td><td>−8</td><td>−10</td></tr>
+  <tr><th>A</th><td>−2</td><td style="background:var(--hl-soft)"><b>1</b></td><td style="background:var(--hl-soft)"><b>−1</b></td><td>−3</td><td>−5</td><td>−7</td></tr>
+  <tr><th>G</th><td>−4</td><td>−1</td><td>0</td><td style="background:var(--hl-soft)"><b>0</b></td><td>−2</td><td>−4</td></tr>
+  <tr><th>C</th><td>−6</td><td>−3</td><td>−2</td><td>−1</td><td style="background:var(--hl-soft)"><b>1</b></td><td>−1</td></tr>
+  <tr><th>T</th><td>−8</td><td>−5</td><td>−2</td><td>−3</td><td>−1</td><td style="background:var(--hl-soft)"><b>2</b></td></tr>
+</table>
+
+<h3>گام ۳: بازگشت</h3>
+
+<p>از خانهٔ پایین‌راست (امتیاز نهایی، اینجا ۲) شروع می‌کنیم. در هر خانه به همسایه‌ای می‌رویم که مقدار فعلی از آن ساخته شده (اسلاید ۱۳):</p>
+
+<ul>
+  <li><b>↖ (قطری):</b> دو حرف روبه‌روی هم قرار می‌گیرند (تطبیق یا ناهمخوانی).</li>
+  <li><b>↑ یا ←:</b> یک شکاف می‌گذاریم. با ↑ حرف سطر (Seq2) با «-» روبه‌رو می‌شود و با ← حرف ستون (Seq1).</li>
+</ul>
+
+<div class="worked" data-title="بازگشت کامل (اسلاید ۱۴)">
+  <p class="problem">مسیر بازگشت ماتریس بالا را از خانهٔ (۴،۵) تا (۰،۰) بنویس و هم‌ترازی را بساز.</p>
+  <ol class="steps">
+    <li>(۴،۵) = ۲: T با T تطبیق است. قطری از (۳،۴) = ۱ و ۱ + ۱ = ۲. ↖ ← T/T.</li>
+    <li>(۳،۴) = ۱: C با C تطبیق است. قطری از (۲،۳) = ۰ و ۰ + ۱ = ۱. ↖ ← C/C.</li>
+    <li>(۲،۳) = ۰: G با G تطبیق است. قطری از (۱،۲) = −۱ و −۱ + ۱ = ۰. ↖ ← G/G.</li>
+    <li>(۱،۲) = −۱: از چپ آمده (۱ − ۲ = −۱). ← حرف T ستون با شکاف: T/-.</li>
+    <li>(۱،۱) = ۱: A با A تطبیق، قطری از (۰،۰) = ۰. ↖ ← A/A.</li>
+    <li>به (۰،۰) رسیدیم؛ تمام.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> هم‌ترازی
+<code class="seq-block">Seq1: ATGCT
+Seq2: A-GCT</code>
+امتیاز = ۱ − ۲ + ۱ + ۱ + ۱ = <b>۲</b>. مقادیر روی مسیر از پایین‌راست: ۲ ← ۱ ← ۰ ← −۱ ← ۱ ← ۰.</p>
+</div>
+
+<aside class="callout exam">
+  <p>امتیاز نهایی هم‌ترازی سراسری همیشه در خانهٔ <b>پایین‌راست</b> است (در اینجا ۲). بازگشت هم از همان‌جا شروع می‌شود و تا گوشهٔ <b>بالاچپ</b> ادامه دارد.</p>
+</aside>
+
+<div class="quiz" data-id="ch16:q1">
+  <p class="q">اگر در بازگشت از خانه‌ای با فلش ← برگردیم، چه اتفاقی در هم‌ترازی می‌افتد؟</p>
+  <ol class="opts">
+    <li>حرف سطر با حرف ستون هم‌تراز می‌شود</li>
+    <li data-correct>حرف ستون (Seq1) با شکاف روبه‌رو می‌شود</li>
+    <li>هم‌ترازی تمام می‌شود</li>
+    <li>امتیاز صفر می‌شود</li>
+  </ol>
+  <div class="explain">حرکت افقی یعنی یک حرف از Seq1 مصرف می‌شود ولی از Seq2 هیچ حرفی. پس Seq2 یک «-» می‌گیرد؛ همان T/- در مثال ما.</div>
+</div>
+
+<details class="think">
+  <summary>چرا سطر و ستون اول با ۰، −۲، −۴، … پر می‌شوند و همه صفر نیستند؟</summary>
+  <div><p>چون در هم‌ترازی سراسری هر حرفی که با چیزی روبه‌رو نشود شکاف است و جریمه دارد. هم‌ترازی k حرف اول Seq1 با پیشوند خالی Seq2 فقط می‌تواند k شکاف باشد، یعنی k × (−۲). (در هم‌ترازی محلی این‌طور نیست؛ بخش بعد.)</p></div>
+</details>
+
+<h3>پایتون: نیدلمن–ونش در چند خط</h3>
+
+<pre data-lang="PYTHON"><code><span class="k">def</span> needleman_wunsch(a, b, match=<span class="n">1</span>, mismatch=-<span class="n">1</span>, gap=-<span class="n">2</span>):
+    m, n = len(a), len(b)
+    F = [[<span class="n">0</span>] * (m + <span class="n">1</span>) <span class="k">for</span> _ <span class="k">in</span> range(n + <span class="n">1</span>)]
+    <span class="k">for</span> j <span class="k">in</span> range(m + <span class="n">1</span>): F[<span class="n">0</span>][j] = j * gap
+    <span class="k">for</span> i <span class="k">in</span> range(n + <span class="n">1</span>): F[i][<span class="n">0</span>] = i * gap
+    <span class="k">for</span> i <span class="k">in</span> range(<span class="n">1</span>, n + <span class="n">1</span>):
+        <span class="k">for</span> j <span class="k">in</span> range(<span class="n">1</span>, m + <span class="n">1</span>):
+            s = match <span class="k">if</span> a[j-<span class="n">1</span>] == b[i-<span class="n">1</span>] <span class="k">else</span> mismatch
+            F[i][j] = max(F[i-<span class="n">1</span>][j-<span class="n">1</span>] + s, F[i-<span class="n">1</span>][j] + gap, F[i][j-<span class="n">1</span>] + gap)
+    i, j, top, bot = n, m, <span class="s">""</span>, <span class="s">""</span>
+    <span class="k">while</span> i &gt; <span class="n">0</span> <span class="k">or</span> j &gt; <span class="n">0</span>:                          <span class="c"># traceback</span>
+        s = match <span class="k">if</span> i &gt; <span class="n">0</span> <span class="k">and</span> j &gt; <span class="n">0</span> <span class="k">and</span> a[j-<span class="n">1</span>] == b[i-<span class="n">1</span>] <span class="k">else</span> mismatch
+        <span class="k">if</span> i &gt; <span class="n">0</span> <span class="k">and</span> j &gt; <span class="n">0</span> <span class="k">and</span> F[i][j] == F[i-<span class="n">1</span>][j-<span class="n">1</span>] + s:
+            top, bot, i, j = a[j-<span class="n">1</span>] + top, b[i-<span class="n">1</span>] + bot, i-<span class="n">1</span>, j-<span class="n">1</span>
+        <span class="k">elif</span> j &gt; <span class="n">0</span> <span class="k">and</span> F[i][j] == F[i][j-<span class="n">1</span>] + gap:
+            top, bot, j = a[j-<span class="n">1</span>] + top, <span class="s">"-"</span> + bot, j-<span class="n">1</span>
+        <span class="k">else</span>:
+            top, bot, i = <span class="s">"-"</span> + top, b[i-<span class="n">1</span>] + bot, i-<span class="n">1</span>
+    <span class="k">return</span> F[n][m], top, bot
+
+print(needleman_wunsch(<span class="s">"ATGCT"</span>, <span class="s">"AGCT"</span>))   <span class="c"># (2, 'ATGCT', 'A-GCT')</span></code></pre>
+
+<div data-widget="dp-align" data-mode="global" data-a="ATGCT" data-b="AGCT"></div>
+
+<h2 id="sw">هم‌ترازی محلی: اسمیت–واترمن</h2>
+
+<p>گاهی دو توالی فقط در یک بخش شبیه‌اند و بقیه ربطی ندارد؛ مثلاً یک ژن کوتاه داخل یک کروموزوم بلند. ایده (اسلاید ۱۵): <b>بهترین بخش مشترک دو توالی را پیدا کن.</b> این <span class="term" data-en="Local alignment">هم‌ترازی محلی</span> است. برای ATGCT و AGCT فقط شبیه‌ترین تکه <code class="seq">GCT</code> می‌آید، در حالی که سراسری کل دو رشته را از اول تا آخر می‌آورد.</p>
+
+<h3>تفاوت‌ها با نیدلمن–ونش</h3>
+
+<div class="compare">
+  <div><h4>نیدلمن–ونش (سراسری)</h4><p>سطر و ستون اول با جریمهٔ شکاف (۰، −۲، −۴، …). امتیاز منفی مجاز است. بازگشت از گوشهٔ پایین‌راست تا بالاچپ.</p></div>
+  <div><h4>اسمیت–واترمن (محلی)</h4><p>سطر و ستون اول همه صفر. هیچ امتیازی منفی نمی‌شود. بازگشت از بیشینهٔ ماتریس شروع می‌شود و به صفر که رسید تمام می‌شود.</p></div>
+</div>
+
+<p style="text-align:center"><code>F(i,j) = max( 0,&nbsp; F(i−1,j−1) + s(a,b),&nbsp; F(i−1,j) − 2,&nbsp; F(i,j−1) − 2 )</code></p>
+
+<p>صفر یعنی «هم‌ترازی را از همین‌جا از نو شروع کن». هر بخش بد را دور می‌اندازیم و فقط بخش خوب نگه داشته می‌شود.</p>
+
+<h3>مثال کامل</h3>
+
+<p>اولین خانهٔ پر شده، <code>F(1,1)</code>، چنین حساب می‌شود (اسلاید ۱۷): A با A تطبیق است، پس max(0, 0+1, 0−2, 0−2) = ۱. ماتریس کامل (اسلاید ۱۸):</p>
+
+<table class="center">
+  <tr><th></th><th></th><th>A</th><th>T</th><th>G</th><th>C</th><th>T</th></tr>
+  <tr><th></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th>A</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th>G</th><td>0</td><td>0</td><td>0</td><td style="background:var(--hl-soft)"><b>1</b></td><td>0</td><td>0</td></tr>
+  <tr><th>C</th><td>0</td><td>0</td><td>0</td><td>0</td><td style="background:var(--hl-soft)"><b>2</b></td><td>0</td></tr>
+  <tr><th>T</th><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td style="background:var(--hl-soft)"><b>3</b></td></tr>
+</table>
+
+<p>بیشترین امتیاز ماتریس ۳ است (پایین‌راست) و بازگشت از همان‌جا شروع می‌شود. خانهٔ T زیر ستون اول T (سطر T، ستون ۲) هم ۱ شده (۰ + ۱) ولی از ۳ کوچک‌تر است، پس نقطهٔ شروع نمی‌شود. بازگشت قطری: ۳ ← ۲ ← ۱ ← ۰ و وقتی به ۰ رسیدیم می‌ایستیم (اسلاید ۱۹).</p>
+
+<div class="worked" data-title="بازگشت محلی">
+  <p class="problem">بهترین هم‌ترازی محلی ATGCT و AGCT را از ماتریس بالا استخراج کن.</p>
+  <ol class="steps">
+    <li>بیشینه: خانهٔ (۴،۵) = ۳، حروف T و T.</li>
+    <li>قطری به (۳،۴) = ۲ (C/C) و بعد (۲،۳) = ۱ (G/G).</li>
+    <li>از (۲،۳) قطری به (۱،۲) = ۰. به صفر رسیدیم، می‌ایستیم.</li>
+    <li>حروف از آخر به اول: T، C، G؛ یعنی <code class="seq">GCT</code>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> هم‌ترازی محلی <code class="seq">GCT</code> / <code class="seq">GCT</code> با امتیاز ۳ (سه تطبیق).</p>
+</div>
+
+<div data-widget="dp-align" data-mode="local" data-a="ATGCT" data-b="AGCT"></div>
+
+<h3>سراسری یا محلی؟</h3>
+
+<table class="center">
+  <tr><th>ویژگی</th><th>سراسری (نیدلمن–ونش)</th><th>محلی (اسمیت–واترمن)</th></tr>
+  <tr><td>هدف</td><td>هم‌ترازی کل دو توالی</td><td>بهترین ناحیهٔ مشترک</td></tr>
+  <tr><td>سطر و ستون اول</td><td>۰، −۲، −۴، …</td><td>همه ۰</td></tr>
+  <tr><td>امتیاز منفی</td><td>مجاز</td><td>ممنوع (حداقل ۰)</td></tr>
+  <tr><td>شروع بازگشت</td><td>گوشهٔ پایین‌راست</td><td>خانهٔ بیشینه</td></tr>
+  <tr><td>پایان بازگشت</td><td>گوشهٔ بالاچپ</td><td>اولین ۰</td></tr>
+  <tr><td>مناسب برای</td><td>توالی‌های هم‌طول و مشابه (دو نسخهٔ یک ژن)</td><td>یافتن یک موتیف یا ژن در توالی بلندتر، توالی‌های نامشابه</td></tr>
+</table>
+
+<details class="think">
+  <summary>برای یافتن جای یک خوانش ۱۰۰ بازی داخل یک کروموزوم، سراسری بهتر است یا محلی؟</summary>
+  <div><p>محلی. خوانش کوتاه است و فقط به بخش کوچکی از کروموزوم می‌چسبد؛ هم‌ترازی سراسری بقیهٔ کروموزوم را با شکاف‌های بسیار پرهزینه جریمه می‌کرد. (البته در عمل از روش‌های ترکیبی «نیمه‌سراسری» هم استفاده می‌شود.)</p></div>
+</details>
+
+<h2 id="exercises">تمرین‌های کلاس (اسلاید ۲۰)</h2>
+
+<p>امتیازها همان است: تطبیق +۱، ناهمخوانی −۱، شکاف −۲. ابتدا خودت حل کن، بعد جواب را ببین.</p>
+
+<div class="worked" data-title="سؤال ۱: هم‌ترازی سراسری X = AGT، Y = AT">
+  <p class="problem">دو توالی X = AGT (روی ستون‌ها) و Y = AT (روی سطرها) را با نیدلمن–ونش هم‌تراز کن.</p>
+  <ol class="steps">
+    <li>ماتریس ۳ × ۴ است. سطر اول: ۰، −۲، −۴، −۶. ستون اول: ۰، −۲، −۴.</li>
+    <li>سطر A: F(1,1): A/A تطبیق، ۰ + ۱ = ۱. F(1,2): G/A ناهمخوان؛ max(−2 − 1, −4 − 2, 1 − 2) = −۱. F(1,3): T/A ناهمخوان؛ max(−4 − 1, −6 − 2, −1 − 2) = −۳.</li>
+    <li>سطر T: F(2,1): T/A ناهمخوان؛ max(−2 − 1, 1 − 2, −4 − 2) = −۱. F(2,2): T/G ناهمخوان؛ max(1 − 1, −1 − 2, −1 − 2) = ۰. F(2,3): T/T تطبیق؛ max(−1 + 1, −3 − 2, 0 − 2) = ۰.</li>
+    <li>بازگشت از (۲،۳) = ۰: قطری از (۱،۲) = −۱ (T/T). (۱،۲) = −۱ از چپ آمده (۱ − ۲): G با شکاف. (۱،۱) = ۱ قطری از (۰،۰): A/A.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> ماتریس: سطر ۰: [۰، −۲، −۴، −۶]؛ سطر A: [−۲، ۱، −۱، −۳]؛ سطر T: [−۴، −۱، ۰، ۰]. هم‌ترازی:
+<code class="seq-block">AGT
+A-T</code>
+امتیاز = ۱ − ۲ + ۱ = <b>۰</b>.</p>
+</div>
+
+<p>ماتریس این تمرین (مسیر بازگشت سبز):</p>
+
+<table class="center">
+  <tr><th></th><th></th><th>A</th><th>G</th><th>T</th></tr>
+  <tr><th></th><td style="background:var(--hl-soft)"><b>0</b></td><td>−2</td><td>−4</td><td>−6</td></tr>
+  <tr><th>A</th><td>−2</td><td style="background:var(--hl-soft)"><b>1</b></td><td style="background:var(--hl-soft)"><b>−1</b></td><td>−3</td></tr>
+  <tr><th>T</th><td>−4</td><td>−1</td><td>0</td><td style="background:var(--hl-soft)"><b>0</b></td></tr>
+</table>
+
+<div class="worked" data-title="سؤال ۲: هم‌ترازی محلی X = ACGT، Y = AGT">
+  <p class="problem">دو توالی X = ACGT (روی ستون‌ها) و Y = AGT (روی سطرها) را با اسمیت–واترمن هم‌تراز کن.</p>
+  <ol class="steps">
+    <li>سطر و ستون اول همه صفر. ماتریس ۴ × ۵.</li>
+    <li>سطر A: A/A تطبیق در ستون اول (۱)، بقیه ناهمخوان یا صفر: [۰، ۱، ۰، ۰، ۰].</li>
+    <li>سطر G: فقط G/G در ستون سوم تطبیق است؛ قطری از F(1,2) = ۰، پس ۰ + ۱ = ۱. بقیه صفر: [۰، ۰، ۰، ۱، ۰]. (برای مثال F(2,1) = max(0, 0 − 1, 1 − 2, 0 − 2) = ۰.)</li>
+    <li>سطر T: T/T در ستون چهارم؛ قطری از F(2,3) = ۱، پس ۱ + ۱ = ۲: [۰، ۰، ۰، ۰، ۲].</li>
+    <li>بیشینه ۲ در خانهٔ (۳،۴). قطری به (۲،۳) = ۱ و بعد به (۱،۲) = ۰ که می‌ایستیم.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> بهترین هم‌ترازی محلی <code class="seq">GT</code> / <code class="seq">GT</code> با امتیاز <b>۲</b>. (ترتیب حروف: خانهٔ (۲،۳) حرف G و خانهٔ (۳،۴) حرف T.)</p>
+</div>
+
+<table class="center">
+  <tr><th></th><th></th><th>A</th><th>C</th><th>G</th><th>T</th></tr>
+  <tr><th></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th>A</th><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th>G</th><td>0</td><td>0</td><td>0</td><td style="background:var(--hl-soft)"><b>1</b></td><td>0</td></tr>
+  <tr><th>T</th><td>0</td><td>0</td><td>0</td><td>0</td><td style="background:var(--hl-soft)"><b>2</b></td></tr>
+</table>
+
+<div class="fill" data-answer="0|۰" data-id="ch16:f1">
+  <p class="q">امتیاز هم‌ترازی سراسری AGT و AT (تمرین ۱) برابر ____ است. <input class="blank" type="text"></p>
+  <div class="explain">A/A: ۱+، G/-: ۲−، T/T: ۱+؛ جمع ۰. همان عدد خانهٔ پایین‌راست ماتریس است.</div>
+</div>
+
+<h2 id="cost">هزینه و راه‌حل عملی: بذر و گسترش</h2>
+
+<p>اسلاید ۲۱ مشکل را می‌گوید: هر دو الگوریتم برای توالی‌هایی به طول‌های m و n زمان <b>O(mn)</b> لازم دارند، چون هر یک از (m+1)(n+1) خانه با کار ثابت پر می‌شود. روش‌های کاهش حافظه وجود دارند (مثلاً نگه داشتن فقط دو سطر آخر)، ولی هزینهٔ محاسباتی همچنان مهم است.</p>
+
+<aside class="callout pitfall">
+  <p>«کاهش حافظه» زمان را کم نمی‌کند. با نگه داشتن دو سطر می‌توان امتیاز را با حافظهٔ O(n) به دست آورد، ولی باز هم mn خانه باید حساب شود (و برای ساختن بازگشت به ترفندهای اضافه نیاز است).</p>
+</aside>
+
+<div class="worked" data-title="چقدر خانه؟">
+  <p class="problem">اگر یک خوانش ۱۰۰ بازی را با کل ژنوم انسان (۳×۱۰<sup>9</sup> باز) با برنامه‌نویسی پویا هم‌تراز کنیم، چند خانه لازم است؟ و برای ۶۰۰ میلیون خوانش؟</p>
+  <ol class="steps">
+    <li>برای یک خوانش: 100 × 3×10<sup>9</sup> = 3×10<sup>11</sup> خانه.</li>
+    <li>برای 6×10<sup>8</sup> خوانش: 3×10<sup>11</sup> × 6×10<sup>8</sup> = 1٫8×10<sup>20</sup> خانه.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> ۳×۱۰<sup>۱۱</sup> خانه برای یک خوانش و حدود ۱٫۸×۱۰<sup>۲۰</sup> برای همهٔ خوانش‌ها؛ هیچ‌کس این را اجرا نمی‌کند.</p>
+</div>
+
+<p>راه‌حل عملی دو مرحله‌ای است: اول با یک روش سریع (هش، k-mer، BWT) <b>ناحیه‌های محتمل</b> را پیدا می‌کنیم، بعد فقط روی همان ناحیه‌های کوچک هم‌ترازی دقیق با برنامه‌نویسی پویا انجام می‌دهیم. این همان ایدهٔ «بذر و گسترش» (seed and extend) است و موضوع فصل ۱۷.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 250" width="720" role="img" aria-labelledby="dp-t2">
+  <title id="dp-t2">دو مرحله: ابتدا جستجوی سریع ناحیه‌های محتمل در ژنوم بزرگ، سپس هم‌ترازی دقیق فقط در همان ناحیه‌ها</title>
+  <defs><marker id="dp-ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <text x="360" y="22" font-size="13" font-weight="700" text-anchor="middle" style="direction:rtl">ژنوم بزرگ مرجع (۳ میلیارد باز)</text>
+  <rect x="30" y="34" width="660" height="26" rx="4" class="f-surface-2 s-ink-2" stroke-width="1.5"/>
+  <g class="f-hl s-hl"><rect x="150" y="34" width="22" height="26"/><rect x="420" y="34" width="22" height="26"/><rect x="590" y="34" width="22" height="26"/></g>
+  <text x="360" y="86" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">مرحله ۱: جست‌وجوی سریع (هش / k-mer / BWT) ← چند ناحیهٔ محتمل (نارنجی)</text>
+  <g class="s-muted" stroke-width="1.6" marker-end="url(#dp-ah2)"><line x1="161" y1="94" x2="161" y2="134" marker-end="url(#dp-ah2)"/><line x1="431" y1="94" x2="431" y2="134" marker-end="url(#dp-ah2)"/><line x1="601" y1="94" x2="601" y2="134" marker-end="url(#dp-ah2)"/></g>
+  <g class="f-ok-soft s-ok" stroke-width="1.5"><rect x="100" y="140" width="122" height="34" rx="6"/><rect x="370" y="140" width="122" height="34" rx="6"/><rect x="540" y="140" width="122" height="34" rx="6"/></g>
+  <g font-size="12" text-anchor="middle" class="mono"><text x="161" y="162">DP</text><text x="431" y="162">DP</text><text x="601" y="162">DP</text></g>
+  <text x="360" y="204" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">مرحله ۲: هم‌ترازی دقیق (برنامه‌نویسی پویا) فقط روی این ناحیه‌های کوچک</text>
+  <text x="360" y="230" font-size="12" text-anchor="middle" class="t-accent" style="direction:rtl">به جای ۳×۱۰¹¹ خانه برای هر خوانش، فقط چند ناحیهٔ کوچک (مثلاً چند هزار خانه)</text>
+</svg>
+<figcaption><b>شکل ۱۶.۲</b> — ایدهٔ دو مرحله‌ای. مرحلهٔ اول ارزان و تقریبی است و مرحلهٔ دوم دقیق ولی فقط روی ناحیه‌های کوچک.</figcaption>
+</figure>
+
+<div class="quiz" data-id="ch16:q2">
+  <p class="q">چرا برای نگاشت خوانش به ژنوم کامل مستقیماً از نیدلمن–ونش یا اسمیت–واترمن استفاده نمی‌کنیم؟</p>
+  <ol class="opts">
+    <li>چون دقیق نیستند</li>
+    <li data-correct>چون هزینهٔ O(mn) برای ژنوم میلیارد بازی و میلیون‌ها خوانش بسیار زیاد است</li>
+    <li>چون فقط روی پروتئین کار می‌کنند</li>
+    <li>چون ماتریس را نمی‌توان ذخیره کرد، ولی زمانشان کم است</li>
+  </ol>
+  <div class="explain">الگوریتم‌ها دقیق‌اند ولی کند. اول با شاخص ناحیه‌های محتمل را پیدا می‌کنیم و بعد DP را فقط روی آن‌ها اجرا می‌کنیم.</div>
+</div>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>هم‌ترازی یعنی قرار دادن دو توالی روبه‌روی هم با تطبیق (+۱)، ناهمخوانی (−۱) و شکاف (−۲)؛ امتیاز، جمع ستون‌هاست.</li>
+    <li>برنامه‌نویسی پویا از زیرمسئلهٔ بهینه استفاده می‌کند، مثل فاصلهٔ ویرایش.</li>
+    <li><b>نیدلمن–ونش (سراسری):</b> ماتریس (N+1)×(M+1)، سطر و ستون اول ۰، −۲، −۴، …، <code>F(i,j) = max(F(i−1,j−1)+s, F(i−1,j)−2, F(i,j−1)−2)</code>، بازگشت از پایین‌راست.</li>
+    <li>بازگشت: ↖ یعنی تطبیق یا ناهمخوانی، ↑ و ← یعنی شکاف.</li>
+    <li>مثال: ATGCT / AGCT ← امتیاز ۲ و هم‌ترازی ATGCT / A-GCT (مسیر ۲ ← ۱ ← ۰ ← −۱ ← ۱ ← ۰).</li>
+    <li><b>اسمیت–واترمن (محلی):</b> سطر و ستون اول ۰، <code>max(0, …)</code>، بازگشت از بیشینه تا ۰. مثال: GCT / GCT با امتیاز ۳.</li>
+    <li>تمرین‌ها: AGT / A-T امتیاز ۰ (سراسری)؛ GT / GT امتیاز ۲ (محلی برای ACGT و AGT).</li>
+    <li>هزینه O(mn)؛ برای ژنوم کامل غیرعملی. راه عملی: اول یافتن ناحیه‌های محتمل (بذر)، بعد هم‌ترازی دقیق (گسترش) ← فصل ۱۷.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی، محاسباتی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

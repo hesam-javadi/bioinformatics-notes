@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>فرمت فایل‌های زیستی · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="FASTA، FASTQ، امتیاز کیفیت Phred، GenBank، GFF3/GTF، SAM/BAM و رکوردهای PDB: ساختار هر فرمت و روش خواندنش.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch12">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۳ (اسلایدهای ۶۱ تا ۷۸)، فایل ۱ (اسلایدهای ۶۹ تا ۷۱)، فایل ۲ (اسلایدهای ۴۱ و ۴۵)" data-motif="GATTACAGGTATCGATGACTGATCG">
+  <h1>فرمت فایل‌های زیستی</h1>
+  <p class="lead">دستگاه توالی‌یابی میلیون‌ها خوانش تحویل می‌دهد. در فایل، یک حرف I و یک حرف # کنار هم چه فرقی دارند؟ و وقتی خوانش‌ها روی ژنوم نگاشت شدند، هر خط فایل چطور می‌گوید «من از موقعیت ۵ کروموزوم ۱ شروع می‌شوم»؟ در این فصل هر فرمت را از روی خط‌هایش می‌خوانی.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>ساختار FASTA و FASTQ را <b>تشخیص بدهی</b> و چهار خط یک رکورد FASTQ را <b>نام ببری</b>.</li>
+    <li>امتیاز Phred را از روی احتمال خطا <b>حساب کنی</b> و کاراکتر کیفیت را به Q (و برعکس) <b>تبدیل کنی</b>.</li>
+    <li>رشتهٔ کیفیت یک FASTQ را در پایتون <b>رمزگشایی کنی</b>.</li>
+    <li>۹ ستون GFF3 و ۱۱ ستون اجباری SAM را <b>توضیح بدهی</b>.</li>
+    <li>یک خط SAM و رشتهٔ CIGAR را <b>تفسیر کنی</b> و روی مرجع <b>رسم کنی</b>.</li>
+    <li>بگویی هر فرمت در چه مرحلهٔ خط لوله تولید یا مصرف می‌شود: FASTQ، SAM، BAM، VCF.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch12:pre1">
+  <p class="q">یک رکورد FASTQ چند خط دارد؟</p>
+  <ol class="opts">
+    <li>۲ خط</li>
+    <li>۳ خط</li>
+    <li data-correct>۴ خط</li>
+    <li>هر تعداد که توالی طول داشته باشد</li>
+  </ol>
+  <div class="explain">همیشه دقیقاً چهار خط: شناسه، توالی، جداکننده (+) و کیفیت. ۲ خط (یا بیشتر) مربوط به FASTA است.</div>
+</div>
+
+<h2 id="strings">توالی فقط یک رشتهٔ متنی است</h2>
+
+<p>از دید کامپیوتر هر توالی زیستی فقط یک رشته از کاراکترهاست: DNA با چهار حرف A T G C، RNA با A U G C و پروتئین با ۲۰ حرف. پس همهٔ کارهایی که با رشته می‌کنی (طول، اندیس، برش، جستجو) رایگان کار می‌کنند. تو از قبل بیشتر از آنچه فکر می‌کنی بلدی.</p>
+
+<pre data-lang="PYTHON"><code>seq = <span class="s">"ATGGCCATT"</span>
+len(seq)        <span class="c"># 9</span>
+seq[2:5]        <span class="c"># 'GGC'  (اندیس ۲ تا ۴؛ ۵ شامل نمی‌شود)</span>
+<span class="s">"GCC"</span> <span class="k">in</span> seq   <span class="c"># True</span></code></pre>
+
+<p>سؤال اصلی این است که این رشته‌ها (و اطلاعات کنارشان مثل کیفیت و موقعیت) را در چه <b>فایلی</b> نگه داریم. هر فرمت جواب یک نیاز است و در ادامه به ترتیب می‌بینیم: FASTA (فقط توالی)، FASTQ (توالی + کیفیت)، GenBank (توالی + حاشیه‌نویسی کامل)، GFF3/GTF (جای ژن‌ها)، SAM/BAM (جای هر خوانش روی ژنوم).</p>
+
+<h2 id="fasta">FASTA: ساده‌ترین فرمت</h2>
+
+<p>FASTA یک سرآیند و بعدش توالی است. خط اول با علامت <code>&gt;</code> شروع می‌شود و شناسه و توضیح را دارد. خط‌های بعد خود توالی‌اند (یک یا چند خط) تا رکورد بعدی. یک فایل می‌تواند چند رکورد داشته باشد.</p>
+
+<pre data-lang="FASTA"><code>&gt;seq1 example gene
+ATGGCCATTGTAATGGGCCGC
+TGAAAGGGTGCCCGATAG
+&gt;chr_demo example sequence
+ACGTTAGCCATGGATCCTAGGCATTACG</code></pre>
+
+<ul>
+  <li><b>خط ۱:</b> <code>&gt;</code> + شناسه (کلمهٔ اول، مثلاً seq1) + توضیح اختیاری.</li>
+  <li><b>خط‌های بعد:</b> توالی، یک یا چند خط (seq1 اینجا دو خط است).</li>
+  <li>کیفیت ندارد؛ فقط حروف.</li>
+  <li>کاربرد: وقتی فقط خود حروف مهم‌اند: ژنوم مرجع، توالی یک ژن، توالی پروتئین.</li>
+</ul>
+
+<aside class="callout pitfall">
+  <p>خطوط توالی یک رکورد FASTA ممکن است چند خط باشند. اگر طول توالی را حساب می‌کنی باید <b>همهٔ خط‌ها</b> را جمع کنی (و کاراکتر خط جدید را نشمار). رکورد seq1 در مثال بالا ۲۱ + ۱۸ = ۳۹ باز دارد.</p>
+</aside>
+
+<h2 id="fastq">FASTQ: توالی همراه کیفیت</h2>
+
+<p>خروجی دستگاه‌های توالی‌یابی هر باز را همراه با میزان اطمینانش می‌دهد. FASTQ همین کار را می‌کند و هر رکورد <b>دقیقاً چهار خط</b> است.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 330" width="740" role="img" aria-labelledby="fq-t">
+<title id="fq-t">ساختار یک رکورد FASTQ: چهار خط شامل شناسه، توالی، جداکننده و کیفیت، با یک کاراکتر کیفیت برای هر باز</title>
+<rect x="20" y="12" width="700" height="56" rx="8" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="560" y="32" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-accent">خط ۱: شناسه، با @ شروع می‌شود</text>
+<text x="40" y="52" font-size="16" font-weight="700" class="mono" style="direction:ltr">@read_001 lane1</text>
+<rect x="20" y="82" width="700" height="56" rx="8" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="560" y="102" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-accent">خط ۲: توالی بازها</text>
+<rect x="40" y="102" width="24" height="26" rx="4" class="f-g"/><text x="52.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="68" y="102" width="24" height="26" rx="4" class="f-a"/><text x="80.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="96" y="102" width="24" height="26" rx="4" class="f-t"/><text x="108.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="124" y="102" width="24" height="26" rx="4" class="f-t"/><text x="136.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="152" y="102" width="24" height="26" rx="4" class="f-a"/><text x="164.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="180" y="102" width="24" height="26" rx="4" class="f-c"/><text x="192.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<rect x="208" y="102" width="24" height="26" rx="4" class="f-a"/><text x="220.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="236" y="102" width="24" height="26" rx="4" class="f-g"/><text x="248.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="264" y="102" width="24" height="26" rx="4" class="f-g"/><text x="276.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="292" y="102" width="24" height="26" rx="4" class="f-t"/><text x="304.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="20" y="152" width="700" height="56" rx="8" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="560" y="172" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-accent">خط ۳: جداکننده (گاهی شناسه را تکرار می‌کند)</text>
+<text x="40" y="192" font-size="16" font-weight="700" class="mono" style="direction:ltr">+</text>
+<rect x="20" y="222" width="700" height="56" rx="8" class="f-surface-2 s-line" stroke-width="1"/>
+<text x="560" y="242" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-accent">خط ۴: یک کاراکتر کیفیت برای هر باز</text>
+<rect x="40" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="52.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">I</text>
+<rect x="68" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="80.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">I</text>
+<rect x="96" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="108.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">5</text>
+<rect x="124" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="136.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">?</text>
+<rect x="152" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="164.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">+</text>
+<rect x="180" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="192.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">#</text>
+<rect x="208" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="220.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">I</text>
+<rect x="236" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="248.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">I</text>
+<rect x="264" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="276.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">5</text>
+<rect x="292" y="242" width="24" height="26" rx="4" class="f-hl-soft"/><text x="304.0" y="260.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-ink-2">?</text>
+<g class="s-muted" stroke-width="1.5" stroke-dasharray="3 3">
+<line x1="52" y1="136" x2="52" y2="232"/>
+<line x1="80" y1="136" x2="80" y2="232"/>
+<line x1="108" y1="136" x2="108" y2="232"/>
+<line x1="136" y1="136" x2="136" y2="232"/>
+<line x1="164" y1="136" x2="164" y2="232"/>
+<line x1="192" y1="136" x2="192" y2="232"/>
+<line x1="220" y1="136" x2="220" y2="232"/>
+<line x1="248" y1="136" x2="248" y2="232"/>
+<line x1="276" y1="136" x2="276" y2="232"/>
+<line x1="304" y1="136" x2="304" y2="232"/>
+</g>
+<text x="170" y="304" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-muted">طول خط ۴ = طول خط ۲ (۱۰ باز، ۱۰ کاراکتر کیفیت)</text>
+<text x="560" y="304" font-size="12.5" text-anchor="middle" style="direction:rtl" class="t-muted">I = Q40 (عالی) · # = Q2 (بسیار بد)</text>
+</svg>
+<figcaption><b>شکل ۱۲.۱</b> — یک رکورد FASTQ. هر کاراکتر خط چهارم کیفیت باز بالای خودش است: اولین I کیفیت اولین باز G، و # کیفیت ششمین باز (C).</figcaption>
+</figure>
+
+<ol class="steps">
+  <li><b>خط ۱:</b> با <code>@</code> شروع می‌شود، بعدش شناسهٔ خوانش و توضیح اختیاری.</li>
+  <li><b>خط ۲:</b> خود توالی خوانده‌شده.</li>
+  <li><b>خط ۳:</b> با <code>+</code> شروع می‌شود؛ جداکننده است و گاهی دوباره شناسه را تکرار می‌کند.</li>
+  <li><b>خط ۴:</b> کیفیت (مقیاس Phred) برای هر باز، یک کاراکتر برای هر باز؛ پس طول خط ۴ = طول خط ۲.</li>
+</ol>
+
+<p>فایل‌های FASTQ را دستگاه‌های توالی‌یابی تولید می‌کنند و ابزارهای هم‌ترازی (مثل BWA)، کنترل کیفیت (مثل FastQC) و مونتاژ (مثل SPAdes) آن‌ها را می‌خوانند. پسوند فایل <code>.fastq</code> یا <code>.fq</code> است.</p>
+
+<aside class="callout pitfall">
+  <p>علامت <code>@</code> می‌تواند در خط کیفیت هم ظاهر شود (چون یک کاراکتر کیفیت معتبر است). پس نمی‌شود رکوردها را با «خطی که با @ شروع می‌شود» جدا کرد؛ باید چهارتا چهارتا خواند.</p>
+</aside>
+
+<div data-widget="fastq-parse"></div>
+
+<h2 id="phred">امتیاز کیفیت Phred</h2>
+
+<p>یک «درصد خطا» چطور در یک کاراکتر جا می‌شود؟ دو قدم: اول احتمال خطا <b>p</b> را به یک عدد صحیح کوچک <b>Q</b> تبدیل می‌کنیم، بعد Q را به یک کاراکتر.</p>
+
+<p style="text-align:center"><code>Q = −10 · log10(p)</code> &nbsp;&nbsp;⟺&nbsp;&nbsp; <code>p = 10^(−Q/10)</code></p>
+
+<p>Q بزرگ‌تر یعنی احتمال خطای کمتر. مقیاس لگاریتمی است: هر <b>۱۰ واحد</b> افزایش Q احتمال خطا را <b>۱۰ برابر</b> کمتر می‌کند (مثل دسی‌بل).</p>
+
+<table>
+  <thead><tr><th>Q</th><th>احتمال خطا</th><th>معنی</th><th>دقت</th></tr></thead>
+  <tbody>
+    <tr><td>Q10</td><td>0.1</td><td>یک خطا در ۱۰ باز</td><td>۹۰٪</td></tr>
+    <tr><td>Q20</td><td>0.01</td><td>یک خطا در ۱۰۰ باز</td><td>۹۹٪</td></tr>
+    <tr><td>Q30</td><td>0.001</td><td>یک خطا در ۱۰۰۰ باز</td><td>۹۹٫۹٪</td></tr>
+    <tr><td>Q40</td><td>0.0001</td><td>یک خطا در ۱۰٬۰۰۰ باز</td><td>۹۹٫۹۹٪</td></tr>
+  </tbody>
+</table>
+
+<div class="worked" data-title="از احتمال خطا به Q (مثال اسلاید ۶۹)">
+  <p class="problem">بازی (آدنین) با Q = 20 چه احتمال خطایی دارد؟ و اگر احتمال خطا ۰٫۰۰۱ باشد Q چقدر است؟</p>
+  <ol class="steps">
+    <li>فرمول: p = 10^(−Q/10).</li>
+    <li>برای Q = 20: p = 10^(−2) = <b>0.01</b> یعنی یک در صد.</li>
+    <li>برای p = 0.001: Q = −10 · log10(0.001) = −10 · (−3) = <b>30</b>.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> Q20 یعنی p = 0.01، و p = 0.001 یعنی Q30.</p>
+</div>
+
+<div class="fill" data-answer="40|Q40" data-id="ch12:f-q">
+  <p class="q">اگر احتمال خطای یک باز ۱ در ۱۰٬۰۰۰ باشد، Q برابر است با <input class="blank" type="text"></p>
+  <div class="explain">p = 10^(−4) پس Q = −10 · (−4) = 40.</div>
+</div>
+
+<h3>رمز Phred+33: از عدد Q به یک کاراکتر</h3>
+
+<p>برای اینکه خط ۴ همان‌قدر طول داشته باشد که خط ۲، هر Q را با یک کاراکتر می‌نویسیم:</p>
+<p style="text-align:center"><code>char = chr(Q + 33)</code> &nbsp;&nbsp;⟺&nbsp;&nbsp; <code>Q = ord(char) − 33</code></p>
+
+<table>
+  <thead><tr><th>کاراکتر</th><th>ASCII</th><th>Q</th><th>احتمال خطا</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><code>#</code></td><td>35</td><td>2</td><td>≈ 0.63</td><td>بسیار بد</td></tr>
+    <tr><td><code>+</code></td><td>43</td><td>10</td><td>0.1</td><td>۱ در ۱۰</td></tr>
+    <tr><td><code>5</code></td><td>53</td><td>20</td><td>0.01</td><td>۱ در ۱۰۰</td></tr>
+    <tr><td><code>?</code></td><td>63</td><td>30</td><td>0.001</td><td>۱ در ۱۰۰۰</td></tr>
+    <tr><td><code>I</code></td><td>73</td><td>40</td><td>0.0001</td><td>۱ در ۱۰٬۰۰۰</td></tr>
+  </tbody>
+</table>
+
+<p>کاراکتر <code>!</code> (ASCII 33) برابر Q = 0 است، یعنی کمترین کیفیت.</p>
+
+<aside class="callout simple">
+  <p>چرا ۳۳؟ کاراکترهای ASCII با کد کمتر از ۳۳ (فاصله و کاراکترهای کنترلی مثل خط جدید) قابل چاپ نیستند. با جابه‌جایی ۳۳ تایی، هر امتیاز کیفیت دقیقاً یک کاراکتر قابل چاپ می‌شود و خط ۴ هم‌طول خط ۲ می‌ماند.</p>
+</aside>
+
+<div class="worked" data-title="رمزگشایی رشتهٔ کیفیت اسلاید ۶۷">
+  <p class="problem">رشتهٔ کیفیت <code>II5?+#II5?</code> را به لیست Q تبدیل کن.</p>
+  <ol class="steps">
+    <li><code>I</code> دارای ASCII 73 است، 73 − 33 = <b>40</b>. دوباره I: 40.</li>
+    <li><code>5</code>: 53 − 33 = <b>20</b>.</li>
+    <li><code>?</code>: 63 − 33 = <b>30</b>.</li>
+    <li><code>+</code>: 43 − 33 = <b>10</b>.</li>
+    <li><code>#</code>: 35 − 33 = <b>2</b>.</li>
+    <li>دوباره I، I، 5، ? را بخوان: 40، 40، 20، 30.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> [40, 40, 20, 30, 10, 2, 40, 40, 20, 30]</p>
+</div>
+
+<pre data-lang="PYTHON"><code>q = <span class="s">"II5?+#II5?"</span>
+[ord(c) - <span class="n">33</span> <span class="k">for</span> c <span class="k">in</span> q]
+<span class="c"># [40, 40, 20, 30, 10, 2, 40, 40, 20, 30]</span>
+
+chr(<span class="n">30</span> + <span class="n">33</span>)          <span class="c"># '?'</span></code></pre>
+
+<div data-widget="phred"></div>
+
+<h3>یک مثال واقعی: SRR001666</h3>
+<pre data-lang="FASTQ"><code>@SRR001666.1 read_1
+GATTTGGGGTTCAAAGCAGT
++
+!''*((((***+))%%%++)</code></pre>
+
+<p>خط ۴ بیست کاراکتر دارد، به تعداد بازها. چند کاراکتر را رمزگشایی کنیم: <code>!</code> → 33−33 = 0؛ <code>'</code> (ASCII 39) → 6؛ <code>*</code> (ASCII 42) → 9؛ <code>(</code> (ASCII 40) → 7؛ <code>+</code> → 10؛ <code>)</code> (ASCII 41) → 8؛ <code>%</code> (ASCII 37) → 4. همهٔ اینها زیر Q10 هستند، یعنی این خوانش کیفیت بسیار پایینی دارد. (برای مقایسه: <code>I</code> برابر Q40 یعنی یک خطا در ۱۰٬۰۰۰.)</p>
+
+<details class="think">
+  <summary>کدام خوانش بهتر است: کیفیت‌هایی مثل IIIIIIII یا مثل ((((((((؟ و چرا؟</summary>
+  <div><p>اولی (Q40) بهتر است. دومی Q7 دارد؛ یعنی هر باز حدود ۲۰٪ احتمال خطا دارد (10^(−0.7) ≈ 0.2). در یک خوانش با این‌همه بازِ مشکوک، خطاها به مونتاژ یا شناسایی جهش‌ها وارد می‌شوند.</p></div>
+</details>
+
+<h3>خوانش خوب و بد، و برش دم</h3>
+<p>شیمی توالی‌یابی هرچه خوانش بلندتر شود کم‌اعتمادتر می‌شود (فصل <a href="11-sequencing.html">توالی‌یابی</a>). در یک خوانش خوب کیفیت در همهٔ طول بالاست؛ در خوانش بد کیفیت به سمت انتها می‌افتد (tail drop). بیوانفورماتیک‌دان‌ها این دم کم‌کیفیت را قبل از تحلیل <b>برش</b> (trimming) می‌دهند، چون بازهای غیرقابل‌اعتماد سیگنال نادرست وارد مونتاژ یا شناسایی جهش می‌کنند. رسم کیفیت در طول خوانش یکی از اولین مراحل کنترل کیفیت است.</p>
+
+<div class="quiz" data-id="ch12:s-fq">
+  <p class="q">کدام عبارت دربارهٔ رکورد FASTQ <code>@r1 / ACGT / + / II#I</code> درست است؟</p>
+  <ol class="opts">
+    <li>رکورد معتبر نیست چون خط کیفیت ۴ کاراکتر دارد</li>
+    <li data-correct>معتبر است و سومین باز (G) کیفیت Q2 دارد</li>
+    <li>معتبر است و سومین باز Q40 دارد</li>
+    <li>معتبر است و چهارمین باز Q2 دارد</li>
+  </ol>
+  <div class="explain">طول خط ۲ و ۴ هر دو ۴ است. سومین کاراکتر # است: 35 − 33 = 2.</div>
+</div>
+
+<h2 id="genbank">GenBank: نسخهٔ کامل و حاشیه‌نویسی‌شده</h2>
+
+<p>FASTA مثل یک <b>فتوکپی ساده</b> از متن یک کتاب است: فقط یک شناسه و حروف. GenBank مثل نسخهٔ آکادمیک کاملاً حاشیه‌نویسی‌شده با پانویس، فهرست و استناد است: نام موجود، محل ژن‌ها و نواحی رمزگذار (CDS)، منابع، تاریخ و اطلاعات ارسال‌کننده.</p>
+
+<div class="compare">
+  <div><h4>FASTA</h4><p>وقتی فقط توالی خام برای تحلیل لازم است.</p></div>
+  <div><h4>GenBank</h4><p>وقتی بافت کامل لازم است: موجود، جای ژن‌ها و نواحی رمزگذار، مرجع‌ها و متادیتای ثبت.</p></div>
+</div>
+
+<h2 id="gff">GFF3 و GTF: نقشهٔ ژن‌ها روی ژنوم</h2>
+
+<h3>یادآوری: ساختار یک ژن یوکاریوتی</h3>
+<ul>
+  <li><b>اگزون (Exon):</b> بخش‌هایی از ژن که در mRNA بالغ باقی می‌مانند.</li>
+  <li><b>اینترون (Intron):</b> بخش‌هایی که پیش از ساخت mRNA بالغ حذف می‌شوند (فصل <a href="06-transcription.html">رونویسی</a>).</li>
+  <li><b><span class="ltr">5′ UTR</span>:</b> ناحیهٔ ترجمه‌نشده پیش از کدون آغاز (ابتدای mRNA).</li>
+  <li><b><span class="ltr">3′ UTR</span>:</b> ناحیهٔ ترجمه‌نشده بعد از کدون پایان (انتهای mRNA).</li>
+  <li><b>CDS:</b> بخشی که واقعاً به پروتئین ترجمه می‌شود، از کدون آغاز تا کدون پایان.</li>
+</ul>
+
+<p>فایل <span class="term" data-en="General Feature Format">GFF3</span> و فایل GTF (Gene Transfer Format) این بازه‌ها را روی ژنوم ثبت می‌کنند. هر دو بر پایهٔ TSV‌اند (ستون‌ها با <b>Tab</b> جدا می‌شوند، مثل CSV)، ساختار مشابه دارند و <b>۹ ستون</b> دارند. هر خط یک «بازه» روی ژنوم است و می‌گوید آن بازه چیست (ژن، اگزون، CDS و ...). ویژگی‌ها <b>سلسله‌مراتبی</b>‌اند: gene ← mRNA ← exon/CDS، و با <code>Parent=…</code> مثل یک درخت به هم وصل می‌شوند.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 330" width="740" role="img" aria-labelledby="gn-t">
+  <title id="gn-t">ساختار یک ژن دو اگزونی روی ژنوم و ردیف‌های متناظر GFF: gene، mRNA، exon، CDS</title>
+  <text x="30" y="22" font-size="12" class="t-muted mono" style="direction:ltr">chr1  1000</text>
+  <text x="590" y="22" font-size="12" class="t-muted mono" style="direction:ltr">3000</text>
+  <line x1="60" y1="40" x2="640" y2="40" class="s-line" stroke-width="1"/>
+  <text x="14" y="76" font-size="12" font-weight="700" class="t-ink-2">gene</text>
+  <rect x="60" y="62" width="580" height="22" rx="3" class="f-surface-2 s-ink-2" stroke-width="1.5"/>
+  <text x="14" y="116" font-size="12" font-weight="700" class="t-ink-2">mRNA</text>
+  <rect x="60" y="102" width="145" height="22" rx="3" class="f-info-soft s-info" stroke-width="1.5"/>
+  <line x1="205" y1="113" x2="466" y2="113" class="s-muted" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="466" y="102" width="174" height="22" rx="3" class="f-info-soft s-info" stroke-width="1.5"/>
+  <text x="14" y="156" font-size="12" font-weight="700" class="t-ink-2">exon</text>
+  <rect x="60" y="142" width="145" height="22" rx="3" class="f-info"/>
+  <rect x="466" y="142" width="174" height="22" rx="3" class="f-info"/>
+  <text x="14" y="196" font-size="12" font-weight="700" class="t-ink-2">CDS</text>
+  <rect x="118" y="182" width="87" height="22" rx="3" class="f-hl"/>
+  <rect x="466" y="182" width="88" height="22" rx="3" class="f-hl"/>
+  <g font-size="11.5" text-anchor="middle" style="direction:rtl" class="t-muted">
+    <text x="89" y="226">UTR ′5</text>
+    <text x="160" y="248">اگزون ۱</text>
+    <text x="335" y="228">اینترون (حذف می‌شود)</text>
+    <text x="510" y="248">اگزون ۲</text>
+    <text x="597" y="226">UTR ′3</text>
+  </g>
+  <g class="s-muted" stroke-width="1" stroke-dasharray="2 3">
+    <line x1="60" y1="164" x2="60" y2="212"/><line x1="118" y1="204" x2="118" y2="214"/><line x1="205" y1="164" x2="205" y2="212"/><line x1="466" y1="164" x2="466" y2="212"/><line x1="554" y1="204" x2="554" y2="214"/><line x1="640" y1="164" x2="640" y2="212"/>
+  </g>
+  <g font-size="10.5" class="mono t-muted" text-anchor="middle" style="direction:ltr">
+    <text x="60" y="270">1000</text><text x="118" y="284">1200</text><text x="205" y="270">1500</text><text x="466" y="270">2401</text><text x="554" y="284">2702</text><text x="640" y="270">3000</text>
+  </g>
+  <text x="370" y="316" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">هر مستطیل یک خط GFF است. (UTRها از تفاضل exon و CDS به‌دست می‌آیند.)</text>
+</svg>
+<figcaption><b>شکل ۱۲.۲</b> — ژن مثال با دو اگزون روی رشتهٔ +. اعداد موقعیت‌های GFF در متن زیرند. CDS تنها بخشی از اگزون‌هاست که به پروتئین ترجمه می‌شود.</figcaption>
+</figure>
+
+<h3>یک نمونهٔ کوچک GFF3</h3>
+<pre data-lang="GFF3"><code><span class="c">##gff-version 3</span>
+chr1	demo	gene	1000	3000	.	+	.	ID=gene1;Name=DEMO1
+chr1	demo	mRNA	1000	3000	.	+	.	ID=tx1;Parent=gene1
+chr1	demo	exon	1000	1500	.	+	.	ID=ex1;Parent=tx1
+chr1	demo	exon	2401	3000	.	+	.	ID=ex2;Parent=tx1
+chr1	demo	CDS	1200	1500	.	+	0	ID=cds1;Parent=tx1
+chr1	demo	CDS	2401	2702	.	+	2	ID=cds2;Parent=tx1</code></pre>
+
+<table>
+  <thead><tr><th>ستون</th><th>نام</th><th>معنی (و مقدار در مثال)</th></tr></thead>
+  <tbody>
+    <tr><td>۱</td><td>seqname</td><td>نام کروموزوم یا scaffold (chr1)</td></tr>
+    <tr><td>۲</td><td>source</td><td>برنامه یا پایگاهی که ویژگی را تولید کرده (demo)</td></tr>
+    <tr><td>۳</td><td>feature</td><td>نوع: gene، mRNA، exon، CDS، UTR ...</td></tr>
+    <tr><td>۴ و ۵</td><td>start / end</td><td>موقعیت‌های <b>1-based</b> و دو سر شامل؛ اگزون ۱ از ۱۰۰۰ تا ۱۵۰۰ یعنی ۵۰۱ باز</td></tr>
+    <tr><td>۶</td><td>score</td><td>عدد اعشاری، یا <code>.</code> اگر استفاده نشده (اینجا .)</td></tr>
+    <tr><td>۷</td><td>strand</td><td><code>+</code> (رو به جلو) یا <code>−</code> (رو به عقب)</td></tr>
+    <tr><td>۸</td><td>frame</td><td>0، 1، 2 یا <code>.</code> برای قاب خوانش؛ فقط CDS مقدار دارد</td></tr>
+    <tr><td>۹</td><td>attribute</td><td>جفت‌های برچسب=مقدار: ID=…;Parent=… (در GFF3)</td></tr>
+  </tbody>
+</table>
+
+<p>خطوطی که با <code>#</code> یا <code>##</code> شروع می‌شوند اطلاعات کلی فایل‌اند (مثلاً نسخهٔ GFF) و ویژگی نیستند. ستون آخر در نمونه‌های واقعی (مثل GENCODE) علاوه بر ID و Parent چیزهایی مثل gene_name هم دارد. در GFF3 رابطهٔ پدر–فرزند را <code>Parent</code> نشان می‌دهد: اگزون‌ها فرزند mRNA‌اند و mRNA فرزند gene.</p>
+
+<aside class="callout pitfall">
+  <p>موقعیت‌ها در GFF از ۱ شروع می‌شوند و دو سر بازه را شامل می‌شوند. اگر در پایتون برش بزنی باید برای بازهٔ <code>[start, end]</code> بنویسی <code>seq[start-1:end]</code>.</p>
+</aside>
+
+<div class="quiz" data-id="ch12:s-gff">
+  <p class="q">طول اگزون ۲ در نمونهٔ GFF3 (از 2401 تا 3000) چند باز است؟</p>
+  <ol class="opts">
+    <li>599</li>
+    <li data-correct>600</li>
+    <li>601</li>
+    <li>3000</li>
+  </ol>
+  <div class="explain">چون موقعیت‌ها 1-based و دو سر شامل‌اند: end − start + 1 = 3000 − 2401 + 1 = 600.</div>
+</div>
+
+<h3>این فایل‌ها کجا به کار می‌آیند؟</h3>
+<ol class="steps">
+  <li><b>نمایش:</b> دیدن جای ژن‌ها، اگزون‌ها و UTRها روی کروموزوم در برنامه‌هایی مثل IGV یا UCSC.</li>
+  <li><b>نگاشت RNA-seq:</b> ابزارهایی مثل HISAT2 و STAR باید مرز اگزون و اینترون را بدانند تا اتصال‌های پیرایش (splice junction) را درست پیدا کنند.</li>
+  <li><b>شمارش:</b> ابزارهایی مثل RSEM و featureCounts می‌شمارند چند خوانش روی اگزون‌های هر ژن افتاده؛ این میزان بیان ژن است.</li>
+  <li><b>هر کار دیگری که جای ویژگی‌ها را بخواهد:</b> مثلاً تفسیر جهش‌ها و طراحی پرایمر.</li>
+</ol>
+
+<details class="think">
+  <summary>چرا HISAT2 و STAR برای نگاشت RNA-seq به فایل GFF/GTF نیاز دارند؟</summary>
+  <div><p>mRNA بالغ از اتصال اگزون‌ها ساخته شده و اینترون‌ها حذف شده‌اند. بنابراین یک خوانش RNA-seq ممکن است نیمی از آن روی انتهای اگزون ۱ و نیم دیگر روی ابتدای اگزون ۲ (با فاصلهٔ چند صد باز روی ژنوم) بنشیند. ابزار باید بداند مرزها کجاست تا این خوانش «شکسته» را درست روی ژنوم بگذارد.</p></div>
+</details>
+
+<h2 id="sam">SAM و BAM: خوانش‌های نگاشت‌شده</h2>
+
+<p>SAM (Sequence Alignment Map) یک فایل <b>متنی</b> است و BAM (Binary Alignment Map) همان محتوا به شکل <b>باینری فشرده</b> است که معمولاً <b>مرتب و ایندکس‌شده</b> است تا جست‌وجویش سریع باشد. این فایل خروجی ابزارهای هم‌ترازی است و می‌گوید هر خوانش کجای ژنوم مرجع نشسته است. دو بخش دارد: سرآیند و بخش هم‌ترازی.</p>
+
+<ul>
+  <li><b>سرآیند (header):</b> خطوطی که با <code>@</code> شروع می‌شوند: اطلاعات درباره ژنوم مرجع، نسخه، ابزار هم‌ترازی و پارامترها. مثال: <code>@SQ SN:chr1 LN:248956422</code> یعنی کروموزوم chr1 با طول حدود ۲۴۸ میلیون باز.</li>
+  <li><b>بخش هم‌ترازی:</b> هر خط یک خوانش با ۱۱ ستون اجباری.</li>
+</ul>
+
+<table>
+  <thead><tr><th>#</th><th>ستون</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td>۱</td><td>QNAME</td><td>نام یا شناسهٔ خوانش</td></tr>
+    <tr><td>۲</td><td>FLAG</td><td>عدد بیتی برای وضعیت خوانش: 0 = نگاشت‌شده (رشتهٔ رو به جلو)، 4 = نگاشت‌نشده، 16 = رشتهٔ معکوس</td></tr>
+    <tr><td>۳</td><td>RNAME</td><td>کروموزوم / contig مرجع</td></tr>
+    <tr><td>۴</td><td>POS</td><td>موقعیت شروع هم‌ترازی (از ۱)</td></tr>
+    <tr><td>۵</td><td>MAPQ</td><td>کیفیت نگاشت (۰ تا ۶۰)</td></tr>
+    <tr><td>۶</td><td>CIGAR</td><td>نحوهٔ هم‌ترازی: match، insertion، deletion</td></tr>
+    <tr><td>۷</td><td>RNEXT</td><td>کروموزوم خوانش جفت (paired-end)</td></tr>
+    <tr><td>۸</td><td>PNEXT</td><td>موقعیت خوانش جفت</td></tr>
+    <tr><td>۹</td><td>TLEN</td><td>طول قالب (فاصلهٔ بین دو خوانش جفت)</td></tr>
+    <tr><td>۱۰</td><td>SEQ</td><td>توالی بازهای خوانش</td></tr>
+    <tr><td>۱۱</td><td>QUAL</td><td>کیفیت Phred هر باز (همان رشتهٔ FASTQ)</td></tr>
+  </tbody>
+</table>
+
+<h3>مثال ساده (اسلاید ۷۸)</h3>
+
+<figure class="fig">
+<svg viewBox="0 0 720 270" width="720" role="img" aria-labelledby="sm-t">
+<title id="sm-t">هم‌ترازی خوانش ATCGATG با مرجع chr1 از موقعیت ۵، مربوط به خط SAM مثال</title>
+<text x="70" y="68" font-size="13" font-weight="700" text-anchor="middle" style="direction:rtl">مرجع chr1</text>
+<text x="165" y="34" font-size="12" text-anchor="middle" class="t-muted mono">1</text>
+<rect x="150" y="46" width="30" height="30" rx="4" class="f-a"/><text x="165.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<text x="199" y="34" font-size="12" text-anchor="middle" class="t-muted mono">2</text>
+<rect x="184" y="46" width="30" height="30" rx="4" class="f-c"/><text x="199.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<text x="233" y="34" font-size="12" text-anchor="middle" class="t-muted mono">3</text>
+<rect x="218" y="46" width="30" height="30" rx="4" class="f-t"/><text x="233.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<text x="267" y="34" font-size="12" text-anchor="middle" class="t-muted mono">4</text>
+<rect x="252" y="46" width="30" height="30" rx="4" class="f-g"/><text x="267.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<text x="301" y="34" font-size="12" text-anchor="middle" class="t-muted mono">5</text>
+<rect x="286" y="46" width="30" height="30" rx="4" class="f-a"/><text x="301.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<text x="335" y="34" font-size="12" text-anchor="middle" class="t-muted mono">6</text>
+<rect x="320" y="46" width="30" height="30" rx="4" class="f-t"/><text x="335.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<text x="369" y="34" font-size="12" text-anchor="middle" class="t-muted mono">7</text>
+<rect x="354" y="46" width="30" height="30" rx="4" class="f-c"/><text x="369.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<text x="403" y="34" font-size="12" text-anchor="middle" class="t-muted mono">8</text>
+<rect x="388" y="46" width="30" height="30" rx="4" class="f-g"/><text x="403.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<text x="437" y="34" font-size="12" text-anchor="middle" class="t-muted mono">9</text>
+<rect x="422" y="46" width="30" height="30" rx="4" class="f-a"/><text x="437.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<text x="471" y="34" font-size="12" text-anchor="middle" class="t-muted mono">10</text>
+<rect x="456" y="46" width="30" height="30" rx="4" class="f-t"/><text x="471.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<text x="505" y="34" font-size="12" text-anchor="middle" class="t-muted mono">11</text>
+<rect x="490" y="46" width="30" height="30" rx="4" class="f-g"/><text x="505.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<text x="539" y="34" font-size="12" text-anchor="middle" class="t-muted mono">12</text>
+<rect x="524" y="46" width="30" height="30" rx="4" class="f-c"/><text x="539.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<text x="573" y="34" font-size="12" text-anchor="middle" class="t-muted mono">13</text>
+<rect x="558" y="46" width="30" height="30" rx="4" class="f-a"/><text x="573.0" y="66.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<text x="70" y="144" font-size="13" font-weight="700" text-anchor="middle" style="direction:rtl">خوانش read123</text>
+<line x1="301" y1="78" x2="301" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="286" y="120" width="30" height="30" rx="4" class="f-a"/><text x="301.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<line x1="335" y1="78" x2="335" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="320" y="120" width="30" height="30" rx="4" class="f-t"/><text x="335.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<line x1="369" y1="78" x2="369" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="354" y="120" width="30" height="30" rx="4" class="f-c"/><text x="369.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<line x1="403" y1="78" x2="403" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="388" y="120" width="30" height="30" rx="4" class="f-g"/><text x="403.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<line x1="437" y1="78" x2="437" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="422" y="120" width="30" height="30" rx="4" class="f-a"/><text x="437.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<line x1="471" y1="78" x2="471" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="456" y="120" width="30" height="30" rx="4" class="f-t"/><text x="471.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<line x1="505" y1="78" x2="505" y2="118" class="s-ok" stroke-width="2"/>
+<rect x="490" y="120" width="30" height="30" rx="4" class="f-g"/><text x="505.0" y="140.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<path d="M286 160 v10 h234 v-10" class="f-none s-accent" stroke-width="2"/>
+<text x="403.0" y="190" font-size="13" text-anchor="middle" style="direction:rtl" class="t-accent">POS = 5 · CIGAR = 7M</text>
+<text x="360" y="226" font-size="13" text-anchor="middle" class="mono">read123  0  chr1  5  60  7M  *  0  0  ATCGATG  IIIIIII</text>
+<text x="360" y="250" font-size="12" text-anchor="middle" class="t-muted" style="direction:rtl">شمارهٔ موقعیت از ۱ شروع می‌شود</text>
+</svg>
+<figcaption><b>شکل ۱۲.۳</b> — خوانش ATCGATG از موقعیت ۵ مرجع شروع می‌شود و هر هفت باز با مرجع یکی است.</figcaption>
+</figure>
+
+<pre data-lang="SAM"><code>read123  0  chr1  5  60  7M  *  0  0  ATCGATG  IIIIIII</code></pre>
+
+<table>
+  <thead><tr><th>فیلد</th><th>مقدار</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td>QNAME</td><td>read123</td><td>نام خوانش</td></tr>
+    <tr><td>FLAG</td><td>0</td><td>نگاشت‌شده، بدون مشکل (رشتهٔ رو به جلو)</td></tr>
+    <tr><td>RNAME</td><td>chr1</td><td>کروموزوم ۱</td></tr>
+    <tr><td>POS</td><td>5</td><td>شروع از باز پنجم مرجع</td></tr>
+    <tr><td>MAPQ</td><td>60</td><td>نگاشت خیلی مطمئن</td></tr>
+    <tr><td>CIGAR</td><td>7M</td><td>هفت باز پیاپی match</td></tr>
+    <tr><td>RNEXT / PNEXT / TLEN</td><td>* 0 0</td><td>paired-end نداریم</td></tr>
+    <tr><td>SEQ / QUAL</td><td>ATCGATG / IIIIIII</td><td>توالی و کیفیت (همه Q40)</td></tr>
+  </tbody>
+</table>
+
+<div class="quiz" data-id="ch12:s-sam">
+  <p class="q">اگر در فایل SAM ستون POS برابر ۵ و CIGAR برابر 7M باشد، خوانش روی کدام موقعیت‌های مرجع می‌نشیند؟</p>
+  <ol class="opts">
+    <li>۴ تا ۱۰</li>
+    <li data-correct>۵ تا ۱۱</li>
+    <li>۵ تا ۱۲</li>
+    <li>۱ تا ۷</li>
+  </ol>
+  <div class="explain">POS 1-based است و ۷ باز از ۵ تا ۵ + ۷ − ۱ = ۱۱ را می‌پوشاند.</div>
+</div>
+
+<h3>CIGAR: توصیف هم‌ترازی</h3>
+<p>رشتهٔ CIGAR از تعدادها و حروف عملیات ساخته می‌شود: <b>M</b> = match یا mismatch (حرف روی حرف می‌نشیند، چه برابر باشند چه نه)، <b>I</b> = insertion (حرفی در خوانش هست که در مرجع نیست)، <b>D</b> = deletion (حرفی در مرجع هست که در خوانش نیست) و <b>S</b> = soft clip (ابتدا یا انتهای خوانش که هم‌تراز نشده ولی در SEQ هست).</p>
+
+<figure class="fig">
+<svg viewBox="0 0 740 300" width="740" role="img" aria-labelledby="cg-t">
+<title id="cg-t">دو مثال CIGAR: درج یک باز در خوانش (3M1I3M) و حذف یک باز از خوانش نسبت به مرجع (2M1D4M)</title>
+<text x="30" y="22" font-size="13" font-weight="700" class="t-accent" style="direction:ltr">3M1I3M</text>
+<text x="75" y="64" font-size="12" text-anchor="middle" style="direction:rtl">مرجع</text>
+<rect x="130" y="40" width="30" height="30" rx="4" class="f-a"/><text x="145.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="164" y="40" width="30" height="30" rx="4" class="f-t"/><text x="179.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="198" y="40" width="30" height="30" rx="4" class="f-c"/><text x="213.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<rect x="232" y="40" width="30" height="30" rx="4" class="f-g"/><text x="247.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="266" y="40" width="30" height="30" rx="4" class="f-a"/><text x="281.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="300" y="40" width="30" height="30" rx="4" class="f-t"/><text x="315.0" y="60.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<text x="75" y="124" font-size="12" text-anchor="middle" style="direction:rtl">خوانش</text>
+<rect x="130" y="100" width="30" height="30" rx="4" class="f-a"/><text x="145.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="164" y="100" width="30" height="30" rx="4" class="f-t"/><text x="179.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="198" y="100" width="30" height="30" rx="4" class="f-c"/><text x="213.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<rect x="232" y="100" width="30" height="30" rx="4" class="f-g"/><text x="247.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="266" y="100" width="30" height="30" rx="4" class="f-a"/><text x="281.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="300" y="100" width="30" height="30" rx="4" class="f-t"/><text x="315.0" y="120.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="215" y="136" width="30" height="30" rx="4" class="f-warn"/><text x="230" y="156" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<text x="420" y="156" font-size="12" text-anchor="middle" style="direction:rtl" class="t-hl">درج (I): این حرف در مرجع نیست</text>
+<text x="30" y="190" font-size="13" font-weight="700" class="t-accent" style="direction:ltr">2M1D4M</text>
+<text x="75" y="226" font-size="12" text-anchor="middle" style="direction:rtl">مرجع</text>
+<rect x="130" y="204" width="30" height="30" rx="4" class="f-a"/><text x="145.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="164" y="204" width="30" height="30" rx="4" class="f-t"/><text x="179.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="198" y="204" width="30" height="30" rx="4" class="f-c"/><text x="213.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">C</text>
+<rect x="232" y="204" width="30" height="30" rx="4" class="f-g"/><text x="247.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="266" y="204" width="30" height="30" rx="4" class="f-a"/><text x="281.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="300" y="204" width="30" height="30" rx="4" class="f-t"/><text x="315.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="334" y="204" width="30" height="30" rx="4" class="f-g"/><text x="349.0" y="224.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<text x="75" y="274" font-size="12" text-anchor="middle" style="direction:rtl">خوانش</text>
+<rect x="130" y="250" width="30" height="30" rx="4" class="f-a"/><text x="145.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="164" y="250" width="30" height="30" rx="4" class="f-t"/><text x="179.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="198" y="250" width="30" height="30" rx="4" class="f-none s-bad" stroke-width="2" stroke-dasharray="4 3"/><text x="213" y="270" font-size="14" text-anchor="middle" class="mono t-muted">-</text>
+<rect x="232" y="250" width="30" height="30" rx="4" class="f-g"/><text x="247.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<rect x="266" y="250" width="30" height="30" rx="4" class="f-a"/><text x="281.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">A</text>
+<rect x="300" y="250" width="30" height="30" rx="4" class="f-t"/><text x="315.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">T</text>
+<rect x="334" y="250" width="30" height="30" rx="4" class="f-g"/><text x="349.0" y="270.0" font-size="14" font-weight="700" text-anchor="middle" class="mono t-white">G</text>
+<text x="520" y="270" font-size="12" text-anchor="middle" style="direction:rtl" class="t-hl">حذف (D): C در خوانش نیست</text>
+</svg>
+<figcaption><b>شکل ۱۲.۴</b> — در 3M1I3M یک حرف اضافه در خوانش است (طول خوانش ۷، روی مرجع ۶ باز را می‌پوشاند). در 2M1D4M یک حرف از مرجع در خوانش نیست (طول خوانش ۶، روی مرجع ۷ باز).</figcaption>
+</figure>
+
+<div class="quiz" data-id="ch12:s-cigar">
+  <p class="q">خوانشی با CIGAR برابر 5M2D3M چند باز دارد و چند باز از مرجع را می‌پوشاند؟</p>
+  <ol class="opts">
+    <li>۱۰ باز در خوانش، ۱۰ باز از مرجع</li>
+    <li>۸ باز در خوانش، ۸ باز از مرجع</li>
+    <li data-correct>۸ باز در خوانش، ۱۰ باز از مرجع</li>
+    <li>۱۰ باز در خوانش، ۸ باز از مرجع</li>
+  </ol>
+  <div class="explain">M و I در طول خوانش (SEQ) حساب می‌شوند: ۵ + ۳ = ۸. M و D روی مرجع حساب می‌شوند: ۵ + ۲ + ۳ = ۱۰. حذف D باز اضافه‌ای در خوانش نمی‌سازد.</div>
+</div>
+
+<h2 id="flow">خط لولهٔ فرمت‌ها</h2>
+
+<figure class="fig">
+<svg viewBox="0 0 740 150" width="740" role="img" aria-labelledby="fl-t">
+  <title id="fl-t">جریان فایل‌ها: Sequencer به FASTQ، با BWA یا HISAT2 به SAM، با samtools به BAM، با bcftools به VCF</title>
+  <defs><marker id="fl-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <rect x="10" y="40" width="110" height="44" rx="8" class="f-surface-2 s-line" stroke-width="1.5"/><text x="65" y="67" class="mono">Sequencer</text>
+    <rect x="170" y="40" width="100" height="44" rx="8" class="f-accent"/><text x="220" y="67" class="t-white mono">FASTQ</text>
+    <rect x="330" y="40" width="90" height="44" rx="8" class="f-info"/><text x="375" y="67" class="t-white mono">SAM</text>
+    <rect x="480" y="40" width="90" height="44" rx="8" class="f-info"/><text x="525" y="67" class="t-white mono">BAM</text>
+    <rect x="630" y="40" width="100" height="44" rx="8" class="f-hl"/><text x="680" y="67" class="t-white mono">VCF</text>
+  </g>
+  <g class="s-muted" stroke-width="1.6" marker-end="url(#fl-ah)">
+    <line x1="120" y1="62" x2="166" y2="62"/><line x1="270" y1="62" x2="326" y2="62"/><line x1="420" y1="62" x2="476" y2="62"/><line x1="570" y1="62" x2="626" y2="62"/>
+  </g>
+  <g font-size="11.5" text-anchor="middle" class="t-muted mono">
+    <text x="298" y="108">BWA / HISAT2</text><text x="448" y="108">samtools</text><text x="598" y="108">bcftools</text>
+  </g>
+  <g font-size="11.5" text-anchor="middle" class="t-muted" style="direction:rtl">
+    <text x="220" y="130">داده خام</text><text x="375" y="130">متن، یک خط برای هر خوانش</text><text x="525" y="130">فشرده، مرتب و ایندکس</text><text x="680" y="130">واریانت‌ها (جهش‌ها)</text>
+  </g>
+</svg>
+<figcaption><b>شکل ۱۲.۵</b> — مسیر داده: دستگاه FASTQ می‌دهد؛ هم‌ترازساز آن را به SAM تبدیل می‌کند؛ samtools به BAM فشرده می‌برد؛ bcftools جهش‌ها را در فایل VCF می‌نویسد.</figcaption>
+</figure>
+
+<h2 id="pdb">یادآوری: فرمت PDB</h2>
+
+<p>ساختار سه‌بعدی پروتئین‌ها (فصل <a href="03-proteins.html">پروتئین‌ها</a>) در پایگاه PDB (rcsb.org) در یک فایل متنی با «نوع رکورد» ذخیره می‌شود. مهم‌ترین رکوردها:</p>
+<table>
+  <thead><tr><th>رکورد</th><th>چه چیزی را شامل می‌شود</th></tr></thead>
+  <tbody>
+    <tr><td>HEADER</td><td>اطلاعات کلی دربارهٔ ساختار؛ نمای کلی فایل</td></tr>
+    <tr><td>TITLE</td><td>توضیح متنی دربارهٔ اینکه ساختار مربوط به چیست</td></tr>
+    <tr><td>COMPND</td><td>مولکول‌ها و زنجیره‌های موجود در ساختار</td></tr>
+    <tr><td>SOURCE</td><td>منبع زیستی مولکول (از چه موجودی به دست آمده)</td></tr>
+    <tr><td>EXPDTA</td><td>روش آزمایشی تعیین ساختار</td></tr>
+    <tr><td>ATOM</td><td>اتم‌ها و مختصات سه‌بعدی آن‌ها؛ مهم‌ترین بخش برای تحلیل محاسباتی</td></tr>
+    <tr><td>CONECT</td><td>پیوند بین اتم‌ها، در صورت وجود</td></tr>
+  </tbody>
+</table>
+<p>هر خط ATOM این فیلدها را دارد: شمارهٔ اتم (شناسهٔ یکتا؛ مثال 1)، نوع اتم (مثلاً N یعنی نیتروژن)، باقی‌مانده یا آمینواسید (مثلاً MET متیونین)، زنجیره (مثلاً D)، شمارهٔ باقی‌مانده (موقعیت آمینواسید در زنجیره) و مختصات X، Y و Z (مثلاً 12.345، 25.678، 18.901).</p>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>هر توالی زیستی یک رشته است؛ <code>len</code>، برش و <code>in</code> بر آن کار می‌کنند.</li>
+    <li><b>FASTA:</b> سرآیند با <code>&gt;</code> + توالی (یک یا چند خط)، چند رکورد در یک فایل؛ بدون کیفیت.</li>
+    <li><b>FASTQ:</b> دقیقاً ۴ خط: <code>@</code> شناسه، توالی، <code>+</code>، کیفیت؛ طول خط ۴ = طول خط ۲.</li>
+    <li><b>Phred:</b> Q = −10·log10(p)؛ هر ۱۰ واحد = ۱۰ برابر خطای کمتر؛ Q20 = ۱٪، Q30 = ۰٫۱٪، Q40 = ۰٫۰۱٪.</li>
+    <li><b>Phred+33:</b> char = chr(Q+33)، Q = ord(char) − 33؛ I = Q40، ? = Q30، 5 = Q20، + = Q10، # = Q2، ! = Q0.</li>
+    <li><b>GenBank:</b> FASTA به‌علاوهٔ حاشیه‌نویسی کامل (موجود، ژن‌ها، CDS، منابع).</li>
+    <li><b>GFF3/GTF:</b> ۹ ستون جداشده با Tab؛ start/end 1-based و دو سر شامل؛ ساختار سلسله‌مراتبی gene ← mRNA ← exon/CDS.</li>
+    <li><b>SAM:</b> متن؛ <b>BAM:</b> باینری فشرده، مرتب و ایندکس‌شده. ۱۱ ستون اجباری؛ POS 1-based؛ CIGAR با M، I، D و S.</li>
+    <li>مسیر: Sequencer ← FASTQ ← (BWA/HISAT2) ← SAM ← (samtools) ← BAM ← (bcftools) ← VCF.</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

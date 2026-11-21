@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root="..">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DNA، زبان حیات · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="مادهٔ ژنتیکی، کروموزوم، فشرده‌سازی DNA، ساختار نوکلئوتید، جفت‌شدن بازها، مکمل معکوس و محتوای GC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="../assets/js/core.js"></script>
+</head>
+<body data-chapter="ch04">
+<main class="chapter">
+
+<header class="hero" data-src="فایل ۱ (advance_bio_part1)، اسلایدهای ۷۲ تا ۹۴" data-motif="ATGCGTACGTTAGCGATTACAATGC">
+  <h1>DNA، زبان حیات</h1>
+  <p class="lead">چرا بچه‌ها شبیه پدر و مادرشان می‌شوند و نه شبیه بچه‌فیل؟ جواب در مولکولی است که با فقط چهار حرف نوشته شده. در این فصل یاد می‌گیری این مولکول کجای سلول است، چطور در جای کوچکی جا می‌شود و چرا هر رشته‌اش رشتهٔ روبه‌رو را تعیین می‌کند.</p>
+</header>
+
+<section class="objectives">
+  <p class="obj-title">بعد از این فصل می‌توانی:</p>
+  <ul>
+    <li>آزمایش هرشی و چیس را <b>توضیح بدهی</b> و بگویی چرا ثابت کرد مادهٔ ژنتیکی DNA است، نه پروتئین.</li>
+    <li>رابطهٔ DNA، کروموزوم، هیستون و هسته را <b>شرح بدهی</b>.</li>
+    <li>اجزای یک نوکلئوتید و قاعدهٔ جفت‌شدن بازها را <b>نام ببری</b>.</li>
+    <li>مکمل معکوس یک توالی را <b>حساب کنی</b>.</li>
+    <li>محتوای GC و تعداد پیوندهای هیدروژنی را <b>محاسبه کنی</b> و بگویی کدام DNA دیرتر باز می‌شود.</li>
+  </ul>
+</section>
+
+<div class="quiz" data-label="پیش‌آزمون — قبل از خواندن حدس بزن؛ نمره ندارد" data-id="ch04:pre1">
+  <p class="q">در یک DNA دورشته‌ای، کدام جفت باز با پیوندهای هیدروژنی بیشتری به هم چسبیده‌اند؟</p>
+  <ol class="opts">
+    <li>A با T</li>
+    <li data-correct>G با C</li>
+    <li>A با G</li>
+    <li>همه یکسان‌اند</li>
+  </ol>
+  <div class="explain">G و C با <b>سه</b> پیوند هیدروژنی جفت می‌شوند و A و T با <b>دو</b> پیوند. A هیچ‌وقت با G جفت نمی‌شود. اگر غلط حدس زدی نگران نباش؛ تحقیقات نشان می‌دهد حدس زدن قبل از یادگیری، به خاطر سپردن را بهتر می‌کند. در بخش ۴.۵ دلیلش را می‌بینی.</div>
+</div>
+
+<h2 id="genetic-material">مادهٔ ژنتیکی چیست؟</h2>
+
+<p>از قدیم معلوم بود که هر موجود شبیه والدینش می‌شود. سؤال این بود: <b>اطلاعاتی که این شباهت را می‌سازد کجای سلول ذخیره شده و چطور به نسل بعد می‌رسد؟</b> دانشمندان سال‌ها جواب را نمی‌دانستند و اسم این مادهٔ ناشناخته را گذاشتند <span class="term" data-en="Genetic material">مادهٔ ژنتیکی</span>.</p>
+
+<p>حدس اول <b>پروتئین</b> بود. منطقش هم قابل‌قبول بود: پروتئین‌ها با الفبای ۲۰ حرفی (۲۰ نوع آمینواسید) ساخته می‌شوند و DNA با الفبای ۴ حرفی؛ به نظر می‌رسید برای نوشتن این‌همه اطلاعات، الفبای بزرگ‌تر مناسب‌تر باشد. بعدها این حدس اصلاح شد و معلوم شد مادهٔ ژنتیکی <b>DNA</b> است.</p>
+
+<aside class="callout analogy">
+  <p>الفبای کوچک مشکلی ندارد. کامپیوتر همه‌چیز را فقط با دو حرف (۰ و ۱) ذخیره می‌کند. چیزی که ظرفیت اطلاعات را می‌سازد <b>طول رشته</b> است، نه اندازهٔ الفبا. ژنوم انسان حدود ۳ میلیارد حرف دارد.</p>
+</aside>
+
+<h3>آزمایش هرشی و چیس (۱۹۵۲)</h3>
+
+<p>آلفرد هرشی و مارتا چیس از <span class="term" data-en="Bacteriophage">باکتریوفاژ</span> استفاده کردند؛ ویروسی که فقط از دو چیز ساخته شده: یک پوستهٔ پروتئینی و مقداری DNA داخل آن. فاژ به باکتری می‌چسبد و <b>مادهٔ ژنتیکی‌اش</b> را به داخل باکتری تزریق می‌کند. پس کافی بود ببینند کدام‌یک وارد باکتری می‌شود.</p>
+
+<p>ترفندشان <b>برچسب رادیواکتیو</b> بود. دو عنصر را انتخاب کردند که هر کدام فقط در یکی از دو مولکول هست:</p>
+<ul>
+  <li><b>گوگرد (<span class="ltr">³⁵S</span>)</b>: در پروتئین هست (در آمینواسیدهای سیستئین و متیونین) ولی DNA اصلاً گوگرد ندارد.</li>
+  <li><b>فسفر (<span class="ltr">³²P</span>)</b>: در اسکلت DNA فراوان است ولی پروتئین تقریباً فسفر ندارد.</li>
+</ul>
+
+<figure class="fig">
+<svg viewBox="0 0 760 330" width="760" role="img" aria-labelledby="hc-t">
+  <title id="hc-t">آزمایش هرشی و چیس: در آزمایش اول پروتئین فاژ و در آزمایش دوم DNA فاژ رادیواکتیو است</title>
+  <defs><marker id="hc-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-muted"/></marker></defs>
+  <!-- step labels -->
+  <g font-size="12" class="t-muted" text-anchor="middle">
+    <text x="90" y="18" class="t-muted">۱. فاژ نشان‌دار</text>
+    <text x="270" y="18" class="t-muted">۲. آلوده کردن باکتری</text>
+    <text x="450" y="18" class="t-muted">۳. مخلوط‌کن و سانتریفیوژ</text>
+    <text x="640" y="18" class="t-muted">۴. کجا رادیواکتیو است؟</text>
+  </g>
+  <!-- ROW 1: 35S protein -->
+  <text x="748" y="48" font-size="13" font-weight="700" text-anchor="end" style="direction:rtl" class="t-hl">آزمایش اول: پوستهٔ پروتئینی با ³⁵S</text>
+  <g transform="translate(90 80)">
+    <polygon points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12" class="f-hl-soft s-hl" stroke-width="2.5"/>
+    <path d="M-9 -8 q9 -9 18 0 t-18 8 t18 8" class="f-none s-muted" stroke-width="2"/>
+    <rect x="-4" y="24" width="8" height="22" class="f-hl-soft s-hl" stroke-width="2"/>
+    <path d="M0 46 l-12 12 M0 46 l12 12" class="s-hl" stroke-width="2"/>
+  </g>
+  <g>
+    <rect x="215" y="98" width="110" height="44" rx="22" class="f-surface-2 s-line" stroke-width="2"/>
+    <g transform="translate(270 36) scale(.8)">
+      <polygon points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12" class="f-hl-soft s-hl" stroke-width="2.5"/>
+      <rect x="-4" y="24" width="8" height="22" class="f-hl-soft s-hl" stroke-width="2"/>
+      <path d="M0 46 l-12 12 M0 46 l12 12" class="s-hl" stroke-width="2"/>
+    </g>
+    <path d="M240 120 q8 -9 16 0 t16 0 t16 0 t16 0" class="f-none s-muted" stroke-width="2"/>
+  </g>
+  <g>
+    <rect x="395" y="76" width="110" height="52" rx="10" class="f-surface s-line" stroke-width="1.5"/>
+    <text x="450" y="98" font-size="11.5" text-anchor="middle" class="t-ink-2">پوسته‌ها از باکتری</text>
+    <text x="450" y="116" font-size="11.5" text-anchor="middle" class="t-ink-2">جدا و ته‌نشین می‌شود</text>
+  </g>
+  <g>
+    <path d="M620 48 v80 a20 20 0 0 0 40 0 v-80" class="f-none s-ink-2" stroke-width="2"/>
+    <path d="M622 70 h36 v58 a18 18 0 0 1 -36 0z" class="f-hl-soft"/>
+    <polygon points="634,84 640,80 646,84 646,90 640,94 634,90" class="f-hl"/>
+    <polygon points="644,102 650,98 656,102 656,108 650,112 644,108" class="f-hl"/>
+    <polygon points="626,110 632,106 638,110 638,116 632,120 626,116" class="f-hl"/>
+    <ellipse cx="640" cy="140" rx="14" ry="6" class="f-muted"/>
+    <text x="700" y="96" font-size="11.5" class="t-hl" style="direction:rtl" text-anchor="middle">مایع: داغ</text>
+    <text x="700" y="142" font-size="11.5" class="t-muted" style="direction:rtl" text-anchor="middle">رسوب: سرد</text>
+  </g>
+  <!-- ROW 2: 32P DNA -->
+  <text x="748" y="198" font-size="13" font-weight="700" text-anchor="end" style="direction:rtl" class="t-accent">آزمایش دوم: DNA با ³²P</text>
+  <g transform="translate(90 230)">
+    <polygon points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12" class="f-surface s-muted" stroke-width="2.5"/>
+    <path d="M-9 -8 q9 -9 18 0 t-18 8 t18 8" class="f-none s-info" stroke-width="2.6"/>
+    <rect x="-4" y="24" width="8" height="22" class="f-surface s-muted" stroke-width="2"/>
+    <path d="M0 46 l-12 12 M0 46 l12 12" class="s-muted" stroke-width="2"/>
+  </g>
+  <g>
+    <rect x="215" y="248" width="110" height="44" rx="22" class="f-surface-2 s-line" stroke-width="2"/>
+    <g transform="translate(270 186) scale(.8)">
+      <polygon points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12" class="f-surface s-muted" stroke-width="2.5"/>
+      <rect x="-4" y="24" width="8" height="22" class="f-surface s-muted" stroke-width="2"/>
+      <path d="M0 46 l-12 12 M0 46 l12 12" class="s-muted" stroke-width="2"/>
+    </g>
+    <path d="M240 270 q8 -9 16 0 t16 0 t16 0 t16 0" class="f-none s-info" stroke-width="2.6"/>
+  </g>
+  <g>
+    <rect x="395" y="226" width="110" height="52" rx="10" class="f-surface s-line" stroke-width="1.5"/>
+    <text x="450" y="248" font-size="11.5" text-anchor="middle" class="t-ink-2">باکتری‌ها سنگین‌ترند</text>
+    <text x="450" y="266" font-size="11.5" text-anchor="middle" class="t-ink-2">و ته لوله می‌نشینند</text>
+  </g>
+  <g>
+    <path d="M620 198 v80 a20 20 0 0 0 40 0 v-80" class="f-none s-ink-2" stroke-width="2"/>
+    <path d="M622 220 h36 v58 a18 18 0 0 1 -36 0z" class="f-surface-2"/>
+    <ellipse cx="640" cy="290" rx="14" ry="6" class="f-info"/>
+    <text x="700" y="246" font-size="11.5" class="t-muted" style="direction:rtl" text-anchor="middle">مایع: سرد</text>
+    <text x="700" y="292" font-size="11.5" class="t-accent" style="direction:rtl" text-anchor="middle">رسوب: داغ</text>
+  </g>
+  <!-- arrows -->
+  <g class="s-muted" stroke-width="1.6" marker-end="url(#hc-ah)">
+    <line x1="125" y1="110" x2="200" y2="110"/><line x1="335" y1="110" x2="385" y2="110"/><line x1="515" y1="110" x2="600" y2="110"/>
+    <line x1="125" y1="260" x2="200" y2="260"/><line x1="335" y1="260" x2="385" y2="260"/><line x1="515" y1="260" x2="600" y2="260"/>
+  </g>
+</svg>
+<figcaption><b>شکل ۴.۱</b> — نارنجی یعنی پروتئین رادیواکتیو، آبی یعنی DNA رادیواکتیو. «داغ» یعنی پرتوزا. فقط برچسب DNA همراه باکتری‌ها در رسوب ماند؛ یعنی فقط DNA وارد باکتری شده بود.</figcaption>
+</figure>
+
+<p>نتیجه روشن بود: فسفر رادیواکتیو (DNA) داخل باکتری‌ها و در رسوب ته لوله پیدا شد، ولی گوگرد رادیواکتیو (پروتئین) در مایع رویی همراه پوسته‌های خالی ماند. چیزی که وارد باکتری شد و فاژهای جدید را ساخت، <b>DNA</b> بود.</p>
+
+<details class="think">
+  <summary>اگر پروتئین مادهٔ ژنتیکی بود، انتظار داشتی کدام ایزوتوپ در رسوب دیده شود؟</summary>
+  <div><p><b>³⁵S</b>، یعنی گوگرد. چون در آن صورت پروتئین باید وارد باکتری می‌شد و همراه باکتری‌ها ته‌نشین می‌شد. ولی آزمایش نشان داد ³⁵S در مایع رویی می‌ماند.</p></div>
+</details>
+
+<details class="think">
+  <summary>چرا کربن یا نیتروژن رادیواکتیو برای این آزمایش مناسب نبود؟</summary>
+  <div><p>چون <b>هم DNA و هم پروتئین</b> کربن و نیتروژن دارند. اگر کربن را نشان‌دار می‌کردند هر دو مولکول رادیواکتیو می‌شدند و نمی‌شد فهمید کدام وارد باکتری شده. برچسب خوب باید فقط در یکی از دو گزینه باشد؛ مثل یک شناسهٔ یکتا.</p></div>
+</details>
+
+<aside class="callout exam">
+  <p>در امتحان، این آزمایش را با سه کلمه به یاد بیاور: <b>فاژ، دو ایزوتوپ، رسوب</b>. ³⁵S برای پروتئین، ³²P برای DNA، و برچسبی که در رسوب (همراه باکتری) پیدا شد مادهٔ ژنتیکی است.</p>
+</aside>
+
+<h2 id="chromosomes">DNA کجاست؟ هسته و کروموزوم</h2>
+
+<p>در سلول‌های <span class="term" data-en="Eukaryote">یوکاریوت</span> (مثل سلول‌های ما) DNA داخل <span class="term" data-en="Nucleus">هسته</span> است؛ جایی که به آن «انبار اطلاعات سلول» می‌گویند. DNA یک رشتهٔ یکپارچه نیست؛ به چند مولکول بلند جدا تقسیم شده که هر کدام همراه پروتئین‌هایش یک <span class="term" data-en="Chromosome">کروموزوم</span> است.</p>
+
+<ul>
+  <li>سلول‌های بدن انسان <b>۴۶ کروموزوم</b> دارند: ۲۳ جفت. ۲۲ جفت شبیه هم‌اند و یک جفت، کروموزوم‌های جنسی است (XX یا XY).</li>
+  <li>هر جفت شامل یک نسخه از پدر و یک نسخه از مادر است.</li>
+  <li>تصویر مرتب‌شدهٔ همهٔ کروموزوم‌های یک سلول را <span class="term" data-en="Karyotype">کاریوتایپ</span> می‌گویند.</li>
+</ul>
+
+<h3>آیا تعداد کروموزوم بیشتر یعنی موجود پیچیده‌تر؟</h3>
+
+<p>نه. دو گونه آهو به نام <b>مونت‌جک</b> را در نظر بگیر که ظاهرشان تقریباً یکی است. مونت‌جک هندی فقط ۶ یا ۷ کروموزوم دارد و مونت‌جک چینی ۴۶ کروموزوم. یعنی حتی موجودات بسیار شبیه هم ممکن است تعداد کروموزوم کاملاً متفاوتی داشته باشند. مقدار DNA تقریباً یکی است، فقط به شکل متفاوتی بسته‌بندی شده است.</p>
+
+<aside class="callout analogy">
+  <p>کروموزوم مثل <b>فایل</b> است و DNA مثل <b>محتوای</b> آن. یک کتاب را می‌شود در ۶ فایل بزرگ ذخیره کرد یا در ۴۶ فایل کوچک؛ محتوا همان است. تعداد فایل‌ها چیزی دربارهٔ کیفیت کتاب نمی‌گوید.</p>
+</aside>
+
+<aside class="callout exam">
+  <p>این جمله از امتحان میان‌ترم است: «موجوداتی که از نظر ظاهری بسیار شبیه هم هستند، قطعاً دارای تعداد کروموزوم یکسان ……» پاسخ: <b>نیستند</b>. کلمهٔ «قطعاً» در صورت سؤال یک تله است.</p>
+</aside>
+
+<h2 id="packing">دو متر DNA در یک هستهٔ میکروسکوپی</h2>
+
+<p>اگر DNA یک سلول انسان را باز کنیم و پشت سر هم بگذاریم، حدود <b>۲ متر</b> می‌شود؛ در حالی که قطر هسته فقط چند میکرومتر است. سلول این را با چند سطح پیچیدن حل می‌کند؛ مثل سیم تلفن قدیمی که دور خودش فنر می‌شود و بعد آن فنر هم دوباره می‌پیچد.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 200" width="760" role="img" aria-labelledby="pk-t">
+  <title id="pk-t">سطوح فشرده‌سازی DNA از مارپیچ دورشته‌ای تا کروموزوم میتوزی</title>
+  <g font-size="12" text-anchor="middle">
+    <!-- 1 double helix -->
+    <path d="M30 80 q15 -22 30 0 t30 0 t30 0" class="f-none s-c" stroke-width="2.4"/>
+    <path d="M30 80 q15 22 30 0 t30 0 t30 0" class="f-none s-t" stroke-width="2.4"/>
+    <text x="75" y="140" class="t-ink-2" font-weight="700">مارپیچ دورشته‌ای</text>
+    <text x="75" y="158" class="t-muted mono" font-size="11" style="direction:ltr">2 nm</text>
+    <!-- 2 beads on a string -->
+    <path d="M165 80 h120" class="s-c" stroke-width="2"/>
+    <g class="f-hl-soft s-hl" stroke-width="2"><circle cx="180" cy="80" r="11"/><circle cx="212" cy="80" r="11"/><circle cx="244" cy="80" r="11"/><circle cx="276" cy="80" r="11"/></g>
+    <text x="225" y="140" class="t-ink-2" font-weight="700">نوکلئوزوم‌ها</text>
+    <text x="225" y="158" class="t-muted" font-size="11">«دانه‌های تسبیح» · <tspan class="mono" style="direction:ltr">11 nm</tspan></text>
+    <!-- 3 30nm fiber -->
+    <g class="f-hl-soft s-hl" stroke-width="1.6">
+      <circle cx="330" cy="66" r="9"/><circle cx="346" cy="92" r="9"/><circle cx="362" cy="66" r="9"/><circle cx="378" cy="92" r="9"/><circle cx="394" cy="66" r="9"/><circle cx="410" cy="92" r="9"/>
+    </g>
+    <text x="370" y="140" class="t-ink-2" font-weight="700">رشتهٔ ۳۰ نانومتری</text>
+    <text x="370" y="158" class="t-muted mono" font-size="11" style="direction:ltr">30 nm</text>
+    <!-- 4 loops -->
+    <path d="M455 100 c0 -60 30 -60 30 0 c0 -60 30 -60 30 0 c0 -60 30 -60 30 0 c0 -60 30 -60 30 0" class="f-none s-hl" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    <text x="515" y="140" class="t-ink-2" font-weight="700">حلقه‌ها روی داربست</text>
+    <text x="515" y="158" class="t-muted mono" font-size="11" style="direction:ltr">300 nm</text>
+    <!-- 5 mitotic chromosome -->
+    <g class="f-hl" opacity=".9">
+      <path d="M640 40 q12 0 18 40 q-6 40 -18 40 q-10 0 -6 -40 q-4 -40 6 -40z"/>
+      <path d="M684 40 q-12 0 -18 40 q6 40 18 40 q10 0 6 -40 q4 -40 -6 -40z"/>
+    </g>
+    <rect x="652" y="74" width="20" height="12" rx="5" class="f-ink-2"/>
+    <text x="662" y="140" class="t-ink-2" font-weight="700">کروموزوم میتوزی</text>
+    <text x="662" y="158" class="t-muted mono" font-size="11" style="direction:ltr">1400 nm</text>
+  </g>
+  <line x1="40" y1="182" x2="720" y2="182" class="s-line" stroke-width="1.5" marker-end="url(#hc-ah)"/>
+  <text x="380" y="198" font-size="11.5" text-anchor="middle" class="t-muted">فشرده‌تر و فشرده‌تر: در تقسیم سلول، DNA حدود ۱۰٬۰۰۰ برابر کوتاه‌تر از حالت باز می‌شود</text>
+</svg>
+<figcaption><b>شکل ۴.۲</b> — سطوح بسته‌بندی DNA. اعداد پهنای تقریبی هر سطح است.</figcaption>
+</figure>
+
+<p>اولین و مهم‌ترین سطح، پیچیدن DNA دور پروتئین‌هایی به نام <span class="term" data-en="Histone">هیستون</span> است. هر دسته هیستون و DNA پیچیده دورش یک <span class="term" data-en="Nucleosome">نوکلئوزوم</span> است (حدود ۱۴۷ جفت‌باز، تقریباً دو دور). زیر میکروسکوپ الکترونی شبیه دانه‌های تسبیح روی نخ دیده می‌شود.</p>
+
+<details class="think">
+  <summary>DNA بار منفی دارد. هیستون‌ها باید چه باری داشته باشند تا DNA محکم دورشان بپیچد؟</summary>
+  <div><p><b>بار مثبت.</b> بار منفی DNA از گروه‌های فسفات اسکلتش می‌آید. هیستون‌ها پر از آمینواسیدهای مثبت (لیزین و آرژینین) هستند. بارهای مخالف همدیگر را جذب می‌کنند؛ مثل آهن‌ربا.</p></div>
+</details>
+
+<h3>یوکروماتین و هتروکروماتین</h3>
+
+<p>همهٔ DNA به یک اندازه فشرده نیست:</p>
+<div class="compare">
+  <div><h4><span class="term" data-en="Euchromatin">یوکروماتین</span></h4><p>بازتر و کم‌فشرده. ژن‌های این نواحی در دسترس‌اند و می‌توانند خوانده و «روشن» شوند.</p></div>
+  <div><h4><span class="term" data-en="Heterochromatin">هتروکروماتین</span></h4><p>خیلی فشرده. ژن‌های این نواحی معمولاً خاموش‌اند. اگر ژنی به‌طور اتفاقی کنار هتروکروماتین بیفتد، ممکن است خاموش شود.</p></div>
+</div>
+
+<details class="think">
+  <summary>اگر DNA این‌قدر فشرده است، سلول چطور یک ژن خاص را می‌خواند؟</summary>
+  <div><p>بسته‌بندی ثابت نیست. سلول با پروتئین‌های ویژه، فقط همان ناحیه‌ای را که لازم دارد <b>باز می‌کند</b> (شل کردن پیچش دور هیستون‌ها)، آن را می‌خواند و دوباره می‌بندد. پس فشرده‌سازی، خودش یک راه کنترل است: ژنی که در ناحیهٔ خیلی فشرده است، کمتر خوانده می‌شود.</p></div>
+</details>
+
+<aside class="callout analogy">
+  <p>شبیه یک فایل فشرده است که <b>به‌طور جزئی</b> باز می‌شود: لازم نیست کل آرشیو را extract کنی، فقط فایلی را که لازم داری باز می‌کنی. یوکروماتین بخش‌های «زیاد استفاده‌شده» است که دم دست است.</p>
+</aside>
+
+<h2 id="nucleotide">الفبای DNA: نوکلئوتید</h2>
+
+<p>DNA یک <b>پلیمر</b> است؛ یعنی زنجیره‌ای بلند از واحدهای تکراری. هر واحد یک <span class="term" data-en="Nucleotide">نوکلئوتید</span> است و سه جزء دارد:</p>
+
+<figure class="fig">
+<svg viewBox="0 0 640 220" width="640" role="img" aria-labelledby="nt-t">
+  <title id="nt-t">اجزای نوکلئوتید: فسفات، قند دئوکسی‌ریبوز با کربن‌های ۱′ تا ۵′، و باز آلی</title>
+  <rect x="20" y="40" width="150" height="150" rx="14" class="f-info-soft"/>
+  <rect x="200" y="40" width="210" height="150" rx="14" class="f-accent-soft"/>
+  <rect x="440" y="40" width="180" height="150" rx="14" class="f-warn-soft"/>
+  <text x="95" y="28" font-size="13" font-weight="700" text-anchor="middle">فسفات</text>
+  <text x="305" y="28" font-size="13" font-weight="700" text-anchor="middle">قند دئوکسی‌ریبوز</text>
+  <text x="530" y="28" font-size="13" font-weight="700" text-anchor="middle">باز آلی (نیتروژن‌دار)</text>
+  <circle cx="95" cy="115" r="30" class="f-info"/>
+  <text x="95" y="122" font-size="20" font-weight="800" text-anchor="middle" class="t-white mono">P</text>
+  <line x1="125" y1="115" x2="232" y2="115" class="s-ink-2" stroke-width="2.5"/>
+  <polygon points="305,72 352,106 334,160 276,160 258,106" class="f-surface s-accent" stroke-width="2.5"/>
+  <text x="305" y="88" font-size="12" text-anchor="middle" class="t-muted">O</text>
+  <text x="362" y="104" font-size="13" font-weight="700" class="t-accent mono">1′</text>
+  <text x="340" y="180" font-size="13" font-weight="700" class="t-accent mono">2′</text>
+  <text x="258" y="180" font-size="13" font-weight="700" class="t-accent mono">3′</text>
+  <text x="236" y="104" font-size="13" font-weight="700" class="t-accent mono">4′</text>
+  <text x="232" y="132" font-size="13" font-weight="700" class="t-accent mono">5′</text>
+  <line x1="352" y1="106" x2="470" y2="106" class="s-ink-2" stroke-width="2.5"/>
+  <rect x="470" y="78" width="120" height="56" rx="10" class="f-a"/>
+  <text x="530" y="114" font-size="22" font-weight="800" text-anchor="middle" class="t-white mono">A</text>
+  <text x="530" y="160" font-size="11.5" text-anchor="middle" class="t-ink-2">یکی از A، T، G یا C</text>
+  <text x="290" y="210" font-size="11.5" text-anchor="middle" class="t-muted">کربن ۳′ با فسفات نوکلئوتید بعدی پیوند می‌دهد؛ این‌طور زنجیره ساخته می‌شود</text>
+</svg>
+<figcaption><b>شکل ۴.۳</b> — نوکلئوتید. کربن‌های قند را از ۱′ تا ۵′ شماره می‌گذارند (بخوان «یک پریم»). باز به کربن ۱′ و فسفات به کربن ۵′ وصل است.</figcaption>
+</figure>
+
+<ol>
+  <li><b>گروه فسفات</b> — به DNA بار منفی می‌دهد.</li>
+  <li><b>قند پنج‌کربنی <span class="term" data-en="Deoxyribose">دئوکسی‌ریبوز</span></b> — «دئوکسی» یعنی نسبت به قند RNA (ریبوز) یک اکسیژن کمتر دارد.</li>
+  <li><b>یک <span class="term" data-en="Base">باز آلی</span></b> — یکی از چهار حرف: <code class="seq">A</code> (آدنین)، <code class="seq">T</code> (تیمین)، <code class="seq">G</code> (گوانین)، <code class="seq">C</code> (سیتوزین).</li>
+</ol>
+
+<p>نوکلئوتیدها با <b>پیوند کووالانسی</b> (قوی) از طریق قند و فسفات به هم وصل می‌شوند و یک <span class="term" data-en="Sugar-phosphate backbone">اسکلت قند–فسفات</span> می‌سازند. بازها مثل دندانه‌های یک شانه از این اسکلت بیرون زده‌اند. اطلاعات ژنتیکی در <b>ترتیب همین بازها</b> نوشته شده است.</p>
+
+<aside class="callout simple">
+  <p>اسکلت قند–فسفات در همهٔ DNAها یکسان است، مثل کاغذ دفتر. چیزی که فرق می‌کند ترتیب حروف (بازها) است، مثل متنی که روی کاغذ نوشته شده.</p>
+</aside>
+
+<h2 id="pairing">نردبان دورشته‌ای و جفت‌شدن بازها</h2>
+
+<p>DNA معمولاً <b>دورشته‌ای</b> است؛ دو رشته که دور هم پیچیده‌اند و یک <span class="term" data-en="Double helix">مارپیچ دوگانه</span> می‌سازند. اگر این مارپیچ را صاف کنی، شبیه یک نردبان می‌شود: دو اسکلت قند–فسفات نرده‌های نردبان‌اند و جفت‌بازها پله‌هایش.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 720 230" width="720" role="img" aria-labelledby="lad-t">
+  <title id="lad-t">نردبان DNA: رشتهٔ بالا 5′-ATGCGT-3′ و رشتهٔ پایین 3′-TACGCA-5′ با پیوندهای هیدروژنی</title>
+  <defs><marker id="lad-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-ink-2"/></marker></defs>
+  <line x1="110" y1="46" x2="620" y2="46" class="s-ink-2" stroke-width="5" stroke-linecap="round"/>
+  <line x1="110" y1="174" x2="620" y2="174" class="s-ink-2" stroke-width="5" stroke-linecap="round"/>
+  <text x="88" y="52" font-size="16" font-weight="800" class="mono" text-anchor="middle">5′</text>
+  <text x="644" y="52" font-size="16" font-weight="800" class="mono" text-anchor="middle">3′</text>
+  <text x="88" y="180" font-size="16" font-weight="800" class="mono" text-anchor="middle">3′</text>
+  <text x="644" y="180" font-size="16" font-weight="800" class="mono" text-anchor="middle">5′</text>
+  <line x1="300" y1="20" x2="430" y2="20" class="s-ink-2" stroke-width="1.6" marker-end="url(#lad-ah)"/>
+  <line x1="430" y1="208" x2="300" y2="208" class="s-ink-2" stroke-width="1.6" marker-end="url(#lad-ah)"/>
+  <g font-size="18" font-weight="800" text-anchor="middle" class="mono">
+    <rect x="133" y="50" width="34" height="50" rx="5" class="f-a"/><text x="150" y="82" class="t-white">A</text>
+    <rect x="133" y="120" width="34" height="50" rx="5" class="f-t"/><text x="150" y="152" class="t-white">T</text>
+    <rect x="223" y="50" width="34" height="50" rx="5" class="f-t"/><text x="240" y="82" class="t-white">T</text>
+    <rect x="223" y="120" width="34" height="50" rx="5" class="f-a"/><text x="240" y="152" class="t-white">A</text>
+    <rect x="313" y="50" width="34" height="50" rx="5" class="f-g"/><text x="330" y="82" class="t-white">G</text>
+    <rect x="313" y="120" width="34" height="50" rx="5" class="f-c"/><text x="330" y="152" class="t-white">C</text>
+    <rect x="403" y="50" width="34" height="50" rx="5" class="f-c"/><text x="420" y="82" class="t-white">C</text>
+    <rect x="403" y="120" width="34" height="50" rx="5" class="f-g"/><text x="420" y="152" class="t-white">G</text>
+    <rect x="493" y="50" width="34" height="50" rx="5" class="f-g"/><text x="510" y="82" class="t-white">G</text>
+    <rect x="493" y="120" width="34" height="50" rx="5" class="f-c"/><text x="510" y="152" class="t-white">C</text>
+    <rect x="583" y="50" width="34" height="50" rx="5" class="f-t"/><text x="600" y="82" class="t-white">T</text>
+    <rect x="583" y="120" width="34" height="50" rx="5" class="f-a"/><text x="600" y="152" class="t-white">A</text>
+  </g>
+  <g class="s-muted" stroke-width="2" stroke-dasharray="3 3">
+    <line x1="144" y1="102" x2="144" y2="118"/><line x1="156" y1="102" x2="156" y2="118"/>
+    <line x1="234" y1="102" x2="234" y2="118"/><line x1="246" y1="102" x2="246" y2="118"/>
+    <line x1="322" y1="102" x2="322" y2="118"/><line x1="330" y1="102" x2="330" y2="118"/><line x1="338" y1="102" x2="338" y2="118"/>
+    <line x1="412" y1="102" x2="412" y2="118"/><line x1="420" y1="102" x2="420" y2="118"/><line x1="428" y1="102" x2="428" y2="118"/>
+    <line x1="502" y1="102" x2="502" y2="118"/><line x1="510" y1="102" x2="510" y2="118"/><line x1="518" y1="102" x2="518" y2="118"/>
+    <line x1="594" y1="102" x2="594" y2="118"/><line x1="606" y1="102" x2="606" y2="118"/>
+  </g>
+</svg>
+<figcaption><b>شکل ۴.۴</b> — خطچین‌ها پیوندهای هیدروژنی‌اند: A=T دو تا، G≡C سه تا. خطوط ضخیم اسکلت قند–فسفات (پیوند کووالانسی) است. فلش‌ها جهت ۵′ به ۳′ هر رشته را نشان می‌دهند؛ دو رشته <b>ناهمسو</b>اند.</figcaption>
+</figure>
+
+<p>سه قانون همهٔ ماجرا را می‌سازد:</p>
+<ol class="steps">
+  <li><b>جفت‌شدن مکمل:</b> A فقط با T جفت می‌شود و G فقط با C. پس اگر یک رشته را بدانی، رشتهٔ روبه‌رو را هم می‌دانی.</li>
+  <li><b>تعداد پیوند هیدروژنی:</b> بین A و T <b>دو</b> پیوند هیدروژنی است و بین G و C <b>سه</b> پیوند. پیوند هیدروژنی ضعیف است؛ برای همین دو رشته را می‌شود با گرما یا آنزیم از هم باز کرد.</li>
+  <li><b>ناهمسو بودن:</b> هر رشته یک سر ۵′ و یک سر ۳′ دارد. دو رشته برعکس هم قرار گرفته‌اند: سر ۵′ یکی روبه‌روی سر ۳′ دیگری است. قرارداد: توالی را همیشه از ۵′ به ۳′ می‌نویسیم.</li>
+</ol>
+
+<aside class="callout simple">
+  <p>دو نوع پیوند در DNA داریم و فرقشان مهم است. <b>کووالانسی</b> (قوی) حروف یک رشته را پشت سر هم نگه می‌دارد؛ <b>هیدروژنی</b> (ضعیف) دو رشته را روبه‌روی هم نگه می‌دارد. موقع باز شدن DNA فقط پیوندهای هیدروژنی می‌شکنند و ترتیب حروف دست‌نخورده می‌ماند.</p>
+</aside>
+
+<div class="quiz" data-id="ch04:s5">
+  <p class="q">در نردبان شکل ۴.۴ (۶ جفت‌باز) روی هم چند پیوند هیدروژنی بین دو رشته هست؟</p>
+  <ol class="opts"><li>۱۲</li><li>۱۴</li><li data-correct>۱۵</li><li>۱۸</li></ol>
+  <div class="explain">جفت‌ها به ترتیب A–T، T–A، G–C، C–G، G–C، T–A هستند: سه جفت AT (هر کدام ۲) و سه جفت GC (هر کدام ۳). پس ۳×۲ + ۳×۳ = ۶ + ۹ = <b>۱۵</b>.</div>
+</div>
+
+<h2 id="revcomp">مکمل معکوس: پرکاربردترین عمل روی توالی</h2>
+
+<p>چون دو رشته ناهمسو هستند، وقتی می‌خواهی رشتهٔ روبه‌رو را <b>به روش استاندارد (از ۵′ به ۳′)</b> بنویسی، باید دو کار بکنی: هر حرف را با مکملش عوض کنی و ترتیب را برعکس کنی. نتیجه را <span class="term" data-en="Reverse complement">مکمل معکوس</span> می‌گویند. در بیوانفورماتیک مدام به آن نیاز داری؛ مثلاً یک خوانش توالی‌یابی ممکن است از هر کدام از دو رشته آمده باشد.</p>
+
+<div class="worked" data-title="مکمل معکوس 5′-GATTACA-3′">
+  <p class="problem">مکمل معکوس توالی <code class="seq">5′-GATTACA-3′</code> چیست؟ (سؤال اسلاید ۸۵)</p>
+  <ol class="steps">
+    <li>زیر هر حرف مکملش را بنویس (A↔T و G↔C): <code class="seq">GATTACA</code> → <code class="seq">CTAATGT</code></li>
+    <li>این رشتهٔ تازه روبه‌روی رشتهٔ اصلی است، پس جهتش برعکس است: <code class="seq">3′-CTAATGT-5′</code></li>
+    <li>برای نوشتن استاندارد از ۵′ به ۳′، ترتیب را برعکس کن: <code class="seq">5′-TGTAATC-3′</code></li>
+    <li>چک کن: مکمل معکوسِ جوابت باید دوباره <code class="seq">GATTACA</code> شود. <code class="seq">TGTAATC</code> برعکس می‌شود <code class="seq">CTAATGT</code> و مکملش <code class="seq">GATTACA</code>. درست است.</li>
+  </ol>
+  <p class="after-steps"><b>پاسخ:</b> <code class="seq">5′-TGTAATC-3′</code></p>
+</div>
+
+<aside class="callout pitfall">
+  <p>رایج‌ترین اشتباه این است که فقط مکمل را بنویسی (<code class="seq">CTAATGT</code>) و برعکس کردن را فراموش کنی. آن جواب غلط نیست، ولی جهتش ۳′ به ۵′ است. اگر سؤال «مکمل معکوس» یا «توالی رشتهٔ مقابل از ۵′ به ۳′» خواست، حتماً برعکسش کن.</p>
+</aside>
+
+<div class="fill" data-answer="ACGCAT|5ACGCAT3" data-id="ch04:fill-rc">
+  <p class="q">رشتهٔ بالا <code class="seq">5′-ATGCGT-3′</code> است. رشتهٔ مقابلش را از ۵′ به ۳′ بنویس: <input class="blank" type="text"></p>
+  <div class="explain">مکمل زیر هر حرف: <code class="seq">TACGCA</code> که جهتش ۳′ به ۵′ است. برعکسش: <code class="seq">5′-ACGCAT-3′</code>. این همان مثال اسلاید ۸۵ است.</div>
+</div>
+
+<div data-widget="dna-tools"></div>
+
+<p>اسلاید ۹۴ از تو خواسته تابعی بنویسی که مکمل معکوس و محتوای GC یک توالی را برگرداند. چون توالی برای کامپیوتر فقط یک رشتهٔ متنی است، با چند خط پایتون حل می‌شود:</p>
+
+<pre data-lang="PYTHON"><code><span class="k">def</span> revcomp_gc(seq):
+    seq = seq.upper()
+    pair = {<span class="s">"A"</span>: <span class="s">"T"</span>, <span class="s">"T"</span>: <span class="s">"A"</span>, <span class="s">"G"</span>: <span class="s">"C"</span>, <span class="s">"C"</span>: <span class="s">"G"</span>}
+    rc = <span class="s">""</span>.join(pair[b] <span class="k">for</span> b <span class="k">in</span> reversed(seq))   <span class="c"># complement + reverse</span>
+    gc = (seq.count(<span class="s">"G"</span>) + seq.count(<span class="s">"C"</span>)) / len(seq) * <span class="n">100</span>
+    <span class="k">return</span> rc, gc
+
+print(revcomp_gc(<span class="s">"GATTACA"</span>))   <span class="c"># ('TGTAATC', 28.57...)</span></code></pre>
+
+<h2 id="gc">محتوای GC، پیوند هیدروژنی و پایداری</h2>
+
+<p><span class="term" data-en="GC content">محتوای GC</span> یعنی چند درصد از بازهای یک توالی G یا C هستند:</p>
+<p style="text-align:center"><code>GC% = (تعداد G + تعداد C) ÷ طول توالی × ۱۰۰</code></p>
+
+<p>چرا مهم است؟ چون جفت G–C سه پیوند هیدروژنی دارد و جفت A–T دو تا. DNA با GC بیشتر، دو رشته‌اش محکم‌تر به هم چسبیده‌اند و برای باز شدن به <b>دمای بالاتری</b> نیاز دارد. این دما را <span class="term" data-en="Melting temperature, Tm">دمای ذوب</span> می‌گویند. این نکته بعداً در طراحی پرایمر برای PCR (فصل ۹) خیلی به کارت می‌آید.</p>
+
+<div class="worked" data-title="تمرین اسلاید ۹۴: محتوای GC و پیوندهای هیدروژنی">
+  <p class="problem">برای توالی ۱۴ نوکلئوتیدی <code class="seq">5′-ATGCGTACGTTAGC-3′</code> (الف) محتوای GC و (ب) تعداد پیوندهای هیدروژنی در حالت دورشته‌ای را حساب کن.</p>
+  <ol class="steps">
+    <li>حروف را بشمار: A = ۳، T = ۴، G = ۴، C = ۳. جمع = ۱۴ (چک کن که با طول برابر باشد).</li>
+    <li>محتوای GC: (۴ + ۳) ÷ ۱۴ = ۷ ÷ ۱۴ = <b>۵۰٪</b>.</li>
+    <li>در حالت دورشته‌ای هر A یا T یک جفت A–T می‌سازد: ۳ + ۴ = ۷ جفت A–T، هر کدام ۲ پیوند → ۱۴ پیوند.</li>
+    <li>هر G یا C یک جفت G–C می‌سازد: ۴ + ۳ = ۷ جفت G–C، هر کدام ۳ پیوند → ۲۱ پیوند.</li>
+    <li>جمع: ۱۴ + ۲۱ = <b>۳۵ پیوند هیدروژنی</b>.</li>
+  </ol>
+  <p class="after-steps">میان‌بر: تعداد پیوند = ۲ × (A+T) + ۳ × (G+C). جواب را با جعبه‌ابزار بالا هم چک کن (دکمهٔ «مثال اسلاید»).</p>
+</div>
+
+<div class="quiz" data-id="ch04:s6">
+  <p class="q">دو توالی ۲۰ حرفی داریم؛ اولی ۷۰٪ GC دارد و دومی ۳۰٪. اگر DNA را گرم کنیم، کدام دیرتر (در دمای بالاتر) باز می‌شود؟ (سؤال اسلاید ۸۴)</p>
+  <ol class="opts"><li data-correct>توالی با ۷۰٪ GC</li><li>توالی با ۳۰٪ GC</li><li>هر دو با هم</li><li>بستگی به طولشان دارد ولی این دو هم‌طول‌اند، پس قابل گفتن نیست</li></ol>
+  <div class="explain">توالی اول ۱۴ جفت GC و ۶ جفت AT دارد: ۱۴×۳ + ۶×۲ = <b>۵۴</b> پیوند. توالی دوم ۶ جفت GC و ۱۴ جفت AT: ۶×۳ + ۱۴×۲ = <b>۴۶</b> پیوند. پیوند بیشتر یعنی چسبندگی بیشتر و دمای ذوب بالاتر.</div>
+</div>
+
+<h3>قاعدهٔ چارگاف</h3>
+<p>از قانون جفت‌شدن یک نتیجهٔ ساده درمی‌آید: در DNA دورشته‌ای تعداد A با T برابر است و تعداد G با C. پس اگر درصد یک باز را بدانی، بقیه حساب می‌شود.</p>
+
+<div class="worked" data-title="تمرین اسلاید ۹۴: درصد بازها">
+  <p class="problem">در یک نمونه DNA دورشته‌ای، ۳۰٪ بازها آدنین است. درصد T، G و C چقدر است؟ اگر نمونه تک‌رشته‌ای بود چه؟</p>
+  <ol class="steps">
+    <li>A با T جفت است، پس T = A = <b>۳۰٪</b>.</li>
+    <li>A و T روی هم ۶۰٪ می‌شوند؛ ۴۰٪ باقی‌مانده بین G و C است.</li>
+    <li>G با C جفت است، پس هر کدام نصف: G = C = <b>۲۰٪</b>.</li>
+    <li>اگر نمونه <b>تک‌رشته‌ای</b> بود، نمی‌توانستیم جواب بدهیم؛ چون بازها جفت نشده‌اند و هیچ قانونی برابری A و T را تضمین نمی‌کند.</li>
+  </ol>
+</div>
+
+<div data-widget="chargaff"></div>
+
+<h2 id="why-dna">چرا DNA زبان حیات است؟</h2>
+
+<p>اسلاید ۸۳ سه دلیل می‌آورد که DNA را برای نگه‌داشتن اطلاعات ژنتیکی مناسب می‌کند:</p>
+<div class="compare">
+  <div><h4>مقاوم و پایدار</h4><p>اسکلت قند–فسفات با پیوند کووالانسی محکم است و اطلاعات به‌راحتی خراب نمی‌شود.</p></div>
+  <div><h4>آسان باز و بسته می‌شود</h4><p>دو رشته فقط با پیوندهای هیدروژنی ضعیف به هم وصل‌اند؛ برای خواندن یا کپی کردن، راحت از هم جدا می‌شوند.</p></div>
+  <div><h4>دو رشته، دو نسخه</h4><p>هر رشته الگوی ساختن رشتهٔ مقابل است؛ پس از روی هر کدام می‌شود یک کپی کامل ساخت.</p></div>
+</div>
+
+<aside class="callout analogy">
+  <p>اسلاید ۹۶ DNA را به <b>هارددیسک سلول</b> تشبیه می‌کند: اطلاعات را دقیق و پایدار در جای امن (هسته) نگه می‌دارد و هنگام تقسیم سلول با دقت کپی می‌شود. ولی هارددیسک خودش کاری انجام نمی‌دهد. چه کسی دستورها را اجرا می‌کند؟ جواب این سؤال در فصل‌های ۶ و ۷ است: RNA و پروتئین.</p>
+</aside>
+
+<h2 id="summary" class="no-num">خلاصه در یک نگاه</h2>
+<div class="summary">
+  <ul>
+    <li>مادهٔ ژنتیکی <b>DNA</b> است. هرشی و چیس با فاژهای نشان‌دار (³⁵S برای پروتئین، ³²P برای DNA) نشان دادند فقط DNA وارد باکتری می‌شود.</li>
+    <li>در یوکاریوت‌ها DNA در <b>هسته</b> و به شکل <b>کروموزوم</b> است؛ انسان ۴۶ کروموزوم دارد. تعداد کروموزوم با پیچیدگی موجود رابطه ندارد.</li>
+    <li>DNA (بار منفی) دور <b>هیستون‌ها</b> (بار مثبت) می‌پیچد و نوکلئوزوم می‌سازد؛ یوکروماتین باز و فعال است، هتروکروماتین فشرده و خاموش.</li>
+    <li>نوکلئوتید = <b>فسفات + دئوکسی‌ریبوز + باز</b> (A، T، G، C).</li>
+    <li><b>A=T</b> (دو پیوند هیدروژنی) و <b>G≡C</b> (سه پیوند)؛ دو رشته <b>ناهمسو</b>اند و توالی را از ۵′ به ۳′ می‌نویسیم.</li>
+    <li>مکمل معکوس = مکمل هر حرف + برعکس کردن ترتیب.</li>
+    <li>GC بیشتر ← پیوند هیدروژنی بیشتر ← دمای ذوب بالاتر. در DNA دورشته‌ای A=T و G=C (قاعدهٔ چارگاف).</li>
+  </ul>
+</div>
+
+<h2 id="exam" class="no-num">سؤال‌های سبک امتحان</h2>
+<p>این سؤال‌ها به سبک امتحان میان‌ترم استاد نوشته شده‌اند: چهارگزینه‌ای، جای خالی و تشریحی. اول بدون نگاه به متن جواب بده.</p>
+<div data-render="questions"></div>
+
+<h2 id="cards" class="no-num">کارت‌های مرور</h2>
+<p>روی کارت بزن تا برگردد. قبل از برگرداندن، جواب را در ذهنت (یا بلند) بگو.</p>
+<div data-render="cards"></div>
+
+<h2 id="terms" class="no-num">واژه‌های این فصل</h2>
+<div data-render="glossary"></div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-root=".">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>خلاصهٔ فرمول‌ها و نکته‌ها · جزوهٔ بیوانفورماتیک</title>
+<meta name="description" content="برگهٔ مرور یک‌صفحه‌ای: همهٔ فرمول‌ها، قاعده‌ها، عددها و جدول‌های درس بیوانفورماتیک به تفکیک فصل.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@300..900&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('bi:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script defer src="assets/js/core.js"></script>
+</head>
+<body data-page="cheatsheet">
+<main class="page">
+
+<h1>خلاصهٔ فرمول‌ها و نکته‌ها</h1>
+<p>برگهٔ مرور شب امتحان: هر گروه به یک فصل وصل است؛ اگر چیزی را یادت نیامد، لینک فصل را باز کن. فرمول‌ها با حروف لاتین نوشته شده‌اند.</p>
+
+<h2 id="g-intro">مقدمه و سلول <small>(<a href="chapters/01-intro.html">فصل ۱</a> و <a href="chapters/02-cell.html">فصل ۲</a>)</small></h2>
+<div class="compare">
+  <div><h4>پروکاریوت</h4><p>بدون هسته؛ DNA حلقوی و معمولاً در سیتوپلاسم؛ ساده‌تر؛ رونویسی و ترجمه می‌توانند هم‌زمان باشند؛ معمولاً بدون اینترون.</p></div>
+  <div><h4>یوکاریوت</h4><p>هستهٔ غشادار و اندامک‌ها؛ DNA خطی در کروموزوم؛ رونویسی در هسته و ترجمه در سیتوپلاسم؛ اینترون و پردازش RNA.</p></div>
+</div>
+<table>
+  <thead><tr><th>اندامک</th><th>کار</th></tr></thead>
+  <tbody>
+    <tr><td>هسته</td><td>نگهداری DNA و رونویسی</td></tr>
+    <tr><td>میتوکندری</td><td>تولید انرژی (ATP)؛ DNA مخصوص خود؛ از مادر به ارث می‌رسد</td></tr>
+    <tr><td>کلروپلاست</td><td>فتوسنتز (فقط گیاهان و جلبک‌ها)</td></tr>
+    <tr><td>ریبوزوم</td><td>ترجمه، ساخت پروتئین</td></tr>
+    <tr><td>شبکهٔ آندوپلاسمی (ER)</td><td>ساخت و تاخوردن پروتئین (زبر) و چربی (صاف)</td></tr>
+    <tr><td>گلژی</td><td>تغییر، بسته‌بندی و ارسال پروتئین‌ها</td></tr>
+    <tr><td>لیزوزوم</td><td>هضم و تجزیه</td></tr>
+  </tbody>
+</table>
+<p>درون‌همزیستی: میتوکندری و کلروپلاست از باکتری‌های بلعیده‌شده آمده‌اند (DNA خودشان را دارند).</p>
+
+<h2 id="g-protein">پروتئین <small>(<a href="chapters/03-proteins.html">فصل ۳</a>)</small></h2>
+<ul>
+  <li>آمینواسید: کربن مرکزی + گروه آمین (<code>NH₂</code>) + گروه اسیدی (<code>COOH</code>) + <code>H</code> + زنجیرهٔ جانبی <code>R</code>؛ ۲۰ نوع، فقط R فرق می‌کند.</li>
+  <li>پیوند پپتیدی (کووالانسی): <code>COOH + NH₂ → پپتید + H₂O</code>؛ چند آمینواسید = پلی‌پپتید.</li>
+  <li>سطوح ساختار: اول (توالی) ← دوم (مارپیچ α، صفحهٔ β) ← سوم (۳بعدی یک زنجیره) ← چهارم (چند زنجیره).</li>
+  <li>طول بازه: <code>end − start + 1</code> (مثلاً ۲۰ تا ۴۵ = ۲۶ باقی‌مانده).</li>
+  <li>PDB: هر خط <code>ATOM</code> یک اتم با مختصات <code>x, y, z</code> دارد؛ رکوردهای دیگر مثل <code>HETATM</code> (غیرپروتئین)، <code>HELIX</code> و <code>SHEET</code>.</li>
+</ul>
+
+<h2 id="g-dna">DNA <small>(<a href="chapters/04-dna.html">فصل ۴</a>)</small></h2>
+<table>
+  <tbody>
+    <tr><th>جفت‌شدن</th><td><code>A=T</code> (۲ پیوند هیدروژنی)، <code>G≡C</code> (۳ پیوند)</td></tr>
+    <tr><th>پیوند هیدروژنی</th><td><code>H = 2·(A+T) + 3·(G+C)</code></td></tr>
+    <tr><th>محتوای GC</th><td><code>GC% = (G + C) / L × 100</code>؛ GC بیشتر ← دمای ذوب بالاتر</td></tr>
+    <tr><th>چارگاف</th><td>فقط دورشته‌ای: <code>A = T</code> و <code>G = C</code> (تک‌رشته‌ای نه). اگر A = ۳۰٪ ← T = ۳۰٪، G = C = ۲۰٪</td></tr>
+    <tr><th>مکمل معکوس</th><td>مکمل هر حرف (A↔T، G↔C) + برعکس‌کردن ترتیب؛ <code>GATTACA → TGTAATC</code></td></tr>
+    <tr><th>جهت</th><td>دو رشته ناهمسو؛ توالی را از <code>5′ → 3′</code> می‌نویسیم؛ نوکلئوتید جدید به <code>3′</code> می‌چسبد</td></tr>
+    <tr><th>نوکلئوتید</th><td>فسفات + قند پنج‌کربنی + باز؛ DNA: دئوکسی‌ریبوز و A,T,G,C</td></tr>
+    <tr><th>مادهٔ ژنتیکی</th><td>DNA (هرشی–چیس: ³²P برای DNA در رسوب، ³⁵S برای پروتئین)</td></tr>
+    <tr><th>بسته‌بندی</th><td>هیستون (مثبت) ← نوکلئوزوم ≈ ۱۴۷ جفت‌باز؛ یوکروماتین باز و فعال، هتروکروماتین فشرده</td></tr>
+  </tbody>
+</table>
+<div class="compare">
+  <div><h4>DNA</h4><p>دئوکسی‌ریبوز؛ بازهای A,T,G,C؛ معمولاً دورشته‌ای؛ پایدار.</p></div>
+  <div><h4>RNA</h4><p>ریبوز؛ A,U,G,C (U به‌جای T)؛ معمولاً تک‌رشته‌ای.</p></div>
+</div>
+
+<h2 id="g-repl">چرخهٔ سلولی و همانندسازی <small>(<a href="chapters/05-replication.html">فصل ۵</a>)</small></h2>
+<ul>
+  <li>چرخه: <code>G1 → S → G2 → M</code>؛ نقاط وارسی G1/S و G2/M؛ G0 (مثل نورون).</li>
+  <li>تعداد مولکول DNA انسان: <code>G1 = 46</code>، <code>G2 = 92</code> (کروموزوم‌ها هنوز ۴۶)؛ بعد از تقسیم هر دختر ۴۶.</li>
+  <li>همانندسازی نیمه‌حفاظتی (هر مولکول دختر: یک رشتهٔ قدیم + یک رشتهٔ جدید).</li>
+</ul>
+<table>
+  <thead><tr><th>آنزیم/پروتئین</th><th>نقش</th></tr></thead>
+  <tbody>
+    <tr><td>هلیکاز</td><td>پیوندهای هیدروژنی را می‌شکند و مارپیچ را باز می‌کند</td></tr>
+    <tr><td>SSB</td><td>تک‌رشته‌ها را جدا نگه می‌دارد</td></tr>
+    <tr><td>توپوایزومراز</td><td>پیچش جلوی چنگال را برطرف می‌کند</td></tr>
+    <tr><td>پرایماز</td><td>پرایمر RNA کوتاه می‌سازد</td></tr>
+    <tr><td>DNA پلیمراز</td><td>نوکلئوتید را فقط در جهت <code>5′→3′</code> اضافه می‌کند</td></tr>
+    <tr><td>لیگاز</td><td>قطعات اوکازاکی را به هم می‌چسباند</td></tr>
+  </tbody>
+</table>
+<p>رشتهٔ پیشرو پیوسته و رشتهٔ تأخیری ناپیوسته (قطعات اوکازاکی) ساخته می‌شود؛ مبدأهای همانندسازی متعدد در یوکاریوت.</p>
+
+<h2 id="g-dogma">رونویسی، پردازش و ترجمه <small>(<a href="chapters/06-transcription.html">فصل ۶</a> و <a href="chapters/07-translation.html">فصل ۷</a>)</small></h2>
+<p><code>DNA → RNA → پروتئین</code>. رونویسی: RNA پلیمراز از روی رشتهٔ الگو، RNA را در جهت <code>5′→3′</code> می‌سازد؛ RNA مثل رشتهٔ رمزگذار است با <code>T→U</code>.</p>
+<ul>
+  <li>پردازش در یوکاریوت: کلاه <code>5′</code> (cap)، دم پلی‌A در <code>3′</code> و حذف اینترون‌ها (splicing).</li>
+  <li>اینترون با <code>GU</code> شروع و با <code>AG</code> تمام می‌شود؛ اگزون‌ها می‌مانند.</li>
+  <li>پیرایش دگرگزینی: اگر <code>k</code> اگزون اختیاری باشد حداکثر <code>2^k</code> ایزوفرم.</li>
+  <li>کدون سه‌حرفی: <code>4³ = 64</code>؛ <code>61</code> کدون آمینواسید + <code>3</code> توقف (<code>UAA, UAG, UGA</code>)؛ شروع <code>AUG</code> (Met)؛ ۶۴ کدون برای ۲۰ آمینواسید (افزونه‌بودن).</li>
+  <li>قاب خواندن: ۳ قاب روی یک رشته و <code>6</code> قاب روی دو رشته.</li>
+</ul>
+
+<h2 id="g-expr">بیان ژن <small>(<a href="chapters/08-expression.html">فصل ۸</a>)</small></h2>
+<ul>
+  <li>پروفایل بیان: هر سلول = بردار به طول تعداد ژن‌ها (حدود ۳۰٬۰۰۰)؛ فاصلهٔ اقلیدسی و شباهت کسینوسی بین سلول‌ها.</li>
+  <li>ماتریس شمارش: ژن × نمونه.</li>
+</ul>
+
+<h2 id="g-pcr">PCR و qPCR <small>(<a href="chapters/09-pcr.html">فصل ۹</a>)</small></h2>
+<table>
+  <thead><tr><th>گام</th><th>دما</th><th>کار</th></tr></thead>
+  <tbody>
+    <tr><td>واسرشت‌سازی</td><td>۹۴–۹۶ °C</td><td>جدا شدن دو رشته</td></tr>
+    <tr><td>اتصال پرایمر</td><td>≈ ۶۸ °C (اسلاید؛ معمولاً ۵۰–۶۵)</td><td>چسبیدن دو پرایمر</td></tr>
+    <tr><td>طویل‌شدن</td><td>≈ ۷۲ °C</td><td>Taq رشتهٔ جدید را از <code>5′→3′</code> می‌سازد</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li>تعداد نسخه‌ها: <code>N = N₀ · 2ⁿ</code> (۳۰ چرخه ≈ ۱٫۰۷ میلیارد برابر).</li>
+  <li>پرایمر: طول <code>18–25</code> نوکلئوتید (<code>4¹⁶ ≈ 4.3×10⁹</code> از ژنوم بزرگ‌تر است).</li>
+  <li>qPCR: فلورسانس هر چرخه؛ <code>Ct</code> = چرخه‌ای که از آستانه می‌گذرد؛ Ct کمتر = DNA اولیهٔ بیشتر؛ اختلاف ۳ چرخه = <code>2³ = 8</code> برابر.</li>
+</ul>
+
+<h2 id="g-array">ریزآرایه و نرمال‌سازی <small>(<a href="chapters/10-microarray.html">فصل ۱۰</a>)</small></h2>
+<ul>
+  <li>رنگ‌ها: قرمز = بیان بیشتر در سرطان، سبز = بیشتر در سالم، زرد = برابر، سیاه = بیان‌نشده. مقدار: <code>log2(R/G)</code> (دو برابر = +۱، نصف = −۱، برابر = ۰).</li>
+  <li>تصحیح پس‌زمینه: کم کردن سیگنال پس‌زمینه (پروب‌های کنترل) از هر کانال پیش از log.</li>
+</ul>
+<table>
+  <thead><tr><th>روش</th><th>فرمول</th><th>نکته</th></tr></thead>
+  <tbody>
+    <tr><td>min-max</td><td><code>x′ = (x − min) / (max − min)</code></td><td>به پرت حساس؛ بازهٔ ۰ تا ۱</td></tr>
+    <tr><td>میانگین</td><td><code>x′ = x / mean</code></td><td>به پرت حساس</td></tr>
+    <tr><td>میانه</td><td><code>x′ = x / median</code></td><td>مقاوم در برابر پرت</td></tr>
+    <tr><td>کوانتایل</td><td>مرتب‌سازی هر ستون ← میانگین هر رتبه ← جایگزینی ← بازگرداندن ترتیب</td><td>توزیع نمونه‌ها یکسان می‌شود</td></tr>
+  </tbody>
+</table>
+
+<h2 id="g-seq">توالی‌یابی <small>(<a href="chapters/11-sequencing.html">فصل ۱۱</a>)</small></h2>
+<table>
+  <thead><tr><th>فناوری</th><th>طول خوانش</th><th>دقت هر باز</th><th>ویژگی</th></tr></thead>
+  <tbody>
+    <tr><td>سنگر</td><td>۷۰۰–۱۰۰۰ bp</td><td>≈ ۹۹٫۹۹٪</td><td>ddNTP فلورسان؛ تأیید جهش</td></tr>
+    <tr><td>ایلومینا</td><td>۱۰۰–۳۰۰ bp</td><td>≈ ۹۹–۹۹٫۹٪</td><td>میلیاردها خوانش کوتاه، توالی‌یابی با سنتز</td></tr>
+    <tr><td>PacBio HiFi</td><td>≈ ۱۵–۲۵ kb</td><td>&gt; ۹۹٫۹٪</td><td>خوانش بلند</td></tr>
+    <tr><td>Nanopore</td><td>ده‌ها kb تا بیش از ۱ Mb</td><td>≈ ۹۵–۹۹٪</td><td>خوانش خیلی بلند</td></tr>
+  </tbody>
+</table>
+<p>پروژهٔ ژنوم انسان: حدود ۳ میلیارد دلار (۲۰۰۳)، حدود ۸٪ ژنوم نانوشته؛ T2T کامل (۲۰۲۲)؛ HiSeq X ≈ ۱۰۰۰ دلار. بدون مرجع: مونتاژ؛ با مرجع: نگاشت.</p>
+
+<h2 id="g-formats">فرمت‌های فایل <small>(<a href="chapters/12-formats.html">فصل ۱۲</a> و <a href="chapters/13-biopython.html">فصل ۱۳</a>)</small></h2>
+<ul>
+  <li><b>FASTA:</b> خط <code>&gt;</code> سرآیند + توالی (چند خط؛ طول = جمع خطوط).</li>
+  <li><b>FASTQ</b> (۴ خط): <code>@id</code>، توالی، <code>+</code>، کیفیت (طول خط ۴ = طول خط ۲).</li>
+  <li><code>Q = −10·log10(p)</code> و <code>p = 10^(−Q/10)</code>؛ Phred+33: <code>Q = ASCII − 33</code>.</li>
+</ul>
+<table>
+  <thead><tr><th>Q</th><th>p</th><th>درستی</th></tr></thead>
+  <tbody>
+    <tr><td>Q10</td><td>0.1</td><td>۹۰٪</td></tr>
+    <tr><td>Q20</td><td>0.01</td><td>۹۹٪</td></tr>
+    <tr><td>Q30</td><td>0.001</td><td>۹۹٫۹٪</td></tr>
+    <tr><td>Q40</td><td>0.0001</td><td>۹۹٫۹۹٪</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li>مثال کاراکتر: <code>I = Q40</code>، <code>! = Q0</code>، <code>#</code> = Q2.</li>
+  <li><b>GFF/GTF:</b> ۹ ستون (seqid, source, type, start, end, score, strand, phase, attributes)؛ مختصات از ۱ و دو سر شامل؛ در پایتون <code>seq[start-1:end]</code>؛ سلسله‌مراتب gene ← mRNA ← exon/CDS با <code>Parent</code>.</li>
+  <li><b>SAM:</b> ۱۱ ستون اجباری (QNAME, FLAG, RNAME, POS, MAPQ, CIGAR, RNEXT, PNEXT, TLEN, SEQ, QUAL).</li>
+  <li><code>FLAG</code>: <code>0</code> نگاشت‌شده (رشتهٔ مستقیم)، <code>4</code> نگاشت‌نشده، <code>16</code> رشتهٔ معکوس.</li>
+  <li><code>MAPQ</code> ۰ تا ۶۰. CIGAR: <code>M</code> تطبیق، <code>I</code> درج، <code>D</code> حذف، <code>N</code> پرش از اینترون، <code>S</code> بریدهٔ نرم. مثال: <code>POS=5, 7M</code> ← موقعیت‌های ۵ تا ۱۱.</li>
+  <li>BAM = SAM باینری فشرده، مرتب و ایندکس‌شده؛ VCF = فهرست واریانت‌ها.</li>
+</ul>
+
+<h2 id="g-coverage">پوشش <small>(<a href="chapters/14-coverage.html">فصل ۱۴</a>)</small></h2>
+<p style="text-align:center"><code>C = L · N / G</code> &nbsp;&nbsp; <code>N = C · G / L</code></p>
+<ul>
+  <li><code>L</code> طول خوانش، <code>N</code> تعداد خوانش‌ها، <code>G</code> طول ژنوم. مثال: <code>30 × 3×10⁹ / 150 = 6×10⁸</code> خوانش.</li>
+  <li>عمق = میانگین دفعات خوانده‌شدن هر باز؛ عرض = درصد ژنوم با حداقل یک خوانش (عمق زیاد ≠ عرض کامل).</li>
+  <li>پیشنهادی: WGS ‏۳۰–۵۰× (انسان ۳۰×)، WES ‏۱۰۰×، ChIP-seq ‏۱۰۰×، RNA-seq بر حسب میلیون خوانش.</li>
+</ul>
+
+<h2 id="g-map">مسئلهٔ نگاشت <small>(<a href="chapters/15-mapping.html">فصل ۱۵</a>)</small></h2>
+<ul>
+  <li>جستجوی ساده: <code>N − L + 1</code> موقعیت، هر کدام تا <code>L</code> مقایسه ← <code>O(N·L)</code> برای هر خوانش.</li>
+  <li>مثال: <code>300 × 10⁶ × 10⁹ = 3×10¹⁷</code> عملیات؛ با <code>10⁹</code> عملیات بر ثانیه ← <code>3×10⁸ s ≈ 3,472</code> روز <code>≈ 9.5</code> سال.</li>
+  <li>نیاز به تطبیق تقریبی چون SNP و خطای دستگاه داریم.</li>
+</ul>
+
+<h2 id="g-dp">برنامه‌نویسی پویا <small>(<a href="chapters/16-dynamic-programming.html">فصل ۱۶</a>)</small></h2>
+<p>امتیازها در اسلاید: <code>match = +1</code>، <code>mismatch = −1</code>، <code>gap = −2</code>.</p>
+<div class="compare">
+  <div><h4>Needleman–Wunsch (سراسری)</h4><p><code>F(i,j) = max( F(i−1,j−1) + s(a,b), F(i−1,j) − 2, F(i,j−1) − 2 )</code><br>مقداردهی: <code>F(i,0) = −2i</code>، <code>F(0,j) = −2j</code>؛ پاسخ از خانهٔ آخر و ردیابی تا (0,0).</p></div>
+  <div><h4>Smith–Waterman (محلی)</h4><p>همان رابطه با <code>max(0, …)</code>؛ مقداردهی با ۰؛ ردیابی از بیشینهٔ ماتریس تا رسیدن به ۰.</p></div>
+</div>
+<p>پیچیدگی زمان و حافظه: <code>O(m·n)</code>.</p>
+
+<h2 id="g-index">هش، k-mer و BWT <small>(<a href="chapters/17-indexing.html">فصل ۱۷</a>)</small></h2>
+<ul>
+  <li>seed and extend: مرحلهٔ ۱ جستجوی سریع (هش/FM-index) ← چند کاندید؛ مرحلهٔ ۲ هم‌ترازی دقیق.</li>
+  <li>تعداد k-merها: <code>L − k + 1</code> (<code>100 − 20 + 1 = 81</code>).</li>
+  <li>لانهٔ کبوتر: <code>m</code> ناجور ← <code>m + 1</code> بلوک ← حداقل یک بلوک سالم (۱۰۰ باز: ۵ بلوک ۲۰ بازی، ۴ جانشینی).</li>
+  <li>محدودیت‌ها: تکرار، درج/حذف، انتخاب k؛ k-mer کاندید می‌دهد نه جواب نهایی. Trie: جستجوی پیشوند ولی حافظهٔ زیاد.</li>
+  <li><b>BWT:</b> افزودن <code>$</code> ← همهٔ چرخش‌ها ← مرتب‌سازی ← ستون آخر. <code>BANANA → ANNB$AA</code>، <code>babaabdad → dbbada$aab</code>.</li>
+  <li><b>FM-index:</b> ستون L + <code>C[c]</code> (تعداد نمادهای کوچک‌تر؛ BANANA$: <code>$0, A1, B4, N5</code>) + <code>Occ(c,i)</code> (تعداد c در <code>L[0..i−1]</code>) + <code>SA = 6,5,3,1,0,4,2</code>.</li>
+  <li><b>جستجوی عقب‌گرد:</b> از آخر الگو؛ شروع <code>[0,n)</code>؛ <code>sp′ = C[c] + Occ(c,sp)</code>، <code>ep′ = C[c] + Occ(c,ep)</code>؛ NAN: <code>[5,7) → [2,4) → [6,7)</code>، <code>SA[6]=2</code>؛ مراحل = طول الگو.</li>
+</ul>
+<table>
+  <thead><tr><th>برنامه</th><th>% درست</th><th>زمان (min)</th><th>حافظه (GB)</th></tr></thead>
+  <tbody>
+    <tr><td>HISAT</td><td>97.6</td><td>26.7</td><td>4.3</td></tr>
+    <tr><td>STAR</td><td>88.9</td><td>25</td><td>28</td></tr>
+    <tr><td>OLego</td><td>91.6</td><td>989.5</td><td>3.7</td></tr>
+    <tr><td>TopHat2</td><td>94.4</td><td>1,170</td><td>4.3</td></tr>
+  </tbody>
+</table>
+
+<h2 id="g-pipe">خط لولهٔ RNA-seq و مینی‌پروژه <small>(<a href="chapters/18-pipeline.html">فصل ۱۸</a>)</small></h2>
+<p><code>Illumina → FastQC → Trimmomatic → HISAT2/STAR → featureCounts → DESeq2 → GO/KEGG</code></p>
+<p>فایل‌ها: <code>FASTQ → clean FASTQ → SAM/BAM → count table → DE genes</code>. با مرجع: هم‌ترازی؛ بدون مرجع: مونتاژ و پر کردن شکاف.</p>
+<pre data-lang="BASH"><code>fastqc data/demo.fastq -o data/
+java -jar trimmomatic-0.39.jar SE -threads 4 -phred33 data/demo.fastq data/demo_trimmed.fastq TRAILING:10
+hisat2 -q --rna-strandness R -x HISAT2/grch38/genome -U data/demo_trimmed.fastq -S data/demo.sam
+samtools sort -o data/demo.sorted.bam data/demo.sam
+samtools index data/demo.sorted.bam
+featureCounts -s 2 -a Homo_sapiens.GRCh38.106.gtf -o data/demo_counts.txt data/demo.sorted.bam</code></pre>
+<ul>
+  <li><code>TRAILING:10</code>: از انتهای ۳′ بازهای با Q &lt; ۱۰ حذف می‌شوند. <code>-s 2</code> با <code>--rna-strandness R</code> سازگار است.</li>
+  <li>HISAT2: <code>-q</code> FASTQ، <code>-x</code> پیشوند ایندکس، <code>-U</code> تک‌انتها، <code>-S</code> خروجی SAM.</li>
+  <li>خوانش‌های FASTQ = <code>wc -l ÷ 4</code>.</li>
+</ul>
+
+</main>
+</body>
+</html>
